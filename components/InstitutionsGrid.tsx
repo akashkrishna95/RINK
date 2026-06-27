@@ -102,8 +102,33 @@ export default function InstitutionsGrid() {
             <ArrowDownRight className="w-[40px] h-[40px] sm:w-[44px] sm:h-[44px] text-[#1b60bb]" strokeWidth={2.5} />
           </div>
 
+          {/* --- MOBILE DESCRIPTION --- */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="flex lg:hidden order-2 bg-white rounded-[20px] p-5 md:p-7 shadow-[0_4px_20px_rgb(0,0,0,0.04)] flex-col md:flex-row justify-between items-start md:items-end gap-5 border border-white/60"
+          >
+            <p className="text-[#1A365D] text-[13px] md:text-[14px] leading-relaxed max-w-lg font-medium">
+              Partner with Kerala&apos;s leading research hubs. Access the labs, experts, and tech
+              you need to bring your startup&apos;s vision to life.
+            </p>
+            <div className="w-full md:w-auto flex justify-end">
+              <Link href="/technologies/institutions">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group bg-[#1b60bb] hover:bg-[#154b94] text-white px-5 py-2.5 md:py-2 rounded-lg font-medium text-sm md:text-base flex items-center gap-1.5 transition-colors shadow-sm whitespace-nowrap"
+                >
+                  View More <ArrowUpRight size={18} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                </motion.button>
+              </Link>
+            </div>
+          </motion.div>
+
           {/* --- MAP SECTION --- */}
-          <div className="order-2 lg:order-2 lg:w-[40%] xl:w-[45%] flex items-center justify-center min-h-[400px] sm:min-h-[500px] lg:min-h-[600px]">
+          <div className="order-3 lg:order-2 lg:w-[40%] xl:w-[45%] flex items-center justify-center min-h-[400px] sm:min-h-[500px] lg:min-h-[600px]">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -162,7 +187,7 @@ export default function InstitutionsGrid() {
                             </div>
 
                             {/* --- CONTENT SECTION --- */}
-                            <div className="order-3 lg:order-1 lg:w-[60%] xl:w-[55%] flex flex-col gap-4 md:gap-5">
+                            <div className="order-4 lg:order-1 lg:w-[60%] xl:w-[55%] flex flex-col gap-4 md:gap-5">
 
                               {/* DESKTOP TITLE */}
                               <div className="hidden lg:flex items-center gap-3 mb-2">
@@ -181,7 +206,7 @@ export default function InstitutionsGrid() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, amount: 0.15 }}
                                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                                className="bg-white rounded-[20px] p-5 md:p-7 shadow-[0_4px_20px_rgb(0,0,0,0.04)] flex flex-col md:flex-row justify-between items-start md:items-end gap-5 border border-white/60"
+                                className="hidden lg:flex bg-white rounded-[20px] p-5 md:p-7 shadow-[0_4px_20px_rgb(0,0,0,0.04)] flex-col md:flex-row justify-between items-start md:items-end gap-5 border border-white/60"
                               >
                                 <p className="text-[#1A365D] text-[13px] md:text-[14px] leading-relaxed max-w-lg font-medium">
                                   Partner with Kerala&apos;s leading research hubs. Access the labs, experts, and tech

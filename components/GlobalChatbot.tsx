@@ -12,6 +12,7 @@ interface Message {
 export default function GlobalChatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true);
+  const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: 'bot',
@@ -143,9 +144,9 @@ export default function GlobalChatbot() {
                 <button 
                   type="submit"
                   disabled={!inputText.trim()}
-                  className="bg-[#1b60bb] hover:bg-[#154b94] text-white p-1.5 rounded-full transition-colors disabled:opacity-50 disabled:hover:bg-[#1b60bb]"
+                  className="flex-shrink-0 bg-[#1b60bb] hover:bg-[#154b94] text-white p-1.5 md:p-2 rounded-full transition-colors disabled:opacity-50 disabled:hover:bg-[#1b60bb]"
                 >
-                  <Send size={14} />
+                  <Send size={16} className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </button>
               </div>
             </form>
@@ -180,10 +181,31 @@ export default function GlobalChatbot() {
 
         {/* Romi Avatar Floating Button */}
         <motion.button
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.1}
+          onDragEnd={(e, info) => {
+            if (info.offset.x > 30) {
+              setIsMinimized(true);
+              setIsOpen(false);
+              setShowTooltip(false);
+            } else if (info.offset.x < -30) {
+              setIsMinimized(false);
+            }
+          }}
+          animate={{ 
+            x: isMinimized ? 'calc(100% - 28px)' : 0,
+            scale: 1
+          }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => {
-            setIsOpen(!isOpen);
+            if (isMinimized) {
+              setIsMinimized(false);
+              setIsOpen(true);
+            } else {
+              setIsOpen(!isOpen);
+            }
             setShowTooltip(false);
           }}
           className="relative bg-white text-[#2c3e50] rounded-full pl-[58px] md:pl-[68px] pr-6 py-2.5 md:py-3 shadow-xl hover:shadow-2xl transition-all border border-gray-100 flex items-center h-[52px] md:h-[58px]"

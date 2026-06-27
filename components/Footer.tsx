@@ -38,13 +38,20 @@ export default function Footer() {
               Navigate
             </h4>
             <ul className="space-y-3">
-              {['About', 'Programs', 'Results', 'Contact'].map((link) => (
-                <li key={link}>
+              {[
+                { label: 'About', href: '/about' },
+                { label: 'Technologies', href: '/technologies' },
+                { label: 'Instrumentation', href: '#' },
+                { label: 'Researchpreneurship', href: '/about/incubation' },
+                { label: 'Events', href: '/events' },
+                { label: 'Contact', href: '/about#contact' }
+              ].map((link) => (
+                <li key={link.label}>
                   <Link
-                    href="#"
+                    href={link.href}
                     className="font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base block"
                   >
-                    {link}
+                    {link.label}
                   </Link>
                 </li>
               ))}
@@ -94,7 +101,7 @@ export default function Footer() {
                   <span className="absolute bottom-0 left-0 w-0 h-px bg-[#eff9ff] group-hover:w-full transition-all duration-300" />
                 </span>
               </a>
-              <p className="font-avenir text-[#eff9ff]/70 text-sm leading-relaxed max-w-[250px]">
+              <p className="font-avenir text-[#eff9ff]/70 text-sm leading-relaxed w-full max-w-sm pr-4">
                 G3B, Thejaswini, Technopark Campus Kariyavattom, Trivandrum, Kerala 695581
               </p>
               <div className="space-y-2">

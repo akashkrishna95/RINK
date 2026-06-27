@@ -51,7 +51,7 @@ export default function PremiumBrowseTechnologies() {
   const uniqueSectors = useMemo(() => {
     const sectors = new Set<string>();
     technologies.forEach((tech: any) => {
-      if (tech['unnamed:_3']) sectors.add(tech['unnamed:_3']);
+      if (tech['unnamed:_3']) sectors.add(tech['unnamed:_3'].replace(/[\s\u00A0]+/g, ' ').trim());
     });
     return Array.from(sectors).sort();
   }, [technologies]);

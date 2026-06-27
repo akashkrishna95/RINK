@@ -35,7 +35,7 @@ function AnimatedCounter({ end, suffix = "+" }: { end: number, suffix?: string }
 
 export default function IncubationPage() {
   return (
-    <main className="min-h-screen bg-[#F4F7FB]">
+    <main className="min-h-screen bg-[#F4F7FB] overflow-x-hidden">
       <Navbar />
 
       {/* Hero Section */}
@@ -52,7 +52,7 @@ export default function IncubationPage() {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-helios font-black text-4xl md:text-5xl lg:text-6xl text-white mb-6 leading-tight"
+            className="font-helios font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white mb-6 leading-tight"
           >
             Research Incubation Programs
           </motion.h1>
