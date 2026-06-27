@@ -131,7 +131,7 @@ export default function PremiumBrowseTechnologies() {
   }, [filteredTechnologies, currentPage]);
 
   const pageNumbers = useMemo(() => {
-    const pages = [];
+    const pages: number[] = [];
     const startPage = Math.max(1, currentPage - 2);
     const endPage = Math.min(totalPages, startPage + 4);
     
