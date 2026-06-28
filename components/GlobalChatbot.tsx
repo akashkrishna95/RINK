@@ -146,7 +146,7 @@ export default function GlobalChatbot() {
                   disabled={!inputText.trim()}
                   className="flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9 bg-[#1b60bb] hover:bg-[#154b94] text-white rounded-full transition-colors disabled:opacity-50 disabled:hover:bg-[#1b60bb] flex items-center justify-center"
                 >
-                  <Send size={18} className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-white translate-x-[0.5px]" />
+                  <Send size={20} className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-white translate-x-[0.5px]" />
                 </button>
               </div>
             </form>
