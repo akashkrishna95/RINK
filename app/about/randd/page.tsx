@@ -7,14 +7,14 @@ import Footer from '@/components/Footer';
 
 export default function RandDGrantPage() {
   return (
-    <main className="min-h-screen bg-[#F4F7FB]">
+    <main className="min-h-screen bg-[#F4F7FB] overflow-x-hidden">
       <Navbar />
 
       {/* Hero Section */}
       <section className="relative w-full h-[450px] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=75')" }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/85 to-[#1b60bb]/70"></div>
         </div>
@@ -45,16 +45,16 @@ export default function RandDGrantPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative"
+            className="relative overflow-hidden"
           >
             {/* Main Image Grid */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4 translate-y-4 sm:translate-y-8">
-                <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80" alt="Lab" className="w-full h-32 sm:h-48 object-cover rounded-2xl shadow-lg" />
-                <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&q=80" alt="Hardware" className="w-full h-44 sm:h-64 object-cover rounded-2xl shadow-lg" />
+                <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=75" alt="Lab" className="w-full h-32 sm:h-48 object-cover rounded-2xl shadow-lg" />
+                <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&w=600&q=75" alt="Hardware" className="w-full h-44 sm:h-64 object-cover rounded-2xl shadow-lg" />
               </div>
               <div className="space-y-4">
-                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80" alt="Circuit" className="w-full h-44 sm:h-64 object-cover rounded-2xl shadow-lg" />
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=75" alt="Circuit" className="w-full h-44 sm:h-64 object-cover rounded-2xl shadow-lg" />
                 <div className="bg-[#1b60bb] p-4 sm:p-6 rounded-2xl shadow-lg h-32 sm:h-48 flex flex-col justify-center items-center text-center text-white">
                   <Rocket className="mb-2 sm:mb-3 text-[#5cc4fe] w-8 h-8 sm:w-10 sm:h-10" />
                   <h3 className="font-helios font-bold text-base sm:text-xl">Scale Faster</h3>

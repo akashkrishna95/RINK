@@ -43,7 +43,7 @@ export default function IncubationPage() {
         {/* Background Image & Overlay */}
         <div 
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=75')" }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/80 to-[#1b60bb]/70"></div>
         </div>
@@ -71,22 +71,24 @@ export default function IncubationPage() {
       <section className="py-20 px-4 md:px-8 max-w-[1400px] mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center bg-white rounded-3xl p-5 md:p-12 shadow-sm border border-slate-100">
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
             className="relative h-[400px] rounded-2xl overflow-hidden shadow-lg"
           >
             <div 
               className="absolute inset-0 bg-cover bg-center hover:scale-105 transition-transform duration-700"
-              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80')" }}
+              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=75')" }}
             ></div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
           </motion.div>
 
           <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
             className="flex flex-col justify-center"
           >
             <h2 className="font-helios text-3xl md:text-4xl font-bold text-[#1b60bb] mb-3">

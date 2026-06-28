@@ -22,14 +22,14 @@ export default function DemoDayPage() {
   const [activeVideo, setActiveVideo] = useState(videos[0]);
 
   return (
-    <main className="min-h-screen bg-[#F4F7FB]">
+    <main className="min-h-screen bg-[#F4F7FB] overflow-x-hidden">
       <Navbar />
 
       {/* Hero Section */}
       <section className="relative w-full h-[500px] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80')" }}
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=75')" }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/80 to-[#1b60bb]/70"></div>
         </div>
@@ -173,7 +173,7 @@ export default function DemoDayPage() {
               className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-lg"
             >
               <img 
-                src="https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&q=80" 
+                src="https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=75" 
                 alt="Exposure Visit"
                 className="w-full h-full object-cover"
               />
