@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import rinkDatabase from '@/data/rink_database.json';
 
 const placeholders = [
   'Best Technologies in agritech for my startup...',
@@ -21,26 +20,45 @@ export default function TechnologiesHero() {
   const [stats, setStats] = useState({ techs: 0, institutions: 0, funds: 0 });
   const [isFocused, setIsFocused] = useState(false);
   const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [technologies, setTechnologies] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!searchQuery.trim()) {
+    async function fetchTechs() {
+      try {
+        const res = await fetch('/api/technologies');
+        const json = await res.json();
+        if (json.success && json.technologies) {
+          let rawData = json.technologies;
+          if (rawData['MAIN SHEET']) {
+            rawData = rawData['MAIN SHEET'];
+          }
+          const processedTechs = (rawData || [])
+            .filter((tech: any) => tech.technology_id && tech.technology_id !== 'technology_id');
+          setTechnologies(processedTechs);
+        }
+      } catch (error) {
+        console.error("Failed to fetch technologies", error);
+      }
+    }
+    fetchTechs();
+  }, []);
+
+  useEffect(() => {
+    if (!searchQuery.trim() || technologies.length === 0) {
       setSuggestions([]);
       return;
     }
     
     const query = searchQuery.toLowerCase();
-    const mainSheetData = (rinkDatabase as Record<string, any[]>)['MAIN SHEET'] || [];
-    
-    const matches = mainSheetData
-      .filter((tech: any, index: number) => index > 0 && tech['unnamed:_0'] && tech['unnamed:_0'] !== 'technology_id')
+    const matches = technologies
       .filter((tech: any) => {
-        const name = (tech['unnamed:_1'] || '').toLowerCase();
-        const sector = (tech['unnamed:_3'] || '').toLowerCase();
+        const name = (tech.technology_name || '').toLowerCase();
+        const sector = (tech.sector || '').toLowerCase();
         return name.includes(query) || sector.includes(query);
       });
       
     setSuggestions(matches);
-  }, [searchQuery]);
+  }, [searchQuery, technologies]);
 
   useEffect(() => {
     const interval = setInterval(() => {

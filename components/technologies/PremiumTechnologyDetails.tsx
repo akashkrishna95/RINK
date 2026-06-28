@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Building2, Tag, Award, MapPin, ChevronRight, ArrowUpRight, X, Handshake } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import rinkDatabase from '@/data/rink_database.json';
 import PremiumTechnologyCard from './PremiumTechnologyCard';
 
 interface PremiumTechnologyDetailsProps {
@@ -16,13 +15,36 @@ interface PremiumTechnologyDetailsProps {
 export default function PremiumTechnologyDetails({ id }: PremiumTechnologyDetailsProps) {
   const router = useRouter();
   const [technology, setTechnology] = useState<any>(null);
+  const [allTechnologies, setAllTechnologies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const mainSheetData = (rinkDatabase as Record<string, any[]>)['MAIN SHEET'] || [];
-    const tech = mainSheetData.find((t) => String(t['unnamed:_0']) === id);
-    setTechnology(tech);
-    setLoading(false);
+    async function fetchTech() {
+      try {
+        const res = await fetch('/api/technologies');
+        const json = await res.json();
+        if (json.success && json.technologies) {
+          let rawData = json.technologies;
+          if (rawData['MAIN SHEET']) {
+            rawData = rawData['MAIN SHEET'];
+          }
+          const processedTechs = (rawData || [])
+            .filter((tech: any) => tech.technology_id && tech.technology_id !== 'technology_id');
+          
+          setAllTechnologies(processedTechs);
+          const tech = processedTechs.find((t: any) => String(t.technology_id) === id);
+          setTechnology(tech || null);
+        } else {
+          setTechnology(null);
+        }
+      } catch (error) {
+        console.error("Failed to load technologies", error);
+        setTechnology(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchTech();
   }, [id]);
 
   if (loading) {
@@ -50,17 +72,17 @@ export default function PremiumTechnologyDetails({ id }: PremiumTechnologyDetail
     );
   }
 
-  const techId = technology['unnamed:_0'] || 'N/A';
-  const techName = technology['unnamed:_1'] || 'Untitled Technology';
-  const institution = technology['unnamed:_2'] || 'N/A';
-  const sector = technology['unnamed:_3'] || 'N/A';
-  const problemSolved = technology['unnamed:_5'] || '';
-  const description = technology['unnamed:_6'] || '';
-  const applications = technology['unnamed:_7'] || '';
-  const ipStatus = technology['unnamed:_10'] || 'Not Specified';
-  const trl = technology['unnamed:_9'] || 'Not Specified';
-  const image = technology['unnamed:_16'] || '/images/placeholder-tech.jpg';
-  const isFeatured = technology['unnamed:_8'] === 'High';
+  const techId = technology.technology_id || 'N/A';
+  const techName = technology.technology_name || 'Untitled Technology';
+  const institution = technology.institution || 'N/A';
+  const sector = technology.sector || 'N/A';
+  const problemSolved = technology.problem_solved || '';
+  const description = technology.description || '';
+  const applications = technology.applications || '';
+  const ipStatus = technology.patent_status || 'Not Specified';
+  const trl = technology.trl || 'Not Specified';
+  const image = technology.image_url || '/images/placeholder-tech.jpg';
+  const isFeatured = technology.startup_potential === 'High';
 
   const getIPStatusColor = (status: string) => {
     switch (status) {
@@ -78,11 +100,10 @@ export default function PremiumTechnologyDetails({ id }: PremiumTechnologyDetail
   const statusColor = getIPStatusColor(ipStatus);
 
   // Get related technologies from same sector (limit to 6)
-  const relatedTechnologies = ((rinkDatabase as Record<string, any[]>)['MAIN SHEET'] || [])
-    .filter((t: any, idx: number) => 
-      idx > 0 && 
-      t['unnamed:_3'] === sector && 
-      String(t['unnamed:_0']) !== id
+  const relatedTechnologies = allTechnologies
+    .filter((t: any) => 
+      t.sector === sector && 
+      String(t.technology_id) !== id
     )
     .slice(0, 6);
 
@@ -391,23 +412,23 @@ export default function PremiumTechnologyDetails({ id }: PremiumTechnologyDetail
               {/* Technologies Grid - Matches Browse Grid */}
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-10">
                 {relatedTechnologies.slice(0, 8).map((tech: any, idx: number) => {
-                  const status = tech['unnamed:_10'];
+                  const status = tech.patent_status;
                   const ipStatusProp = (status === 'Patented' || status === 'Patent Filed' || status === 'Not Specified') ? status : 'Not Specified';
                   return (
                     <motion.div
-                      key={tech['unnamed:_0']}
+                      key={tech.technology_id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
                     >
                       <PremiumTechnologyCard
-                        id={String(tech['unnamed:_0'])}
-                        name={tech['unnamed:_1'] || 'Untitled'}
-                        image={tech['unnamed:_16'] || '/images/placeholder-tech.jpg'}
-                        sector={tech['unnamed:_3'] || 'N/A'}
-                        institution={tech['unnamed:_2'] || 'N/A'}
+                        id={String(tech.technology_id)}
+                        name={tech.technology_name || 'Untitled Technology'}
+                        image={tech.image_url || '/images/placeholder-tech.jpg'}
+                        sector={tech.sector || 'N/A'}
+                        institution={tech.institution || 'N/A'}
                         ipStatus={ipStatusProp}
-                        featured={tech['unnamed:_8'] === 'High'}
+                        featured={tech.startup_potential === 'High'}
                       />
                     </motion.div>
                   );

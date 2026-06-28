@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight, CircleCheckBig, Building2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import rinkDatabase from '@/data/rink_database.json';
 
 interface Technology {
   id: string;
@@ -27,28 +26,41 @@ export default function FeaturedTechnologies() {
   useEffect(() => {
     setIsMounted(true);
     
-    // Process JSON data
-    const mainSheetData = (rinkDatabase as Record<string, any[]>)['MAIN SHEET'] || [];
-    const processedTechs: Technology[] = mainSheetData
-      .filter((tech: any, index: number) => index > 0 && tech['unnamed:_0'] && tech['unnamed:_0'] !== 'technology_id')
-      .map((tech: any) => ({
-        id: String(tech['unnamed:_0']),
-        name: tech['unnamed:_1'] || 'Untitled Technology',
-        institution: tech['unnamed:_2'] || 'N/A',
-        sector: tech['unnamed:_3'] || 'N/A',
-        ipStatus: tech['unnamed:_10'] || 'Not Specified',
-        featured: tech['unnamed:_8'] === 'High',
-        image: tech['unnamed:_16'] || '/images/placeholder-tech.jpg',
-      }))
-      .filter(t => t.featured) // only show featured ones on the home page
-      .slice(0, 10); // get top 10
+    async function fetchTechs() {
+      try {
+        const res = await fetch('/api/technologies');
+        const json = await res.json();
+        if (json.success && json.technologies) {
+          let rawData = json.technologies;
+          if (rawData['MAIN SHEET']) {
+            rawData = rawData['MAIN SHEET'];
+          }
+          const processedTechs: Technology[] = (rawData || [])
+            .filter((tech: any) => tech.technology_id && tech.technology_id !== 'technology_id')
+            .map((tech: any) => ({
+              id: String(tech.technology_id),
+              name: tech.technology_name || 'Untitled Technology',
+              institution: tech.institution || 'N/A',
+              sector: tech.sector || 'N/A',
+              ipStatus: tech.patent_status || 'Not Specified',
+              featured: tech.startup_potential === 'High',
+              image: tech.image_url || '/images/placeholder-tech.jpg',
+            }))
+            .filter(t => t.featured) // only show featured ones on the home page
+            .slice(0, 10); // get top 10
 
-    // Tripled array to facilitate seamless infinite native scrolling
-    setExtendedTechnologies([
-      ...processedTechs,
-      ...processedTechs,
-      ...processedTechs,
-    ]);
+          // Tripled array to facilitate seamless infinite native scrolling
+          setExtendedTechnologies([
+            ...processedTechs,
+            ...processedTechs,
+            ...processedTechs,
+          ]);
+        }
+      } catch (error) {
+        console.error("Failed to load featured technologies:", error);
+      }
+    }
+    fetchTechs();
   }, []);
 
   // Handler for pausing the entire carousel and optionally targeting a specific card

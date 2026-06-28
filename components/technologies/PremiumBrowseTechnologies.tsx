@@ -4,7 +4,6 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Grid3x3, List, Filter, X } from 'lucide-react';
-import rinkDatabase from '@/data/rink_database.json';
 import PremiumTechnologyCard from './PremiumTechnologyCard';
 import PremiumTechnologyListCard from './PremiumTechnologyListCard';
 import FilterDrawer from './FilterDrawer';
@@ -32,6 +31,9 @@ export default function PremiumBrowseTechnologies() {
     featured: [] as string[],
   });
 
+  const [technologies, setTechnologies] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   // Parse query params on mount
   useEffect(() => {
     const sectorParam = searchParams.get('sector');
@@ -43,15 +45,29 @@ export default function PremiumBrowseTechnologies() {
     }
   }, [searchParams]);
 
-  // Filter out header row (first item contains field names instead of data)
-  const technologies = ((rinkDatabase as any)['MAIN SHEET'] || []).filter(
-    (tech: any, index: number) => index > 0 && tech['unnamed:_0'] && tech['unnamed:_0'] !== 'technology_id'
-  );
+  useEffect(() => {
+    async function fetchTechnologies() {
+      try {
+        const res = await fetch('/api/technologies');
+        const json = await res.json();
+        if (json.success && json.technologies) {
+          const processedTechs = json.technologies
+            .filter((tech: any) => tech.technology_id && tech.technology_id !== 'technology_id');
+          setTechnologies(processedTechs);
+        }
+      } catch (error) {
+        console.error("Failed to load technologies", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchTechnologies();
+  }, []);
 
   const uniqueSectors = useMemo(() => {
     const sectors = new Set<string>();
     technologies.forEach((tech: any) => {
-      if (tech['unnamed:_3']) sectors.add(tech['unnamed:_3'].replace(/[\s\u00A0]+/g, ' ').trim());
+      if (tech.sector) sectors.add(tech.sector.replace(/[\s\u00A0]+/g, ' ').trim());
     });
     return Array.from(sectors).sort();
   }, [technologies]);
@@ -59,7 +75,7 @@ export default function PremiumBrowseTechnologies() {
   const uniqueInstitutions = useMemo(() => {
     const institutions = new Set<string>();
     technologies.forEach((tech: any) => {
-      if (tech['unnamed:_2']) institutions.add(tech['unnamed:_2']);
+      if (tech.institution) institutions.add(tech.institution);
     });
     return Array.from(institutions).slice(0, 15).sort();
   }, [technologies]);
@@ -67,7 +83,7 @@ export default function PremiumBrowseTechnologies() {
   const uniqueTechTypes = useMemo(() => {
     const typeMap = new Map<string, string>();
     technologies.forEach((tech: any) => {
-      let techTypeRaw = tech['unnamed:_4'];
+      let techTypeRaw = tech.technology_type;
       if (typeof techTypeRaw === 'string') {
         const parts = techTypeRaw.split(',').map(s => s.trim()).filter(s => s.length > 0 && s.toLowerCase() !== 'technology_type');
         parts.forEach(techType => {
@@ -87,38 +103,34 @@ export default function PremiumBrowseTechnologies() {
       const searchLower = searchQuery.toLowerCase();
       const matchesSearch =
         !searchQuery ||
-        (tech['unnamed:_1'] || '').toLowerCase().includes(searchLower) ||
-        (tech['unnamed:_3'] || '').toLowerCase().includes(searchLower) ||
-        (tech['unnamed:_2'] || '').toLowerCase().includes(searchLower);
+        (tech.technology_name || '').toLowerCase().includes(searchLower) ||
+        (tech.institution || '').toLowerCase().includes(searchLower) ||
+        (tech.sector || '').toLowerCase().includes(searchLower);
 
       const matchesSector =
         selectedFilters.sector.length === 0 ||
-        selectedFilters.sector.includes(tech['unnamed:_3']);
+        selectedFilters.sector.includes(tech.sector);
 
       const matchesInstitution =
         selectedFilters.institution.length === 0 ||
-        selectedFilters.institution.includes(tech['unnamed:_2']);
+        selectedFilters.institution.includes(tech.institution);
 
-      const matchesIP =
+      const matchesIPStatus =
         selectedFilters.ipStatus.length === 0 ||
-        selectedFilters.ipStatus.includes(tech['unnamed:_10'] || 'Not Specified');
+        selectedFilters.ipStatus.includes(tech.patent_status || 'Not Specified');
 
       const matchesTechType =
         selectedFilters.techType.length === 0 ||
-        (() => {
-          const raw = tech['unnamed:_4'];
-          if (!raw || typeof raw !== 'string') return false;
-          const types = raw.split(',').map((s: string) => normalizeTechType(s.trim()));
-          return selectedFilters.techType.some((t: string) => types.includes(t));
-        })();
+        (typeof tech.technology_type === 'string' &&
+          tech.technology_type.split(',').some((t: string) =>
+            selectedFilters.techType.includes(normalizeTechType(t.trim()))
+          ));
 
-      const isFeatured = tech['unnamed:_8'] === 'High';
       const matchesFeatured =
         selectedFilters.featured.length === 0 ||
-        (selectedFilters.featured.includes('featured') && isFeatured) ||
-        (selectedFilters.featured.includes('non-featured') && !isFeatured);
+        (selectedFilters.featured.includes('Featured Only') && tech.startup_potential === 'High');
 
-      return matchesSearch && matchesSector && matchesInstitution && matchesIP && matchesTechType && matchesFeatured;
+      return matchesSearch && matchesSector && matchesInstitution && matchesIPStatus && matchesTechType && matchesFeatured;
     });
   }, [searchQuery, selectedFilters, technologies]);
 
@@ -258,7 +270,13 @@ export default function PremiumBrowseTechnologies() {
         {/* Main Content */}
         <div className="flex gap-6 relative">
           {/* Results */}
-          <div className="flex-1 md:relative">
+          <div className="flex-1 w-full min-w-0 pb-20">
+            {isLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1b60bb]"></div>
+              </div>
+            ) : (
+              <>
             {/* Active Filters Display */}
             {(selectedFilters.sector.length > 0 || selectedFilters.institution.length > 0 || selectedFilters.ipStatus.length > 0 || selectedFilters.techType.length > 0 || selectedFilters.featured.length > 0) && (
               <motion.div
@@ -354,7 +372,7 @@ export default function PremiumBrowseTechnologies() {
                         exit={{ opacity: 0, scale: 0.9 }}
                         className="bg-[#ff9c3d] text-white px-4 py-2 rounded-full flex items-center gap-2 font-poppins text-sm font-semibold shadow-md whitespace-nowrap"
                       >
-                        {featured === 'featured' ? 'Featured' : featured === 'non-featured' ? 'Non-Featured' : 'All'}
+                        {featured}
                         <button
                           onClick={() => handleFilterChange('featured', featured)}
                           className="hover:bg-white/20 rounded-full p-0.5 transition-colors"
@@ -389,17 +407,17 @@ export default function PremiumBrowseTechnologies() {
                 transition={{ duration: 0.2 }}
               >
                 <AnimatePresence>
-                  {paginatedTechnologies.map((tech: any, index: number) => (
+                  {paginatedTechnologies.map((tech: any) => (
                     <PremiumTechnologyCard
-                        key={`tech-grid-${tech['unnamed:_0'] || 'empty'}-${index}`}
-                        id={String(tech['unnamed:_0'] || index)}
-                        name={tech['unnamed:_1'] || 'Untitled'}
-                        image={tech['unnamed:_16'] || '/images/placeholder-tech.jpg'}
-                        sector={tech['unnamed:_3'] || 'N/A'}
-                        institution={tech['unnamed:_2'] || 'N/A'}
-                        ipStatus={tech['unnamed:_10'] || 'Not Specified'}
-                        featured={tech['unnamed:_8'] === 'High'}
-                      />
+                      key={tech.technology_id}
+                      id={String(tech.technology_id)}
+                      name={tech.technology_name || 'Untitled Technology'}
+                      institution={tech.institution || 'N/A'}
+                      sector={tech.sector || 'N/A'}
+                      ipStatus={tech.patent_status || 'Not Specified'}
+                      image={tech.image_url || '/images/placeholder-tech.jpg'}
+                      featured={tech.startup_potential === 'High'}
+                    />
                   ))}
                 </AnimatePresence>
               </motion.div>
@@ -411,17 +429,17 @@ export default function PremiumBrowseTechnologies() {
                 transition={{ duration: 0.2 }}
               >
                 <AnimatePresence>
-                  {paginatedTechnologies.map((tech: any, index: number) => (
+                  {paginatedTechnologies.map((tech: any) => (
                     <PremiumTechnologyListCard
-                      key={`tech-list-${tech['unnamed:_0'] || 'empty'}-${index}`}
-                      id={String(tech['unnamed:_0'] || index)}
-                      name={tech['unnamed:_1'] || 'Untitled'}
-                      image={tech['unnamed:_16'] || '/images/placeholder-tech.jpg'}
-                      sector={tech['unnamed:_3'] || 'N/A'}
-                      institution={tech['unnamed:_2'] || 'N/A'}
-                      ipStatus={tech['unnamed:_10'] || 'Not Specified'}
-                      description={tech['unnamed:_6'] || 'No description available'}
-                      featured={tech['unnamed:_8'] === 'High'}
+                      key={tech.technology_id}
+                      id={String(tech.technology_id)}
+                      name={tech.technology_name || 'Untitled Technology'}
+                      image={tech.image_url || '/images/placeholder-tech.jpg'}
+                      sector={tech.sector || 'N/A'}
+                      institution={tech.institution || 'N/A'}
+                      ipStatus={tech.patent_status || 'Not Specified'}
+                      description={tech.description || 'No description available'}
+                      featured={tech.startup_potential === 'High'}
                     />
                   ))}
                 </AnimatePresence>
@@ -462,9 +480,9 @@ export default function PremiumBrowseTechnologies() {
                 >
                   Next
                 </button>
-
-
               </div>
+            )}
+            </>
             )}
           </div>
         </div>

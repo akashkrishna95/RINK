@@ -41,17 +41,16 @@ export default function TechnologyListCard({
     }
   };
 
-  // Truncate description: 150 chars for desktop, 80 for mobile
+  // Truncate description to a safe maximum for DOM rendering
   const truncateDescription = (text: string, maxLength: number) => {
     if (!text) return '';
     if (text.length > maxLength) {
-      return text.substring(0, maxLength) + '...';
+      return text.substring(0, maxLength);
     }
     return text;
   };
 
-  const desktopDescription = truncateDescription(description || '', 150);
-  const mobileDescription = truncateDescription(description || '', 80);
+  const displayDescription = truncateDescription(description || '', 300);
 
   return (
     <motion.div
@@ -137,11 +136,8 @@ export default function TechnologyListCard({
               </div>
 
               {/* Description */}
-              <p className="hidden sm:block font-poppins text-sm text-gray-600 line-clamp-2 leading-relaxed">
-                {desktopDescription}
-              </p>
-              <p className="sm:hidden font-poppins text-sm text-gray-600 line-clamp-2">
-                {mobileDescription}
+              <p className="font-poppins text-sm text-gray-600 line-clamp-2 leading-relaxed">
+                {displayDescription}
               </p>
             </div>
 
