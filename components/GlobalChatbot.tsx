@@ -72,7 +72,7 @@ export default function GlobalChatbot() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="mb-4 w-[320px] sm:w-[380px] h-[500px] max-h-[75vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col border border-gray-200 origin-bottom-right z-20"
+            className="mb-4 w-[calc(100vw-32px)] sm:w-[380px] h-[500px] max-h-[75vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col border border-gray-200 origin-bottom-right z-20"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-[#1b60bb] to-[#1872dd] p-4 flex items-center justify-between shadow-sm z-10">
@@ -133,13 +133,13 @@ export default function GlobalChatbot() {
             
             {/* Input Area */}
             <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-gray-100 z-10">
-              <div className="bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 flex items-center gap-2">
+              <div className="bg-gray-50 border border-gray-200 rounded-full px-4 py-2 flex sm:py-2.5 items-center gap-2">
                 <input 
                   type="text" 
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder="Ask me anything..." 
-                  className="flex-1 bg-transparent outline-none font-poppins text-sm text-gray-700 placeholder:text-gray-400"
+                  className="flex-1 bg-transparent outline-none font-poppins text-base sm:text-sm text-gray-700 placeholder:text-gray-400"
                 />
                 <button 
                   type="submit"

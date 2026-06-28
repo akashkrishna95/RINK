@@ -69,7 +69,7 @@ export default function IncubationPage() {
 
       {/* Researchpreneurship Validation Program */}
       <section className="py-20 px-4 md:px-8 max-w-[1400px] mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-slate-100">
+        <div className="grid lg:grid-cols-2 gap-12 items-center bg-white rounded-3xl p-5 md:p-12 shadow-sm border border-slate-100">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -161,7 +161,7 @@ export default function IncubationPage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="grid lg:grid-cols-2 gap-10 items-center bg-white rounded-3xl p-8 shadow-sm border border-slate-100 hover:shadow-lg transition-shadow"
+            className="grid lg:grid-cols-2 gap-10 items-center bg-white rounded-3xl p-5 md:p-8 shadow-sm border border-slate-100 hover:shadow-lg transition-shadow"
           >
             <div className="relative h-[300px] md:h-[400px] w-full rounded-2xl overflow-hidden group">
               <img 
@@ -187,7 +187,7 @@ export default function IncubationPage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="grid lg:grid-cols-2 gap-10 items-center bg-white rounded-3xl p-8 shadow-sm border border-slate-100 hover:shadow-lg transition-shadow"
+            className="grid lg:grid-cols-2 gap-10 items-center bg-white rounded-3xl p-5 md:p-8 shadow-sm border border-slate-100 hover:shadow-lg transition-shadow"
           >
             <div className="order-2 lg:order-1">
               <div className="bg-purple-50 w-12 h-12 rounded-xl flex items-center justify-center mb-6">

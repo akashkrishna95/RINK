@@ -38,7 +38,7 @@ export default function IPRSupportPage() {
 
       {/* Main Content Section */}
       <section className="py-20 px-4 md:px-8 max-w-[1200px] mx-auto">
-        <div className="bg-white rounded-[2rem] p-8 md:p-12 shadow-xl border border-blue-50 relative overflow-hidden">
+        <div className="bg-white rounded-[2rem] p-5 md:p-12 shadow-xl border border-blue-50 relative overflow-hidden">
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-50 to-transparent rounded-bl-full opacity-50 -z-0"></div>
           
@@ -102,7 +102,7 @@ export default function IPRSupportPage() {
               transition={{ duration: 0.6 }}
               className="relative"
             >
-              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+              <div className="relative aspect-[4/3] md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
                 <img 
                   src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80" 
                   alt="IPR Support"
@@ -116,7 +116,7 @@ export default function IPRSupportPage() {
               </div>
               
               {/* Floating Badge */}
-              <div className="absolute -top-6 -right-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-4 animate-bounce" style={{ animationDuration: '3s' }}>
+              <div className="absolute -top-6 right-2 sm:-right-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-4 animate-bounce" style={{ animationDuration: '3s' }}>
                 <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                   <CheckCircle2 className="text-green-600" size={20} />
                 </div>

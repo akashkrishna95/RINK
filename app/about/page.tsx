@@ -96,7 +96,7 @@ export default function AboutRinkPage() {
 
       {/* Mission Split Section */}
       <section className="py-20 px-4 md:px-8 max-w-[1400px] mx-auto">
-        <div className="bg-white rounded-[2.5rem] p-8 md:p-16 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col lg:flex-row items-center gap-16">
+        <div className="bg-white rounded-[2.5rem] p-5 md:p-16 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col lg:flex-row items-center gap-16">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
