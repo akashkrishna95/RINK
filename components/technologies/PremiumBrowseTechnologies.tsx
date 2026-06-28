@@ -8,6 +8,24 @@ import PremiumTechnologyCard from './PremiumTechnologyCard';
 import PremiumTechnologyListCard from './PremiumTechnologyListCard';
 import FilterDrawer from './FilterDrawer';
 
+const INSTITUTION_MAP: { [key: string]: string } = {
+  'csir-niist': 'CSIR-National Institute for Interdisciplinary Science and Technology (NIIST)',
+  'kau': 'Kerala Agricultural University',
+  'kufos': 'Kerala University of Fisheries and Ocean Studies (KUFOS)',
+  'cpcri': 'ICAR-CPCRI Kasaragod',
+  'cdac': 'Centre for Development of Advanced Computing (C-DAC)',
+  'iisr': 'ICAR-Indian Institute of Spices Research (IISR)',
+  'ctcri': 'ICAR-Central Tuber Crops Research Institute (CTCRI) Thiruvananthapuram',
+  'kfri': 'KSCSTE- Kerala Forest Research Institute (KFRI)',
+  'cwrdm': 'KSCSTE- Centre for Water Resources Development and Management (CWRDM)',
+  'c-met': 'C-MET Kerala',
+  'jntbgri': 'KSCSTE- Jawaharlal Nehru Tropical Botanic Garden & Research Institute (JNTBGRI)',
+  'mbgips': 'KSCSTE- Malabar Botanical Garden & Institute for Plant Sciences (MBGIPS)',
+  'iav': 'Institute of Advanced Virology (IAV)',
+  'natpac': 'KSCSTE - National Transportation Planning and Research Centre (NATPAC)',
+  'sbi-kannur': 'ICAR-Sugarcane Breeding Institute Research Centre, Kannur'
+};
+
 const ITEMS_PER_PAGE = 12;
 
 const normalizeTechType = (type: string) => {
@@ -37,12 +55,20 @@ export default function PremiumBrowseTechnologies() {
   // Parse query params on mount
   useEffect(() => {
     const sectorParam = searchParams.get('sector');
-    if (sectorParam) {
-      setSelectedFilters((prev) => ({
-        ...prev,
-        sector: [decodeURIComponent(sectorParam)],
-      }));
-    }
+    const instParam = searchParams.get('institution');
+    
+    setSelectedFilters((prev) => {
+      const updated = { ...prev };
+      if (sectorParam) {
+        updated.sector = [decodeURIComponent(sectorParam)];
+      }
+      if (instParam) {
+        const decodedInst = decodeURIComponent(instParam);
+        const mappedInst = INSTITUTION_MAP[decodedInst] || decodedInst;
+        updated.institution = [mappedInst];
+      }
+      return updated;
+    });
   }, [searchParams]);
 
   useEffect(() => {
@@ -67,7 +93,8 @@ export default function PremiumBrowseTechnologies() {
   const uniqueSectors = useMemo(() => {
     const sectors = new Set<string>();
     technologies.forEach((tech: any) => {
-      if (tech.primary_sector) sectors.add(tech.primary_sector.replace(/[\s\u00A0]+/g, ' ').trim());
+      const sec = tech.primary_sector || tech.sector;
+      if (sec) sectors.add(sec.replace(/[\s\u00A0]+/g, ' ').trim());
     });
     return Array.from(sectors).sort();
   }, [technologies]);
@@ -105,11 +132,11 @@ export default function PremiumBrowseTechnologies() {
         !searchQuery ||
         (tech.technology_name || '').toLowerCase().includes(searchLower) ||
         (tech.institution || '').toLowerCase().includes(searchLower) ||
-        (tech.primary_sector || '').toLowerCase().includes(searchLower);
+        (tech.primary_sector || tech.sector || '').toLowerCase().includes(searchLower);
 
       const matchesSector =
         selectedFilters.sector.length === 0 ||
-        selectedFilters.sector.includes(tech.primary_sector);
+        selectedFilters.sector.includes(tech.primary_sector || tech.sector);
 
       const matchesInstitution =
         selectedFilters.institution.length === 0 ||
@@ -413,7 +440,7 @@ export default function PremiumBrowseTechnologies() {
                       id={String(tech.technology_id)}
                       name={tech.technology_name || 'Untitled Technology'}
                       institution={tech.institution || 'N/A'}
-                      sector={tech.primary_sector || 'N/A'}
+                      sector={tech.primary_sector || tech.sector || 'N/A'}
                       ipStatus={tech.patent_status || 'Not Specified'}
                       image={tech.image_url || '/images/placeholder-tech.jpg'}
                       featured={tech.startup_potential === 'High'}
@@ -435,7 +462,7 @@ export default function PremiumBrowseTechnologies() {
                       id={String(tech.technology_id)}
                       name={tech.technology_name || 'Untitled Technology'}
                       image={tech.image_url || '/images/placeholder-tech.jpg'}
-                      sector={tech.primary_sector || 'N/A'}
+                      sector={tech.primary_sector || tech.sector || 'N/A'}
                       institution={tech.institution || 'N/A'}
                       ipStatus={tech.patent_status || 'Not Specified'}
                       description={tech.description || 'No description available'}

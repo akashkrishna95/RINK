@@ -53,7 +53,7 @@ export default function TechnologiesHero() {
     const matches = technologies
       .filter((tech: any) => {
         const name = (tech.technology_name || '').toLowerCase();
-        const sector = (tech.primary_sector || '').toLowerCase();
+        const sector = (tech.primary_sector || tech.sector || '').toLowerCase();
         return name.includes(query) || sector.includes(query);
       });
       

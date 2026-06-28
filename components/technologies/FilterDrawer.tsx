@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronDown, Check } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface FilterDrawerProps {
   isOpen: boolean;
@@ -48,6 +48,19 @@ export default function FilterDrawer({
     techTypes: false,
     featured: false,
   });
+
+  // Auto-expand sections with active selections
+  useEffect(() => {
+    if (selectedSectors && selectedSectors.length > 0) {
+      setExpandedSections((prev) => ({ ...prev, sectors: true }));
+    }
+  }, [selectedSectors]);
+
+  useEffect(() => {
+    if (selectedInstitutions && selectedInstitutions.length > 0) {
+      setExpandedSections((prev) => ({ ...prev, institutions: true }));
+    }
+  }, [selectedInstitutions]);
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections((prev) => ({

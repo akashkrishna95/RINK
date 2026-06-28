@@ -75,7 +75,7 @@ export default function PremiumTechnologyDetails({ id }: PremiumTechnologyDetail
   const techId = technology.technology_id || 'N/A';
   const techName = technology.technology_name || 'Untitled Technology';
   const institution = technology.institution || 'N/A';
-  const sector = technology.primary_sector || 'N/A';
+  const sector = technology.primary_sector || technology.sector || 'N/A';
   const problemSolved = technology.problem_solved || '';
   const description = technology.description || '';
   const applications = technology.applications || '';
@@ -102,7 +102,7 @@ export default function PremiumTechnologyDetails({ id }: PremiumTechnologyDetail
   // Get related technologies from same sector (limit to 6)
   const relatedTechnologies = allTechnologies
     .filter((t: any) => 
-      t.primary_sector === sector && 
+      (t.primary_sector || t.sector) === sector && 
       String(t.technology_id) !== id
     )
     .slice(0, 6);
@@ -425,7 +425,7 @@ export default function PremiumTechnologyDetails({ id }: PremiumTechnologyDetail
                         id={String(tech.technology_id)}
                         name={tech.technology_name || 'Untitled Technology'}
                         image={tech.image_url || '/images/placeholder-tech.jpg'}
-                        sector={tech.primary_sector || 'N/A'}
+                        sector={tech.primary_sector || tech.sector || 'N/A'}
                         institution={tech.institution || 'N/A'}
                         ipStatus={ipStatusProp}
                         featured={tech.startup_potential === 'High'}
