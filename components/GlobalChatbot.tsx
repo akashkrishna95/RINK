@@ -133,20 +133,20 @@ export default function GlobalChatbot() {
             
             {/* Input Area */}
             <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-gray-100 z-10">
-              <div className="bg-gray-50 border border-gray-200 rounded-full px-4 py-2 flex sm:py-2.5 items-center gap-2">
+              <div className="bg-gray-50 border border-gray-200 rounded-full pl-4 pr-1.5 py-1.5 flex items-center gap-2">
                 <input 
                   type="text" 
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder="Ask me anything..." 
-                  className="flex-1 bg-transparent outline-none font-poppins text-base sm:text-sm text-gray-700 placeholder:text-gray-400"
+                  className="flex-1 bg-transparent outline-none font-poppins text-sm text-gray-700 placeholder:text-gray-400"
                 />
                 <button 
                   type="submit"
                   disabled={!inputText.trim()}
-                  className="flex-shrink-0 bg-[#1b60bb] hover:bg-[#154b94] text-white p-1.5 md:p-2 rounded-full transition-colors disabled:opacity-50 disabled:hover:bg-[#1b60bb]"
+                  className="flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9 bg-[#1b60bb] hover:bg-[#154b94] text-white rounded-full transition-colors disabled:opacity-50 disabled:hover:bg-[#1b60bb] flex items-center justify-center"
                 >
-                  <Send size={16} className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                  <Send size={18} className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-white translate-x-[0.5px]" />
                 </button>
               </div>
             </form>
