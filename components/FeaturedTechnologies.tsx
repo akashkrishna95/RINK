@@ -41,7 +41,7 @@ export default function FeaturedTechnologies() {
               id: String(tech.technology_id),
               name: tech.technology_name || 'Untitled Technology',
               institution: tech.institution || 'N/A',
-              sector: tech.sector || 'N/A',
+              sector: tech.primary_sector || 'N/A',
               ipStatus: tech.patent_status || 'Not Specified',
               featured: tech.startup_potential === 'High',
               image: tech.image_url || '/images/placeholder-tech.jpg',

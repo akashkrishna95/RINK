@@ -67,7 +67,7 @@ export default function PremiumBrowseTechnologies() {
   const uniqueSectors = useMemo(() => {
     const sectors = new Set<string>();
     technologies.forEach((tech: any) => {
-      if (tech.sector) sectors.add(tech.sector.replace(/[\s\u00A0]+/g, ' ').trim());
+      if (tech.primary_sector) sectors.add(tech.primary_sector.replace(/[\s\u00A0]+/g, ' ').trim());
     });
     return Array.from(sectors).sort();
   }, [technologies]);
@@ -105,11 +105,11 @@ export default function PremiumBrowseTechnologies() {
         !searchQuery ||
         (tech.technology_name || '').toLowerCase().includes(searchLower) ||
         (tech.institution || '').toLowerCase().includes(searchLower) ||
-        (tech.sector || '').toLowerCase().includes(searchLower);
+        (tech.primary_sector || '').toLowerCase().includes(searchLower);
 
       const matchesSector =
         selectedFilters.sector.length === 0 ||
-        selectedFilters.sector.includes(tech.sector);
+        selectedFilters.sector.includes(tech.primary_sector);
 
       const matchesInstitution =
         selectedFilters.institution.length === 0 ||
@@ -413,7 +413,7 @@ export default function PremiumBrowseTechnologies() {
                       id={String(tech.technology_id)}
                       name={tech.technology_name || 'Untitled Technology'}
                       institution={tech.institution || 'N/A'}
-                      sector={tech.sector || 'N/A'}
+                      sector={tech.primary_sector || 'N/A'}
                       ipStatus={tech.patent_status || 'Not Specified'}
                       image={tech.image_url || '/images/placeholder-tech.jpg'}
                       featured={tech.startup_potential === 'High'}
@@ -435,7 +435,7 @@ export default function PremiumBrowseTechnologies() {
                       id={String(tech.technology_id)}
                       name={tech.technology_name || 'Untitled Technology'}
                       image={tech.image_url || '/images/placeholder-tech.jpg'}
-                      sector={tech.sector || 'N/A'}
+                      sector={tech.primary_sector || 'N/A'}
                       institution={tech.institution || 'N/A'}
                       ipStatus={tech.patent_status || 'Not Specified'}
                       description={tech.description || 'No description available'}
