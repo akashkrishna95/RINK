@@ -45,7 +45,7 @@ export default function RandDGrantPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative overflow-hidden"
+            className="relative"
           >
             {/* Main Image Grid */}
             <div className="grid grid-cols-2 gap-4">
