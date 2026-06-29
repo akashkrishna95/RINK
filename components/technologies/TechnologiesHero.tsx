@@ -54,7 +54,8 @@ export default function TechnologiesHero() {
       .filter((tech: any) => {
         const name = (tech.technology_name || '').toLowerCase();
         const sector = (tech.primary_sector || tech.sector || '').toLowerCase();
-        return name.includes(query) || sector.includes(query);
+        const desc = (tech.description || tech.brief_description_abstract || '').toLowerCase();
+        return name.includes(query) || sector.includes(query) || desc.includes(query);
       });
       
     setSuggestions(matches);
@@ -164,12 +165,15 @@ export default function TechnologiesHero() {
                     {suggestions.map((s, idx) => (
                       <Link 
                         key={idx}
-                        href={`/technologies/${s['unnamed:_0']}`}
+                        href={`/technologies/${s.technology_id || s['unnamed:_0']}`}
                         className="block px-6 py-4 hover:bg-[#eff9ff] transition-colors border-b border-gray-50"
                         onMouseDown={(e) => e.preventDefault()}
                       >
-                        <p className="font-poppins font-semibold text-gray-800 text-[15px] line-clamp-2">{s['unnamed:_1']}</p>
-                        <p className="font-poppins text-xs text-[#1b60bb] mt-1">{s['unnamed:_3']} • {s['unnamed:_2']}</p>
+                        <p className="font-poppins font-semibold text-gray-800 text-[15px] line-clamp-2">{s.technology_name || s['unnamed:_1']}</p>
+                        <p className="font-poppins text-xs text-gray-500 mt-1.5 line-clamp-2 md:line-clamp-3">
+                           {s.description || s.brief_description_abstract || s['unnamed:_4'] || 'No description available.'}
+                        </p>
+                        <p className="font-poppins text-xs text-[#1b60bb] mt-1.5">{s.institution || s['unnamed:_3']} • {s.sector || s['unnamed:_2']}</p>
                       </Link>
                     ))}
                   </div>

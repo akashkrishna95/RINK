@@ -10,12 +10,15 @@ interface Institute {
   logoUrl: string;
 }
 
-// 20 Mock items to demonstrate the "See More" logic
-const mockInstitutes: Institute[] = Array.from({ length: 20 }, (_, i) => ({
-  id: `${i + 1}`,
-  name: `Institute ${i + 1}`,
-  logoUrl: `https://via.placeholder.com/200x100?text=Logo+${i + 1}`,
-}));
+// 23 logos extracted from RINK KSUM partnered institutions
+const mockInstitutes: Institute[] = Array.from({ length: 23 }, (_, i) => {
+  const num = (i + 1).toString().padStart(3, '0');
+  return {
+    id: `${i + 1}`,
+    name: `Partner Institute ${i + 1}`,
+    logoUrl: `https://rink.startupmission.in/img/logo/logo-${num}.jpg`,
+  };
+});
 
 export default function PartnerInstitutes() {
   const [isExpanded, setIsExpanded] = useState(false);

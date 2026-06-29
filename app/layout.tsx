@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Poppins } from 'next/font/google'
 import localFont from 'next/font/local'
 import NextTopLoader from 'nextjs-toploader'
-import GlobalChatbot from '@/components/GlobalChatbot'
+import RomiChat from '@/components/RomiChat'
 import './globals.css'
 
 const poppins = Poppins({
@@ -56,7 +56,7 @@ export default function RootLayout({
       <body className="font-poppins antialiased" style={{ backgroundColor: '#F4F7FB' }}>
         <NextTopLoader color="#1b60bb" showSpinner={false} height={3} />
         {children}
-        <GlobalChatbot />
+        <RomiChat />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

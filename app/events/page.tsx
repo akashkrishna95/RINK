@@ -9,6 +9,7 @@ import { eventsData, RinkEvent } from '@/data/events';
 
 export default function EventsPage() {
   const [selectedEvent, setSelectedEvent] = useState<RinkEvent | null>(null);
+  const [galleryEvent, setGalleryEvent] = useState<RinkEvent | null>(null);
   const upcomingEvents = eventsData.filter(e => e.type === 'upcoming');
   const pastEvents = eventsData.filter(e => e.type === 'past');
 
@@ -105,7 +106,7 @@ export default function EventsPage() {
           <div className="h-px bg-slate-200 flex-grow rounded-full"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10 pb-8 md:pb-0 snap-x snap-mandatory hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
           {pastEvents.map((event, idx) => (
             <motion.div
               key={event.id}
@@ -114,7 +115,7 @@ export default function EventsPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               onClick={() => setSelectedEvent(event)}
-              className="group bg-white rounded-3xl overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col h-full cursor-pointer"
+              className="group bg-white rounded-3xl overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col h-full cursor-pointer min-w-[85vw] sm:min-w-[350px] md:min-w-0 md:w-full snap-center shrink-0"
             >
               {/* 4:5 Aspect Ratio Poster with Grayscale Effect */}
               <div className="relative w-full aspect-[4/5] overflow-hidden bg-slate-100">
@@ -231,7 +232,15 @@ export default function EventsPage() {
                       </a>
                     )}
                     
-                    {selectedEvent.galleryUrl && (
+                    {selectedEvent.galleryImages && selectedEvent.galleryImages.length > 0 ? (
+                      <button 
+                        onClick={() => setGalleryEvent(selectedEvent)}
+                        className="w-full py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-helios font-bold text-center transition-colors flex items-center justify-center gap-2 group/btn"
+                      >
+                        View Event Gallery
+                        <ImageIcon size={18} className="group-hover/btn:scale-110 transition-transform" />
+                      </button>
+                    ) : selectedEvent.galleryUrl ? (
                       <a 
                         href={selectedEvent.galleryUrl}
                         className="w-full py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-helios font-bold text-center transition-colors flex items-center justify-center gap-2 group/btn"
@@ -239,8 +248,65 @@ export default function EventsPage() {
                         View Event Gallery
                         <ImageIcon size={18} className="group-hover/btn:scale-110 transition-transform" />
                       </a>
-                    )}
+                    ) : null}
                   </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Gallery Modal */}
+      <AnimatePresence>
+        {galleryEvent && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-[#00050e] z-[110]"
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="fixed inset-0 z-[111] overflow-y-auto custom-scrollbar flex flex-col"
+            >
+              {/* Gallery Header */}
+              <div className="sticky top-0 bg-[#00050e]/80 backdrop-blur-xl p-4 md:p-6 flex items-center justify-between z-10 border-b border-white/10">
+                <div>
+                  <h2 className="text-white font-helios text-2xl md:text-3xl font-bold">{galleryEvent.title}</h2>
+                  <p className="text-white/60 font-poppins text-sm mt-1">{galleryEvent.galleryImages?.length} Photos</p>
+                </div>
+                <button 
+                  onClick={() => setGalleryEvent(null)}
+                  className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors backdrop-blur-md"
+                >
+                  <X size={24} className="text-white" />
+                </button>
+              </div>
+
+              {/* Masonry Gallery Grid */}
+              <div className="p-4 md:p-8 max-w-[1600px] mx-auto w-full flex-grow">
+                <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 md:gap-6 space-y-4 md:space-y-6">
+                  {galleryEvent.galleryImages?.map((imgUrl, i) => (
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: i * 0.05 }}
+                      key={i} 
+                      className="break-inside-avoid group relative rounded-2xl overflow-hidden bg-white/5 cursor-pointer"
+                    >
+                      <img 
+                        src={imgUrl} 
+                        alt={`${galleryEvent.title} photo ${i + 1}`} 
+                        loading="lazy"
+                        className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
             </motion.div>
@@ -265,6 +331,13 @@ export default function EventsPage() {
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: rgba(27, 96, 187, 0.6);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}} />
     </main>

@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, Phone, ChevronRight, Mail } from 'lucide-react';
 
+import { usePathname } from 'next/navigation';
+
 const cn = (...classes: (string | undefined | null | false)[]) =>
   classes.filter(Boolean).join(' ');
 
@@ -16,16 +18,26 @@ const LinkedinIcon = ({ className }: { className?: string }) => (
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
   }, [isMobileMenuOpen]);
 
-  const navLinks = [
+  const baseNavLinks = [
     { href: '/', label: 'Home' },
     { href: '/events', label: 'Events' },
     { href: '/about#contact', label: 'Contact Us' },
   ];
+
+  const extraLinks = [
+    { href: '/technologies', label: 'Technologies' },
+    { href: '/instrumentation', label: 'Instrumentation' },
+  ];
+
+  const navLinks = pathname === '/' 
+    ? baseNavLinks 
+    : [baseNavLinks[0], ...extraLinks, baseNavLinks[1], baseNavLinks[2]];
 
   return (
     <>

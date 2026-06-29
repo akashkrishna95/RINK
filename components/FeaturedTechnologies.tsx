@@ -25,14 +25,16 @@ export default function FeaturedTechnologies() {
 
   useEffect(() => {
     setIsMounted(true);
-    
+
     async function fetchTechs() {
       try {
         const res = await fetch('/api/technologies');
         const json = await res.json();
         if (json.success && json.technologies) {
           let rawData = json.technologies;
-          if (rawData['MAIN SHEET']) {
+          if (rawData['MAIN_SHEET']) {
+            rawData = rawData['MAIN_SHEET'];
+          } else if (rawData['MAIN SHEET']) {
             rawData = rawData['MAIN SHEET'];
           }
           const processedTechs: Technology[] = (rawData || [])
