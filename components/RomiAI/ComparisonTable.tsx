@@ -1,29 +1,31 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\components\RomiAI\ComparisonTable.tsx
+
 'use client';
 
-import React from 'react';
+import { ReactNode } from 'react';
 
-export function TableHead({ children }: { children: React.ReactNode }) {
-  return <thead className="bg-[#f8fafc] text-gray-700 font-helios font-bold border-b border-gray-200">{children}</thead>;
-}
-
-export function TableRow({ children }: { children: React.ReactNode }) {
-  return <tr className="border-b border-gray-100 hover:bg-slate-50/50 transition-colors last:border-0">{children}</tr>;
-}
-
-export function TableHeaderCell({ children }: { children: React.ReactNode }) {
-  return <th className="px-3 py-2.5 text-[11px] font-bold text-gray-600 uppercase tracking-wider text-left">{children}</th>;
-}
-
-export function TableCell({ children }: { children: React.ReactNode }) {
-  return <td className="px-3 py-2.5 text-[11px] text-gray-600 leading-normal font-poppins align-top">{children}</td>;
-}
-
-export default function ComparisonTable({ children }: { children: React.ReactNode }) {
+export default function ComparisonTable({ children }: { children: ReactNode }) {
   return (
-    <div className="w-full overflow-x-auto my-3 border border-gray-200 rounded-xl bg-white shadow-sm scrollbar-thin">
-      <table className="w-full text-left border-collapse text-[11px]">
+    <div className="w-full my-4 overflow-x-auto border border-gray-200 rounded-xl shadow-sm bg-white">
+      <table className="w-full text-left border-collapse font-poppins text-xs text-gray-700 min-w-[500px]">
         {children}
       </table>
     </div>
   );
+}
+
+export function TableHead({ children }: { children: ReactNode }) {
+  return <thead className="bg-gradient-to-r from-gray-50 to-slate-100 text-gray-900 border-b border-gray-200 font-semibold">{children}</thead>;
+}
+
+export function TableRow({ children }: { children: ReactNode }) {
+  return <tr className="border-b border-gray-100 last:border-b-0 hover:bg-slate-50/50 transition-colors">{children}</tr>;
+}
+
+export function TableHeaderCell({ children }: { children: ReactNode }) {
+  return <th className="p-3 font-semibold text-[#1b60bb] border-r border-gray-200/60 last:border-r-0">{children}</th>;
+}
+
+export function TableCell({ children }: { children: ReactNode }) {
+  return <td className="p-3 border-r border-gray-100 last:border-r-0 max-w-[200px] leading-relaxed vertical-top">{children}</td>;
 }

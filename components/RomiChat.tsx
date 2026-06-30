@@ -1,3 +1,5 @@
+// C:\Users\Akash Krishna\Downloads\RINK KSUM Website\components\RomiChat.tsx
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -10,11 +12,22 @@ import MiniCard from './RomiAI/MiniCard';
 interface Technology {
   technology_id: string;
   technology_name: string;
+  institution: string;
   primary_sector: string;
-  brief_description_abstract: string;
-  relevance_score: number;
+  secondary_sector?: string;
+  technology_type?: string;
+  problem_solved?: string;
+  brief_description_abstract: string; // Filled with normalized full description text
+  applications?: string;
+  trl: string;
+  startup_potential: string;
+  patent_status: string;
+  contact_person?: string;
+  email?: string;
+  source_pdf?: string;
+  page_no?: string;
+  keywords?: string;
   image_url?: string;
-  institution?: string;
 }
 
 interface Message {
@@ -65,7 +78,15 @@ export default function RomiChat() {
       const response = await fetch("http://127.0.0.1:8000/api/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: queryText, limit: 20 }),
+        body: JSON.stringify({ 
+          query: queryText, 
+          limit: 20,
+          // THIS IS THE NEW PART: Passing conversation history for context!
+          history: messages.slice(-6).map(m => ({
+            role: m.sender === 'user' ? 'user' : 'assistant',
+            content: m.text
+          }))
+        }),
       }).catch(() => null);
 
       if (!response) {

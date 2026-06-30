@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight, Building2, CircleCheckBig } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { formatTechnologyName } from '@/lib/utils';
 
 export interface TechnologyListCardProps {
   id: string;
@@ -114,7 +115,7 @@ export default function TechnologyListCard({
 
               {/* Title */}
               <h3 className="font-helios text-lg sm:text-[22px] leading-tight font-medium text-[#1b60bb] line-clamp-2 mb-3">
-                {name}
+                {formatTechnologyName(name)}
               </h3>
 
               {/* Institution & Sector Pills */}
@@ -150,12 +151,12 @@ export default function TechnologyListCard({
                 </span>
               </div>
 
-              <button
+              <div
                 className="bg-[#005bb5] hover:bg-[#004a94] text-white px-4 py-1.5 rounded flex items-center justify-center gap-1.5 transition-colors"
               >
                 <span className="font-poppins text-xs font-semibold">View Details</span>
                 <ArrowUpRight size={16} />
-              </button>
+              </div>
             </div>
 
           </div>

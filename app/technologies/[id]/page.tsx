@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import TechnologiesNavbar from '@/components/technologies/TechnologiesNavbar';
-import PremiumTechnologyDetails from '@/components/technologies/PremiumTechnologyDetails';
+import TechnologyDetails from '@/components/technologies/TechnologyDetails';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export default async function TechnologyPage({ params }: { params: Promise<{ id:
   return (
     <main>
       <TechnologiesNavbar />
-      <PremiumTechnologyDetails id={id} />
+      <TechnologyDetails id={id} />
       <Footer />
     </main>
   );

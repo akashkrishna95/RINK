@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight, CircleCheckBig, Building2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { formatTechnologyName } from '@/lib/utils';
 
 export interface TechnologyCardProps {
   id: string;
@@ -14,6 +15,7 @@ export interface TechnologyCardProps {
   institution: string;
   ipStatus: 'Patented' | 'Patent Filed' | 'Not Specified';
   featured: boolean;
+  description?: string;
 }
 
 export default function TechnologyCard({
@@ -24,6 +26,7 @@ export default function TechnologyCard({
   institution,
   ipStatus,
   featured,
+  description,
 }: TechnologyCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -57,7 +60,7 @@ export default function TechnologyCard({
         willChange: 'transform',
         zIndex: isHovered ? 50 : 0,
       }}
-      className="w-full relative"
+      className="w-full h-full relative"
     >
       <Link href={`/technologies/${id}`} className="block h-full outline-none">
         <motion.div
@@ -104,7 +107,7 @@ export default function TechnologyCard({
           {/* Content Container */}
           <div className="flex-1 p-3 sm:p-4 md:p-5 flex flex-col bg-white">
             <h3 className="font-helios font-normal text-[14px] sm:text-[15px] md:text-[16px] text-[#1b60bb] mb-2 leading-tight line-clamp-2 min-h-[2rem]">
-              {name}
+              {formatTechnologyName(name)}
             </h3>
 
             {/* Institution Label */}
@@ -115,8 +118,15 @@ export default function TechnologyCard({
               </span>
             </div>
 
+            {/* Short Description */}
+            {description && (
+              <p className="font-poppins text-[10px] sm:text-[11px] text-gray-500 line-clamp-2 mb-3 leading-relaxed">
+                {description.length > 100 ? `${description.substring(0, 97)}...` : description}
+              </p>
+            )}
+
             {/* Footer Section: IP Status & Button */}
-            <div className="mt-auto flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 border-t border-gray-100 pt-3">
+            <div className="mt-auto flex items-end justify-between gap-2 border-t border-gray-100 pt-3">
               <div className="flex flex-col">
                 <span className="font-avenir text-[9px] sm:text-[10px] text-gray-500 mb-0.5">
                   IP Status
@@ -130,14 +140,14 @@ export default function TechnologyCard({
                 </span>
               </div>
 
-              <button className="group/btn bg-[#1b60bb] hover:bg-[#153156] text-white px-3 py-1 sm:py-1.5 md:py-2 rounded-lg font-avenir font-semibold text-[10px] sm:text-[11px] md:text-xs flex items-center gap-1 shadow-sm transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-md whitespace-nowrap">
+              <div className="group/btn bg-[#1b60bb] hover:bg-[#153156] text-white px-3 py-1.5 rounded-lg font-avenir font-semibold text-[10px] sm:text-[11px] md:text-xs flex items-center gap-1 shadow-sm transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-md whitespace-nowrap">
                 View Details
                 <ArrowUpRight
                   size={12}
                   strokeWidth={2.5}
                   className="transition-transform duration-700 ease-out group-hover/btn:translate-x-[2px] group-hover/btn:-translate-y-[2px]"
                 />
-              </button>
+              </div>
             </div>
           </div>
         </motion.div>

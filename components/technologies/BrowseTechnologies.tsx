@@ -4,9 +4,10 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Grid3x3, List, Filter, X } from 'lucide-react';
-import PremiumTechnologyCard from './PremiumTechnologyCard';
-import PremiumTechnologyListCard from './PremiumTechnologyListCard';
+import TechnologyCard from './TechnologyCard';
+import TechnologyListCard from './TechnologyListCard';
 import FilterDrawer from './FilterDrawer';
+import { normalizeIPStatus, isFeaturedTechnology } from '@/lib/utils';
 
 const INSTITUTION_MAP: { [key: string]: string } = {
   'csir-niist': 'CSIR-National Institute for Interdisciplinary Science and Technology (NIIST)',
@@ -35,7 +36,7 @@ const normalizeTechType = (type: string) => {
   return cleanType.length > 0 ? cleanType : type;
 };
 
-export default function PremiumBrowseTechnologies() {
+export default function BrowseTechnologies() {
   const searchParams = useSearchParams();
   const [layoutView, setLayoutView] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
@@ -56,7 +57,12 @@ export default function PremiumBrowseTechnologies() {
   useEffect(() => {
     const sectorParam = searchParams.get('sector');
     const instParam = searchParams.get('institution');
+    const searchParam = searchParams.get('search');
     
+    if (searchParam) {
+      setSearchQuery(decodeURIComponent(searchParam));
+    }
+
     setSelectedFilters((prev) => {
       const updated = { ...prev };
       if (sectorParam) {
@@ -126,14 +132,8 @@ export default function PremiumBrowseTechnologies() {
   }, [technologies]);
 
   const filteredTechnologies = useMemo(() => {
-    return technologies.filter((tech: any) => {
-      const searchLower = searchQuery.toLowerCase();
-      const matchesSearch =
-        !searchQuery ||
-        (tech.technology_name || '').toLowerCase().includes(searchLower) ||
-        (tech.institution || '').toLowerCase().includes(searchLower) ||
-        (tech.primary_sector || tech.sector || '').toLowerCase().includes(searchLower);
-
+    // 1. First, apply strict filters (checkboxes)
+    const results = technologies.filter((tech: any) => {
       const matchesSector =
         selectedFilters.sector.length === 0 ||
         selectedFilters.sector.includes(tech.primary_sector || tech.sector);
@@ -144,7 +144,7 @@ export default function PremiumBrowseTechnologies() {
 
       const matchesIPStatus =
         selectedFilters.ipStatus.length === 0 ||
-        selectedFilters.ipStatus.includes(tech.patent_status || 'Not Specified');
+        selectedFilters.ipStatus.includes(normalizeIPStatus(tech.patent_status));
 
       const matchesTechType =
         selectedFilters.techType.length === 0 ||
@@ -155,10 +155,107 @@ export default function PremiumBrowseTechnologies() {
 
       const matchesFeatured =
         selectedFilters.featured.length === 0 ||
-        (selectedFilters.featured.includes('Featured Only') && tech.startup_potential === 'High');
+        selectedFilters.featured.includes('all') ||
+        (selectedFilters.featured.includes('featured') && isFeaturedTechnology(tech.startup_potential)) ||
+        (selectedFilters.featured.includes('non-featured') && !isFeaturedTechnology(tech.startup_potential));
 
-      return matchesSearch && matchesSector && matchesInstitution && matchesIPStatus && matchesTechType && matchesFeatured;
+      return matchesSector && matchesInstitution && matchesIPStatus && matchesTechType && matchesFeatured;
     });
+
+    // 2. If no search query, return the filtered array directly
+    if (!searchQuery || !searchQuery.trim()) {
+      return results;
+    }
+
+    // 3. AI-like weighting based on search query (scoring each matched tech)
+    const rawSearchLower = searchQuery.toLowerCase().trim();
+    
+    // Naive stemming / alias replacement for common terms
+    const searchLower = rawSearchLower
+      .replace(/\bpatented\b/g, 'patent')
+      .replace(/\btechnologies\b/g, 'technology');
+
+    const searchWords = searchLower.split(/\s+/).filter(w => w.length > 1); // Only match words length > 1
+
+    const scoredResults = results.map((tech: any) => {
+      let score = 0;
+
+      const techName = (tech.technology_name || '').toLowerCase();
+      const institution = (tech.institution || '').toLowerCase();
+      const sector = (tech.primary_sector || tech.sector || '').toLowerCase();
+      const techType = (tech.technology_type || '').toLowerCase();
+      const description = (tech.problem_being_solved || '').toLowerCase();
+      const application = (tech.application_industry || '').toLowerCase();
+      
+      const ipStatus = (tech.patent_status || tech.ip_status || '').toLowerCase();
+      const startupPotential = (tech.startup_potential || '').toLowerCase();
+      const trlLevel = (tech.trl_level || tech.technology_readiness_level || '').toLowerCase();
+      const isFeatured = startupPotential === 'high';
+
+      // Catch-all safety net: scans EVERY field available in the database for this technology
+      const allText = Object.values(tech)
+        .map(v => (typeof v === 'string' ? v.toLowerCase() : ''))
+        .join(' ');
+
+      // Exact match heuristics (High Scores)
+      if (techName === searchLower || techName === rawSearchLower) score += 10;
+      if (institution === searchLower || institution === rawSearchLower) score += 8;
+      if (sector === searchLower || sector === rawSearchLower) score += 8;
+      if (ipStatus === searchLower || ipStatus === rawSearchLower) score += 5;
+      
+      // Feature / Top Tech Overrides
+      const isFeaturedQuery = searchLower.includes('feature') || searchLower.includes('top tech');
+      if (isFeaturedQuery && isFeatured) {
+        score += 15; // Massive boost to float featured tech to the very top
+      }
+
+      // Full phrase inclusion
+      if (techName.includes(searchLower) || techName.includes(rawSearchLower)) score += 5;
+      if (institution.includes(searchLower) || institution.includes(rawSearchLower)) score += 4;
+      if (sector.includes(searchLower) || sector.includes(rawSearchLower)) score += 4;
+      if (techType.includes(searchLower) || techType.includes(rawSearchLower)) score += 3;
+
+      // Word-by-word tokenized search
+      searchWords.forEach((word) => {
+        // Hierarchy of matches: Title > Institution/Sector > TechType > Descriptions > Meta > Catch-all
+        if (techName.includes(word)) {
+          // Extra weight for starting with the word
+          if (techName.startsWith(word) || techName.includes(` ${word}`)) score += 3;
+          else score += 1.5;
+        }
+        
+        if (institution.includes(word)) {
+          if (institution.startsWith(word) || institution.includes(` ${word}`)) score += 2.5;
+          else score += 1;
+        }
+
+        if (sector.includes(word)) {
+          if (sector.startsWith(word) || sector.includes(` ${word}`)) score += 2.5;
+          else score += 1;
+        }
+
+        if (techType.includes(word)) score += 2;
+        
+        if (application.includes(word)) score += 1;
+        if (description.includes(word)) score += 1;
+
+        // Metadata Fields
+        if (ipStatus.includes(word)) score += 1.5;
+        if (trlLevel.includes(word)) score += 1.5;
+        if (startupPotential.includes(word) || (word === 'featured' && isFeatured)) score += 2;
+
+        // Catch-all safety net (scans EVERYTHING in the database row)
+        if (allText.includes(word)) score += 0.3;
+      });
+
+      return { tech, score };
+    });
+
+    // 4. Filter by threshold (accuracy threshold > 0.25) and Sort by score descending
+    return scoredResults
+      .filter(item => item.score >= 0.25)
+      .sort((a, b) => b.score - a.score)
+      .map(item => item.tech);
   }, [searchQuery, selectedFilters, technologies]);
 
   const totalPages = Math.ceil(filteredTechnologies.length / ITEMS_PER_PAGE);
@@ -183,10 +280,18 @@ export default function PremiumBrowseTechnologies() {
   const handleFilterChange = (key: string, value: string) => {
     setSelectedFilters((prev) => {
       const updated = { ...prev };
-      if ((updated as any)[key].includes(value)) {
-        (updated as any)[key] = (updated as any)[key].filter((v: string) => v !== value);
+      if (key === 'ipStatus' || key === 'featured') {
+        if ((updated as any)[key].includes(value)) {
+          (updated as any)[key] = [];
+        } else {
+          (updated as any)[key] = [value];
+        }
       } else {
-        (updated as any)[key] = [...(updated as any)[key], value];
+        if ((updated as any)[key].includes(value)) {
+          (updated as any)[key] = (updated as any)[key].filter((v: string) => v !== value);
+        } else {
+          (updated as any)[key] = [...(updated as any)[key], value];
+        }
       }
       return updated;
     });
@@ -435,15 +540,16 @@ export default function PremiumBrowseTechnologies() {
               >
                 <AnimatePresence>
                   {paginatedTechnologies.map((tech: any) => (
-                    <PremiumTechnologyCard
+                    <TechnologyCard
                       key={tech.technology_id}
                       id={String(tech.technology_id)}
                       name={tech.technology_name || 'Untitled Technology'}
                       institution={tech.institution || 'N/A'}
                       sector={tech.primary_sector || tech.sector || 'N/A'}
-                      ipStatus={tech.patent_status || 'Not Specified'}
-                      image={tech.image_url || '/images/placeholder-tech.jpg'}
-                      featured={tech.startup_potential === 'High'}
+                      ipStatus={normalizeIPStatus(tech.patent_status)}
+                      image={tech.image_url || '/placeholder.jpg'}
+                      featured={isFeaturedTechnology(tech.startup_potential)}
+                      description={tech.description || tech.brief_description_abstract || tech.problem_solved || ''}
                     />
                   ))}
                 </AnimatePresence>
@@ -457,16 +563,16 @@ export default function PremiumBrowseTechnologies() {
               >
                 <AnimatePresence>
                   {paginatedTechnologies.map((tech: any) => (
-                    <PremiumTechnologyListCard
+                    <TechnologyListCard
                       key={tech.technology_id}
                       id={String(tech.technology_id)}
                       name={tech.technology_name || 'Untitled Technology'}
-                      image={tech.image_url || '/images/placeholder-tech.jpg'}
+                      image={tech.image_url || '/placeholder.jpg'}
                       sector={tech.primary_sector || tech.sector || 'N/A'}
                       institution={tech.institution || 'N/A'}
-                      ipStatus={tech.patent_status || 'Not Specified'}
+                      ipStatus={normalizeIPStatus(tech.patent_status)}
                       description={tech.description || 'No description available'}
-                      featured={tech.startup_potential === 'High'}
+                      featured={isFeaturedTechnology(tech.startup_potential)}
                     />
                   ))}
                 </AnimatePresence>

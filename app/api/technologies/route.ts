@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-// Three dots takes us exactly from route.ts -> technologies -> api -> app -> root!
-import technologiesData from '../../../data/technologies.json';
+// Three dots perfectly links this file to your root data folder
+import technologiesData from '../../../data/technologies.json'; 
 
 export async function GET() {
   try {
-    return NextResponse.json({
-      success: true,
+    return NextResponse.json({ 
+      success: true, 
       count: technologiesData.length,
-      technologies: technologiesData
+      technologies: technologiesData 
     });
   } catch (error) {
     console.error("API Error:", error);

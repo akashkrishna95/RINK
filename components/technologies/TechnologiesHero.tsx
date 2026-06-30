@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { formatTechnologyName } from '@/lib/utils';
 
 const placeholders = [
   'Best Technologies in agritech for my startup...',
@@ -17,7 +18,7 @@ const placeholders = [
 export default function TechnologiesHero() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
-  const [stats, setStats] = useState({ techs: 0, institutions: 0, funds: 0 });
+  const [stats, setStats] = useState({ techs: 0, domains: 0, institutions: 0 });
   const [isFocused, setIsFocused] = useState(false);
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [technologies, setTechnologies] = useState<any[]>([]);
@@ -49,14 +50,64 @@ export default function TechnologiesHero() {
       return;
     }
     
-    const query = searchQuery.toLowerCase();
-    const matches = technologies
-      .filter((tech: any) => {
-        const name = (tech.technology_name || '').toLowerCase();
-        const sector = (tech.primary_sector || tech.sector || '').toLowerCase();
-        const desc = (tech.description || tech.brief_description_abstract || '').toLowerCase();
-        return name.includes(query) || sector.includes(query) || desc.includes(query);
+    const rawSearchLower = searchQuery.toLowerCase().trim();
+    const searchLower = rawSearchLower
+      .replace(/\bpatented\b/g, 'patent')
+      .replace(/\btechnologies\b/g, 'technology');
+    
+    const searchWords = searchLower.split(/\s+/).filter(w => w.length > 1);
+
+    const scoredResults = technologies.map((tech: any) => {
+      let score = 0;
+      const techName = (tech.technology_name || '').toLowerCase();
+      const institution = (tech.institution || '').toLowerCase();
+      const sector = (tech.primary_sector || tech.sector || '').toLowerCase();
+      const techType = (tech.technology_type || '').toLowerCase();
+      const description = (tech.problem_being_solved || tech.description || tech.brief_description_abstract || '').toLowerCase();
+      const application = (tech.application_industry || '').toLowerCase();
+      const ipStatus = (tech.patent_status || tech.ip_status || '').toLowerCase();
+      const startupPotential = (tech.startup_potential || '').toLowerCase();
+      const trlLevel = (tech.trl_level || tech.technology_readiness_level || '').toLowerCase();
+      const isFeatured = startupPotential === 'high';
+
+      const allText = Object.values(tech).map(v => (typeof v === 'string' ? v.toLowerCase() : '')).join(' ');
+
+      if (techName === searchLower || techName === rawSearchLower) score += 10;
+      if (institution === searchLower || institution === rawSearchLower) score += 8;
+      if (sector === searchLower || sector === rawSearchLower) score += 8;
+      if (ipStatus === searchLower || ipStatus === rawSearchLower) score += 5;
+
+      const isFeaturedQuery = searchLower.includes('feature') || searchLower.includes('top tech');
+      if (isFeaturedQuery && isFeatured) {
+        score += 15;
+      }
+
+      if (techName.includes(searchLower) || techName.includes(rawSearchLower)) score += 5;
+      if (institution.includes(searchLower) || institution.includes(rawSearchLower)) score += 4;
+      if (sector.includes(searchLower) || sector.includes(rawSearchLower)) score += 4;
+      if (techType.includes(searchLower) || techType.includes(rawSearchLower)) score += 3;
+
+      searchWords.forEach((word) => {
+        if (techName.includes(word)) score += (techName.startsWith(word) || techName.includes(` ${word}`)) ? 3 : 1.5;
+        if (institution.includes(word)) score += (institution.startsWith(word) || institution.includes(` ${word}`)) ? 2.5 : 1;
+        if (sector.includes(word)) score += (sector.startsWith(word) || sector.includes(` ${word}`)) ? 2.5 : 1;
+        if (techType.includes(word)) score += 2;
+        if (application.includes(word)) score += 1;
+        if (description.includes(word)) score += 1;
+        if (ipStatus.includes(word)) score += 1.5;
+        if (trlLevel.includes(word)) score += 1.5;
+        if (startupPotential.includes(word) || (word === 'featured' && isFeatured)) score += 2;
+        if (allText.includes(word)) score += 0.3;
       });
+
+      return { tech, score };
+    });
+
+    const matches = scoredResults
+      .filter(item => item.score >= 0.25)
+      .sort((a, b) => b.score - a.score)
+      .map(item => item.tech)
+      .slice(0, 5); // Max 5 suggestions in dropdown
       
     setSuggestions(matches);
   }, [searchQuery, technologies]);
@@ -71,11 +122,11 @@ export default function TechnologiesHero() {
   useEffect(() => {
     const counters = setInterval(() => {
       setStats((prev) => ({
-        techs: Math.min(prev.techs + 10, 150),
-        institutions: Math.min(prev.institutions + 5, 100),
-        funds: Math.min(prev.funds + 10, 150),
+        techs: Math.min(prev.techs + 15, 270),
+        domains: Math.min(prev.domains + 1, 11),
+        institutions: Math.min(prev.institutions + 2, 20),
       }));
-    }, 50);
+    }, 40);
     return () => clearInterval(counters);
   }, []);
 
@@ -96,16 +147,20 @@ export default function TechnologiesHero() {
           <div className="absolute inset-0 bg-gradient-to-tr from-[#0060b8]/40 via-transparent to-[#011a38]/60"></div>
         </div>
 
-        <div className="w-full max-w-4xl mx-auto px-4 py-24 md:py-40 text-center relative z-10">
+        <div className="w-full max-w-4xl mx-auto px-4 py-20 md:py-28 text-center relative z-10">
           {/* Main Content */}
-          <div className="mb-10 md:mb-14">
-            <h1 className="font-helios text-4xl md:text-6xl lg:text-[64px] font-black text-white mb-6 leading-tight tracking-tight">
-              Discover. License. Scale.
-            </h1>
-            <p className="font-poppins text-lg md:text-[22px] text-white/90">
-              Where breakthrough research meets{' '}
-              <span className="text-[#5cc4fe]">commercial scale</span>
+          <div className="mb-10 md:mb-12 flex flex-col items-center">
+            {/* Portal Tagline */}
+            <p className="font-avenir text-[10px] sm:text-xs md:text-sm uppercase tracking-[0.2em] text-slate-400 font-bold mb-4">
+              RESEARCH INNOVATION NETWORK KERALA • TECHNOLOGY TRANSFER PORTAL
             </p>
+            {/* Main Title */}
+            <h1 className="font-helios text-3xl sm:text-4xl md:text-6xl lg:text-[56px] font-black text-white leading-tight tracking-tight">
+              Discover Technologies from
+              <span className="text-xl sm:text-2xl md:text-4xl lg:text-[38px] font-extrabold text-white/80 block mt-2 md:mt-3">
+                Kerala's Leading Research Institutions
+              </span>
+            </h1>
           </div>
 
           {/* Search Bar */}
@@ -169,7 +224,7 @@ export default function TechnologiesHero() {
                         className="block px-6 py-4 hover:bg-[#eff9ff] transition-colors border-b border-gray-50"
                         onMouseDown={(e) => e.preventDefault()}
                       >
-                        <p className="font-poppins font-semibold text-gray-800 text-[15px] line-clamp-2">{s.technology_name || s['unnamed:_1']}</p>
+                        <p className="font-poppins font-semibold text-gray-800 text-[15px] line-clamp-2">{formatTechnologyName(s.technology_name || s['unnamed:_1'])}</p>
                         <p className="font-poppins text-xs text-gray-500 mt-1.5 line-clamp-2 md:line-clamp-3">
                            {s.description || s.brief_description_abstract || s['unnamed:_4'] || 'No description available.'}
                         </p>
@@ -193,13 +248,35 @@ export default function TechnologiesHero() {
             </AnimatePresence>
           </div>
 
-          {/* Stats Row Inline */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-white/90 font-poppins text-xs sm:text-sm md:text-[16px]">
-            <span>{stats.techs}+ Technologies</span>
-            <span className="text-white/50 text-[10px] mx-1 md:mx-2">•</span>
-            <span>{stats.institutions}+ Institutions</span>
-            <span className="text-white/50 text-[10px] mx-1 md:mx-2">•</span>
-            <span>₹{stats.funds}L+ Innovation Fund</span>
+          {/* Stats Row Cards (Liquid Glass Effect) */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 max-w-3xl mx-auto mt-6">
+            {/* Card 1 */}
+            <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl sm:rounded-2xl p-2 sm:p-4 md:p-5 shadow-[0_8px_32px_0_rgba(255,255,255,0.02)] hover:bg-white/15 hover:border-white/25 transition-all duration-300 flex flex-col justify-center">
+              <div className="font-helios text-lg sm:text-2xl md:text-3xl font-extrabold text-[#5cc4fe] mb-0.5 sm:mb-1">
+                {stats.techs}+
+              </div>
+              <div className="font-poppins text-[9px] sm:text-xs text-white/85 font-medium leading-tight">
+                Available Technologies
+              </div>
+            </div>
+            {/* Card 2 */}
+            <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl sm:rounded-2xl p-2 sm:p-4 md:p-5 shadow-[0_8px_32px_0_rgba(255,255,255,0.02)] hover:bg-white/15 hover:border-white/25 transition-all duration-300 flex flex-col justify-center">
+              <div className="font-helios text-lg sm:text-2xl md:text-3xl font-extrabold text-[#5cc4fe] mb-0.5 sm:mb-1">
+                {stats.domains}+
+              </div>
+              <div className="font-poppins text-[9px] sm:text-xs text-white/85 font-medium leading-tight">
+                Technology Domains
+              </div>
+            </div>
+            {/* Card 3 */}
+            <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl sm:rounded-2xl p-2 sm:p-4 md:p-5 shadow-[0_8px_32px_0_rgba(255,255,255,0.02)] hover:bg-white/15 hover:border-white/25 transition-all duration-300 flex flex-col justify-center">
+              <div className="font-helios text-lg sm:text-2xl md:text-3xl font-extrabold text-[#5cc4fe] mb-0.5 sm:mb-1">
+                {stats.institutions}+
+              </div>
+              <div className="font-poppins text-[9px] sm:text-xs text-white/85 font-medium leading-tight">
+                Research Institutions
+              </div>
+            </div>
           </div>
         </div>
       </div>

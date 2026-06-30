@@ -35,6 +35,7 @@ export default function TechnologiesNavbar() {
 
   const navLinks = [
     { href: '/', label: 'Home' },
+    { href: '/technologies', label: 'Technologies', isScroll: false },
     { href: '/technologies/institutions', label: 'Institutions', isScroll: false },
     { href: '/technologies/sectors', label: 'Sector', isScroll: false },
     { href: '/events', label: 'Events', isScroll: false },

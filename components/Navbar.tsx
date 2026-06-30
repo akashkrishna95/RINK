@@ -24,20 +24,13 @@ export default function Navbar() {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
   }, [isMobileMenuOpen]);
 
-  const baseNavLinks = [
+  const navLinks = [
     { href: '/', label: 'Home' },
+    { href: '/technologies', label: 'Technologies' },
+    { href: '/instrumentation', label: 'Instrumentation' },
     { href: '/events', label: 'Events' },
     { href: '/about#contact', label: 'Contact Us' },
   ];
-
-  const extraLinks = [
-    { href: '/technologies', label: 'Technologies' },
-    { href: '/instrumentation', label: 'Instrumentation' },
-  ];
-
-  const navLinks = pathname === '/' 
-    ? baseNavLinks 
-    : [baseNavLinks[0], ...extraLinks, baseNavLinks[1], baseNavLinks[2]];
 
   return (
     <>
