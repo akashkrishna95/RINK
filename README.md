@@ -1,6 +1,6 @@
 # RINK (Research Innovation Network Kerala) - Official Web Portal
 
-![RINK Banner](/public/images/kerala-map.png) 
+![RINK Banner](/public/images/rink-logo.png) 
 *(Note: Replace with actual project banner if available)*
 
 Welcome to the official repository for the **Research Innovation Network Kerala (RINK)** web portal. This platform is designed by the Kerala Startup Mission (KSUM) to bridge the gap between breakthrough laboratory research and commercial enterprise, empowering the research fraternity to build and scale deep-tech ventures.
