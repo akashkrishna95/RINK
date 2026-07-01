@@ -6,7 +6,7 @@ import { ArrowUp, Phone } from 'lucide-react';
 import Link from 'next/link';
 
 // Custom premium easing curve matching the reference design
-const easePremium = [0.16, 1, 0.3, 1];
+const easePremium = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
 export default function Footer() {
   const footerRef = useRef(null);

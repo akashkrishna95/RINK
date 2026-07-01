@@ -63,14 +63,12 @@ export default function TechnologyCard({
       className="w-full h-full relative"
     >
       <Link href={`/technologies/${id}`} className="block h-full outline-none">
-        <motion.div
-          className="bg-white rounded-2xl overflow-hidden h-full flex flex-col relative group border border-gray-100"
-          animate={{
-            boxShadow: isHovered
-              ? '0 25px 50px -12px rgba(27, 96, 187, 0.15)'
-              : '0 8px 16px -3px rgba(0, 0, 0, 0.08)',
-          }}
-          transition={{ duration: 0.4 }}
+        <div
+          className={`bg-white rounded-2xl overflow-hidden h-full flex flex-col relative group border border-gray-100 transition-all duration-300 ${
+            isHovered
+              ? 'shadow-[0_25px_50px_-12px_rgba(27,96,187,0.15)]'
+              : 'shadow-[0_8px_16px_-3px_rgba(0,0,0,0.08)]'
+          }`}
         >
           {/* Image Container */}
           <div className="p-2 md:p-2.5">
@@ -83,8 +81,8 @@ export default function TechnologyCard({
                 sizes="(max-width:768px) 260px, 320px"
               />
 
-              <div className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-sm rounded-full px-2.5 py-1 shadow-md z-20">
-                <span className="font-avenir text-[9px] md:text-[10px] font-semibold text-[#1b60bb] truncate max-w-[120px] inline-block">
+              <div className="absolute bottom-2 left-2 bg-white/95 backdrop-blur-sm rounded-full px-2.5 h-[22px] md:h-6 shadow-md z-20 flex items-center justify-center">
+                <span className="font-avenir text-[9px] md:text-[10px] font-semibold text-[#1b60bb] truncate max-w-[120px] leading-none select-none">
                   {sector}
                 </span>
               </div>
@@ -94,7 +92,7 @@ export default function TechnologyCard({
           {/* TOP TECH Ribbon */}
           {featured && (
             <div
-              className="absolute top-0 right-4 bg-[#f97316] shadow-md z-30 flex flex-col items-center pt-2 pb-4 px-2.5"
+              className="absolute -top-[2px] right-4 bg-[#f97316] shadow-md z-30 flex flex-col items-center pt-2 pb-4 px-2.5"
               style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)' }}
             >
               <CircleCheckBig size={18} className="text-white mb-0.5" strokeWidth={2.5} />
@@ -150,7 +148,7 @@ export default function TechnologyCard({
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </Link>
     </motion.div>
   );

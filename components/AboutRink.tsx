@@ -2,7 +2,7 @@
 
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { ArrowDownRight, ArrowUpRight, TrendingUp, UsersRound, FileBadge, Coins } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,7 +16,7 @@ export default function AboutRink() {
   ];
 
   // Uniform arrow animation for all "View More" buttons
-  const arrowAnimation = {
+  const arrowAnimation: Variants = {
     initial: { x: 0, y: 0 },
     hover: { x: 3, y: -3, transition: { duration: 0.2, ease: "easeOut" } }
   };

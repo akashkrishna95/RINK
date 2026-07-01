@@ -296,7 +296,8 @@ export default function IncubationPage() {
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, delay: 0.1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
             className="bg-white rounded-3xl p-8 md:p-12 shadow-md border border-slate-100"
           >
             <h2 className="font-helios text-3xl md:text-4xl font-bold text-[#1b60bb] mb-10 flex items-center gap-4">

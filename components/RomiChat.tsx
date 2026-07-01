@@ -75,11 +75,11 @@ export default function RomiChat() {
     }, 2000);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/search", {
+      const response = await fetch("http://localhost:8000/api/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          query: queryText, 
+        body: JSON.stringify({
+          query: queryText,
           limit: 20,
           // THIS IS THE NEW PART: Passing conversation history for context!
           history: messages.slice(-6).map(m => ({
@@ -175,48 +175,59 @@ export default function RomiChat() {
               <div className="absolute inset-0 z-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#1b60bb 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
 
               <div className="relative z-10 flex-1 flex flex-col justify-start space-y-4">
-                {messages.map((msg, index) => (
-                  <div key={index} className={`flex flex-col ${msg.sender === 'user' ? 'items-end self-end max-w-[85%]' : 'items-start self-start max-w-[90%] mt-2'}`}>
-                    <div className={`flex items-start gap-2.5 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                      {msg.sender === 'bot' && (
-                        <div className="w-8 h-8 overflow-visible flex-shrink-0 relative">
-                          <img src="/images/romi-avatar.png" alt="Romi" className="w-full h-full object-contain object-top" />
+                {messages.map((msg, index) => {
+                  const isUserMsg = msg.sender === 'user';
+                  const hasTable = msg.sender === 'bot' && msg.text.includes('|');
+                  return (
+                    <div
+                      key={index}
+                      className={`flex flex-col ${
+                        isUserMsg
+                          ? 'items-end self-end max-w-[85%]'
+                          : `items-start self-start ${hasTable ? 'w-full md:max-w-[98%] max-w-[92%]' : 'max-w-[90%]'} mt-2`
+                      }`}
+                    >
+                      <div className={`flex items-start gap-2.5 w-full ${isUserMsg ? 'flex-row-reverse' : ''}`}>
+                        {msg.sender === 'bot' && (
+                          <div className="w-8 h-8 overflow-visible flex-shrink-0 relative">
+                            <img src="/images/romi-avatar.png" alt="Romi" className="w-full h-full object-contain object-top" />
+                          </div>
+                        )}
+                        <ChatBubble
+                          sender={msg.sender}
+                          text={msg.text}
+                          isNew={msg.sender === 'bot' && index === messages.length - 1 && index > 0}
+                          onComplete={() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                        />
+                      </div>
+
+                      {/* RENDER THE RELEVANT MICRO-CARDS (Only under the very first welcome message) */}
+                      {msg.sender === 'bot' && index === 0 && messages.length === 1 && (
+                        <div className="grid grid-cols-2 gap-2 mt-4 ml-10 w-[calc(100%-40px)]">
+                          {microCards.map((card, cIdx) => (
+                            <button
+                              key={cIdx}
+                              onClick={() => executeSearch(card.query)}
+                              className="p-2.5 bg-white hover:bg-[#e1eaf4] border border-gray-200 text-left rounded-xl transition-all shadow-sm hover:border-[#1b60bb] cursor-pointer"
+                            >
+                              <p className="font-poppins font-medium text-[11px] text-[#1b60bb] leading-tight">{card.label}</p>
+                              <span className="text-[9px] text-gray-400 block mt-1 font-poppins">Tap to ask</span>
+                            </button>
+                          ))}
                         </div>
                       )}
-                      <ChatBubble
-                        sender={msg.sender}
-                        text={msg.text}
-                        isNew={msg.sender === 'bot' && index === messages.length - 1 && index > 0}
-                        onComplete={() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })}
-                      />
+
+                      {/* RENDER DYNAMIC MINI-CARDS FROM THE VECTOR RETRIEVAL STACK */}
+                      {msg.technologies && msg.technologies.length > 0 && (
+                        <div className="flex flex-col gap-3 mt-2 ml-10 w-[calc(100%-40px)]">
+                          {msg.technologies.map((tech) => (
+                            <MiniCard key={tech.technology_id} technology={tech} />
+                          ))}
+                        </div>
+                      )}
                     </div>
-
-                    {/* RENDER THE RELEVANT MICRO-CARDS (Only under the very first welcome message) */}
-                    {msg.sender === 'bot' && index === 0 && messages.length === 1 && (
-                      <div className="grid grid-cols-2 gap-2 mt-4 ml-10 w-[calc(100%-40px)]">
-                        {microCards.map((card, cIdx) => (
-                          <button
-                            key={cIdx}
-                            onClick={() => executeSearch(card.query)}
-                            className="p-2.5 bg-white hover:bg-[#e1eaf4] border border-gray-200 text-left rounded-xl transition-all shadow-sm hover:border-[#1b60bb] cursor-pointer"
-                          >
-                            <p className="font-poppins font-medium text-[11px] text-[#1b60bb] leading-tight">{card.label}</p>
-                            <span className="text-[9px] text-gray-400 block mt-1 font-poppins">Tap to ask</span>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* RENDER DYNAMIC MINI-CARDS FROM THE VECTOR RETRIEVAL STACK */}
-                    {msg.technologies && msg.technologies.length > 0 && (
-                      <div className="flex flex-col gap-3 mt-2 ml-10 w-[calc(100%-40px)]">
-                        {msg.technologies.map((tech) => (
-                          <MiniCard key={tech.technology_id} technology={tech} />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
 
                 {isTyping && (
                   <div className="flex items-start gap-2.5 max-w-[85%] self-start mt-2">

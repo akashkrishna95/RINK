@@ -113,17 +113,31 @@ export default function FeaturedTechnologies() {
     container.scrollLeft = container.scrollWidth / 3;
 
     let animationId: number;
-    const scroll = () => {
+    let currentScroll = container.scrollLeft;
+    let lastTime = performance.now();
+
+    const scroll = (now: number) => {
+      const deltaTime = now - lastTime;
+      lastTime = now;
+
+      // Handle cases where deltaTime is excessively large (e.g., background tab)
+      const clampedDelta = Math.min(deltaTime, 32); 
+
       if (!isInteracting.current) {
-        container.scrollLeft += 0.5; // Reduced speed from 1.2 to 0.5 for slower carousel
+        const speed = 0.12; // pixels per millisecond 
+        currentScroll += speed * clampedDelta;
 
         // Loop back seamlessly using direct calculation to avoid jumps
         const oneThird = container.scrollWidth / 3;
-        if (container.scrollLeft >= oneThird * 2) {
-          container.scrollLeft -= oneThird;
-        } else if (container.scrollLeft <= 0) {
-          container.scrollLeft += oneThird;
+        if (currentScroll >= oneThird * 2) {
+          currentScroll -= oneThird;
+        } else if (currentScroll <= 0) {
+          currentScroll += oneThird;
         }
+        container.scrollLeft = currentScroll;
+      } else {
+        // Sync float scroll value with actual DOM scrollLeft when user drags/interacts
+        currentScroll = container.scrollLeft;
       }
       animationId = requestAnimationFrame(scroll);
     };

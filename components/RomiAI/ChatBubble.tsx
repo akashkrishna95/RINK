@@ -38,13 +38,16 @@ export default function ChatBubble({ sender, text, isNew = false, onComplete }: 
   }, [text, sender, isNew]);
 
   const isUser = sender === 'user';
+  const hasTable = sender === 'bot' && text.includes('|');
 
   return (
     <div
-      className={`p-3.5 rounded-2xl shadow-sm leading-relaxed max-w-[85%] font-poppins text-[13px] ${
+      className={`p-3.5 rounded-2xl shadow-sm leading-relaxed font-poppins text-[13px] ${
         isUser
-          ? 'bg-gradient-to-r from-[#1b60bb] to-[#1872dd] text-white self-end rounded-tr-none'
-          : 'bg-[#f4f7fb] text-gray-800 self-start rounded-tl-none border border-[#e1eaf4]'
+          ? 'bg-gradient-to-r from-[#1b60bb] to-[#1872dd] text-white self-end rounded-tr-none max-w-[85%]'
+          : `bg-[#f4f7fb] text-gray-800 self-start rounded-tl-none border border-[#e1eaf4] ${
+              hasTable ? 'w-full md:max-w-[96%] max-w-[92%]' : 'max-w-[85%]'
+            }`
       }`}
     >
       {isUser ? (
