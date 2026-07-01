@@ -124,7 +124,7 @@ export default function FeaturedTechnologies() {
       const clampedDelta = Math.min(deltaTime, 32); 
 
       if (!isInteracting.current) {
-        const speed = 0.12; // pixels per millisecond 
+        const speed = 0.08; // pixels per millisecond 
         currentScroll += speed * clampedDelta;
 
         // Loop back seamlessly using direct calculation to avoid jumps
