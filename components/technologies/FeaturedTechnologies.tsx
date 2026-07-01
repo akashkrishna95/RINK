@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, CircleCheckBig, Building2 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
-import TechnologyCard from './TechnologyCard';
+import TechnologyCard from './technologies/TechnologyCard';
 import { normalizeIPStatus, isFeaturedTechnology } from '@/lib/utils';
 
 interface Technology {
@@ -39,15 +40,14 @@ export default function FeaturedTechnologies() {
           } else if (rawData['MAIN SHEET']) {
             rawData = rawData['MAIN SHEET'];
           }
-
           const uniqueMap = new Map<string, Technology>();
-
+          
           (rawData || []).forEach((tech: any) => {
             if (!tech.technology_id || tech.technology_id === 'technology_id') return;
-
+            
             const isFeatured = isFeaturedTechnology(tech.startup_potential);
             const isPatented = normalizeIPStatus(tech.patent_status) === 'Patented';
-
+            
             if (isFeatured || isPatented) {
               if (!uniqueMap.has(tech.technology_id)) {
                 uniqueMap.set(tech.technology_id, {
@@ -67,7 +67,7 @@ export default function FeaturedTechnologies() {
           const getSortScore = (tech: Technology) => {
             const hasImage = tech.image && !tech.image.includes('placeholder') && tech.image.trim() !== '';
             const isFeatured = tech.featured;
-
+            
             if (hasImage && isFeatured) return 3;
             if (hasImage) return 2;
             if (isFeatured) return 1;
@@ -124,7 +124,7 @@ export default function FeaturedTechnologies() {
       const clampedDelta = Math.min(deltaTime, 32); 
 
       if (!isInteracting.current) {
-        const speed = 0.03; // pixels per millisecond (approx 30px/sec)
+        const speed = 0.08; // pixels per millisecond 
         currentScroll += speed * clampedDelta;
 
         // Loop back seamlessly using direct calculation to avoid jumps
@@ -149,24 +149,38 @@ export default function FeaturedTechnologies() {
     };
   }, [isMounted, extendedTechnologies.length]);
 
+  const getIPStatusColor = (status: string) => {
+    switch (status) {
+      case 'Patented':
+        return 'text-[#1d984a]';
+      case 'Patent Filed':
+        return 'text-[#1b60bb]';
+      case 'Not Specified':
+        return 'text-[#ff3131]';
+      default:
+        return 'text-gray-500';
+    }
+  };
+
   if (!isMounted) return null;
 
   return (
     <div className="w-full relative">
 
       {/* Main Container Gradient */}
-      <div className="bg-gradient-to-b from-[#36a8fb] via-[#1b60bb] to-[#153156] relative pt-[180px] md:pt-[220px] pb-[200px] md:pb-[240px] overflow-hidden flex flex-col justify-center min-h-[650px] md:min-h-[750px]">
+      <div className="bg-gradient-to-b from-[#36a8fb] via-[#1b60bb] to-[#153156] relative pt-[100px] md:pt-[140px] pb-[160px] md:pb-[190px] overflow-hidden flex flex-col justify-center min-h-[620px] sm:min-h-[660px] md:min-h-[720px]">
 
         {/* Top Inverted Curve Mask with Title */}
         <div
-          className="absolute top-0 left-0 right-0 h-[140px] md:h-[180px] bg-[#F3F7FB] rounded-b-[3rem] md:rounded-b-[4rem] z-10 w-full flex items-center justify-center pt-4 shadow-sm"
+          className="absolute top-0 left-0 right-0 h-[85px] md:h-[120px] bg-[#eff9ff] rounded-b-[2rem] md:rounded-b-[3.5rem] z-10 w-full flex items-center justify-center pt-2 shadow-sm"
         >
-          <h2 className="font-helios font-black text-3xl md:text-[45px] lg:text-[50px] text-[#1b60bb] tracking-wide px-4 text-center leading-tight">
+          <h2 className="font-helios font-black text-2xl md:text-[34px] lg:text-[38px] text-[#1b60bb] tracking-wide px-4 text-center leading-tight">
             Explore Technologies
           </h2>
         </div>
 
         {/* Carousel Container */}
+        {/* Attached mouse/touch handlers to the parent to pause even when hovering the gaps */}
         <div
           className="w-full relative z-20"
           onMouseEnter={() => { isInteracting.current = true; }}
@@ -176,7 +190,7 @@ export default function FeaturedTechnologies() {
         >
           <div
             ref={containerRef}
-            className="flex gap-4 md:gap-6 overflow-x-auto pb-16 pt-8 px-[10vw] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] cursor-grab active:cursor-grabbing snap-y"
+            className="flex gap-4 md:gap-6 overflow-x-auto pb-8 pt-4 md:pb-12 md:pt-6 px-[10vw] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] cursor-grab active:cursor-grabbing snap-y"
             style={{ WebkitOverflowScrolling: 'touch' }}
           >
             {extendedTechnologies.map((tech, index) => {
@@ -190,13 +204,13 @@ export default function FeaturedTechnologies() {
                   onTouchStart={() => handleInteractionStart(uniqueId)}
                   className="flex-shrink-0 w-[240px] xs:w-[260px] sm:w-[280px] md:w-[320px] relative h-[360px] sm:h-[380px] md:h-[420px]"
                 >
-                  <TechnologyCard
+                  <TechnologyCard 
                     id={tech.id}
                     name={tech.name}
                     image={tech.image}
                     sector={tech.sector}
                     institution={tech.institution}
-                    ipStatus={tech.ipStatus}
+                    ipStatus={tech.ipStatus as any}
                     featured={tech.featured}
                     description={tech.description}
                   />
@@ -208,9 +222,9 @@ export default function FeaturedTechnologies() {
 
         {/* Bottom Inverted Curve Mask with Content */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-[160px] md:h-[200px] bg-[#ffffff] rounded-t-[3rem] md:rounded-t-[4rem] z-10 w-full flex flex-col items-center justify-center px-4"
+          className="absolute bottom-0 left-0 right-0 h-[150px] md:h-[180px] bg-[#eff9ff] rounded-t-[2rem] md:rounded-t-[3.5rem] z-10 w-full flex flex-col items-center justify-center px-4 pb-4"
         >
-          <h3 className="text-[#1b60bb] text-[18px] md:text-[24px] font-medium text-center mb-4 leading-snug">
+          <h3 className="text-[#1b60bb] text-[16px] md:text-[20px] font-medium text-center mb-3 leading-snug">
             Wanna Know What&apos;s New Technology<br className="hidden md:block" /> for your Startup?
           </h3>
           <Link href="/technologies/browse_technologies">
