@@ -53,6 +53,11 @@ export default function TechnologyListCard({
 
   const displayDescription = truncateDescription(description || '', 300);
 
+  // Proxy external images (e.g. drive.google.com) to bypass mobile user-agent blocking rules
+  const imageUrl = image.startsWith('http')
+    ? `/api/image-proxy?url=${encodeURIComponent(image)}`
+    : image;
+
   return (
     <motion.div
       onMouseEnter={() => setIsHovered(true)}
@@ -99,7 +104,7 @@ export default function TechnologyListCard({
           {/* Image Section */}
           <div className="w-full sm:w-56 sm:flex-shrink-0 relative h-48 sm:h-auto min-h-[160px]">
             <Image
-              src={image}
+              src={imageUrl}
               alt={name}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"

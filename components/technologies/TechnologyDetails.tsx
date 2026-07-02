@@ -168,7 +168,7 @@ export default function TechnologyDetails({ id }: TechnologyDetailsProps) {
               <div className="rounded-xl overflow-hidden border border-gray-200 shadow-md aspect-[16/9] w-full relative bg-gray-50 flex items-center justify-center">
                 {technology.image_url && technology.image_url.trim() !== '' ? (
                   <Image
-                    src={technology.image_url}
+                    src={technology.image_url.startsWith('http') ? `/api/image-proxy?url=${encodeURIComponent(technology.image_url)}` : technology.image_url}
                     alt={techName}
                     fill
                     className="object-cover"

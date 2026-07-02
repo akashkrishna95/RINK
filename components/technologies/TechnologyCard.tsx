@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { ArrowUpRight, CircleCheckBig, Building2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -28,8 +26,6 @@ export default function TechnologyCard({
   featured,
   description,
 }: TechnologyCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   const getIPStatusColor = (status: TechnologyCardProps['ipStatus']) => {
     switch (status) {
       case 'Patented':
@@ -43,38 +39,24 @@ export default function TechnologyCard({
     }
   };
 
+  // Proxy external images (e.g. drive.google.com) to bypass mobile user-agent blocking rules
+  const imageUrl = image.startsWith('http')
+    ? `/api/image-proxy?url=${encodeURIComponent(image)}`
+    : image;
+
   return (
-    <motion.div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onTouchStart={() => setIsHovered(true)}
-      onTouchEnd={() => setIsHovered(false)}
-      animate={{
-        y: isHovered ? -16 : 0,
-      }}
-      transition={{
-        duration: 0.4,
-        ease: [0.25, 0.1, 0.25, 1],
-      }}
-      style={{
-        willChange: 'transform',
-        zIndex: isHovered ? 50 : 0,
-      }}
-      className="w-full h-full relative"
+    <div
+      className="w-full h-full relative transition-transform duration-300 ease-out hover:-translate-y-4 hover:z-50 will-change-transform group"
     >
       <Link href={`/technologies/${id}`} className="block h-full outline-none">
         <div
-          className={`bg-white rounded-2xl overflow-hidden h-full flex flex-col relative group border border-gray-100 transition-all duration-300 ${
-            isHovered
-              ? 'shadow-[0_25px_50px_-12px_rgba(27,96,187,0.15)]'
-              : 'shadow-[0_8px_16px_-3px_rgba(0,0,0,0.08)]'
-          }`}
+          className="bg-white rounded-2xl overflow-hidden h-full flex flex-col relative border border-gray-100 shadow-[0_8px_16px_-3px_rgba(0,0,0,0.08)] group-hover:shadow-[0_25px_50px_-12px_rgba(27,96,187,0.15)] transition-shadow duration-300"
         >
           {/* Image Container */}
           <div className="p-2 md:p-2.5">
             <div className="relative h-[140px] sm:h-[150px] md:h-[180px] w-full overflow-hidden rounded-xl">
               <Image
-                src={image}
+                src={imageUrl}
                 alt={name}
                 fill
                 className="object-cover"
@@ -150,6 +132,6 @@ export default function TechnologyCard({
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }

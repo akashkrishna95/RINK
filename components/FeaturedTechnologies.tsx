@@ -20,9 +20,9 @@ interface Technology {
 }
 
 export default function FeaturedTechnologies() {
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isInteracting = useRef(false);
+  const isVisible = useRef(false);
   const [isMounted, setIsMounted] = useState(false);
   const [extendedTechnologies, setExtendedTechnologies] = useState<Technology[]>([]);
 
@@ -47,8 +47,11 @@ export default function FeaturedTechnologies() {
             
             const isFeatured = isFeaturedTechnology(tech.startup_potential);
             const isPatented = normalizeIPStatus(tech.patent_status) === 'Patented';
+            const hasTrl = tech.trl && tech.trl !== 'Not Specified' && tech.trl.trim() !== '';
+            const hasStartupPotential = tech.startup_potential && tech.startup_potential !== '⚪ Not Specified' && tech.startup_potential.trim() !== '';
             
-            if (isFeatured || isPatented) {
+            // Show only cards that are patented, have a TRL, have startup potential, or are featured (have badge)
+            if (isPatented || hasTrl || hasStartupPotential || isFeatured) {
               if (!uniqueMap.has(tech.technology_id)) {
                 uniqueMap.set(tech.technology_id, {
                   id: String(tech.technology_id),
@@ -91,16 +94,34 @@ export default function FeaturedTechnologies() {
     fetchTechs();
   }, []);
 
-  // Handler for pausing the entire carousel and optionally targeting a specific card
-  const handleInteractionStart = useCallback((cardUniqueId?: string) => {
+  // Monitor element intersection with viewport to pause when offscreen
+  useEffect(() => {
+    if (!isMounted) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible.current = entry.isIntersecting;
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isMounted]);
+
+  // Handler for pausing the entire carousel
+  const handleInteractionStart = useCallback(() => {
     isInteracting.current = true;
-    if (cardUniqueId) setHoveredCard(cardUniqueId);
   }, []);
 
   // Handler for resuming the animation immediately when interaction stops
   const handleInteractionEnd = useCallback(() => {
     isInteracting.current = false;
-    setHoveredCard(null);
   }, []);
 
   // Infinite Auto-Scroll Logic (Moves Right to Left automatically)
@@ -123,8 +144,8 @@ export default function FeaturedTechnologies() {
       // Handle cases where deltaTime is excessively large (e.g., background tab)
       const clampedDelta = Math.min(deltaTime, 32); 
 
-      if (!isInteracting.current) {
-        const speed = 0.08; // pixels per millisecond 
+      if (!isInteracting.current && isVisible.current) {
+        const speed = 0.10; // pixels per millisecond (speed set to 0.10)
         currentScroll += speed * clampedDelta;
 
         // Loop back seamlessly using direct calculation to avoid jumps
@@ -136,7 +157,7 @@ export default function FeaturedTechnologies() {
         }
         container.scrollLeft = currentScroll;
       } else {
-        // Sync float scroll value with actual DOM scrollLeft when user drags/interacts
+        // Sync float scroll value with actual DOM scrollLeft when user drags/interacts or offscreen
         currentScroll = container.scrollLeft;
       }
       animationId = requestAnimationFrame(scroll);
@@ -168,13 +189,13 @@ export default function FeaturedTechnologies() {
     <div className="w-full relative">
 
       {/* Main Container Gradient */}
-      <div className="bg-gradient-to-b from-[#36a8fb] via-[#1b60bb] to-[#153156] relative pt-[100px] md:pt-[140px] pb-[160px] md:pb-[190px] overflow-hidden flex flex-col justify-center min-h-[620px] sm:min-h-[660px] md:min-h-[720px]">
+      <div className="bg-gradient-to-b from-[#36a8fb] via-[#1b60bb] to-[#153156] relative pt-[180px] md:pt-[220px] pb-[200px] md:pb-[240px] overflow-hidden flex flex-col justify-center min-h-[650px] md:min-h-[750px]">
 
         {/* Top Inverted Curve Mask with Title */}
         <div
-          className="absolute top-0 left-0 right-0 h-[85px] md:h-[120px] bg-[#eff9ff] rounded-b-[2rem] md:rounded-b-[3.5rem] z-10 w-full flex items-center justify-center pt-2 shadow-sm"
+          className="absolute top-0 left-0 right-0 h-[140px] md:h-[180px] bg-[#F3F7FB] rounded-b-[3rem] md:rounded-b-[4rem] z-10 w-full flex items-center justify-center pt-4 shadow-sm"
         >
-          <h2 className="font-helios font-black text-2xl md:text-[34px] lg:text-[38px] text-[#1b60bb] tracking-wide px-4 text-center leading-tight">
+          <h2 className="font-helios font-black text-3xl md:text-[45px] lg:text-[50px] text-[#1b60bb] tracking-wide px-4 text-center leading-tight">
             Explore Technologies
           </h2>
         </div>
@@ -183,9 +204,9 @@ export default function FeaturedTechnologies() {
         {/* Attached mouse/touch handlers to the parent to pause even when hovering the gaps */}
         <div
           className="w-full relative z-20"
-          onMouseEnter={() => { isInteracting.current = true; }}
+          onMouseEnter={handleInteractionStart}
           onMouseLeave={handleInteractionEnd}
-          onTouchStart={() => { isInteracting.current = true; }}
+          onTouchStart={handleInteractionStart}
           onTouchEnd={handleInteractionEnd}
         >
           <div
@@ -199,9 +220,6 @@ export default function FeaturedTechnologies() {
               return (
                 <div
                   key={uniqueId}
-                  onMouseEnter={() => handleInteractionStart(uniqueId)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  onTouchStart={() => handleInteractionStart(uniqueId)}
                   className="flex-shrink-0 w-[240px] xs:w-[260px] sm:w-[280px] md:w-[320px] relative h-[360px] sm:h-[380px] md:h-[420px]"
                 >
                   <TechnologyCard 
