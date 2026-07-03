@@ -17,15 +17,26 @@ interface Technology {
   description?: string;
 }
 
-export default function FeaturedTechnologies() {
+interface FeaturedTechnologiesProps {
+  initialTechnologies?: Technology[];
+}
+
+export default function FeaturedTechnologies({ initialTechnologies = [] }: FeaturedTechnologiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInteracting = useRef(false);
   const isVisible = useRef(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [extendedTechnologies, setExtendedTechnologies] = useState<Technology[]>([]);
+  const [extendedTechnologies, setExtendedTechnologies] = useState<Technology[]>(() => {
+    if (initialTechnologies.length > 0) {
+      return [...initialTechnologies, ...initialTechnologies, ...initialTechnologies];
+    }
+    return [];
+  });
 
   useEffect(() => {
     setIsMounted(true);
+
+    if (initialTechnologies.length > 0) return; // Skip fetch if initialized from props
 
     async function fetchTechs() {
       try {
@@ -91,7 +102,7 @@ export default function FeaturedTechnologies() {
       }
     }
     fetchTechs();
-  }, []);
+  }, [initialTechnologies]);
 
   // Monitor element intersection with viewport to pause when offscreen
   useEffect(() => {

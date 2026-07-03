@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import TechnologiesNavbar from '@/components/technologies/TechnologiesNavbar';
 import TechnologiesHero from '@/components/technologies/TechnologiesHero';
 import FeaturedTechnologies from '@/components/technologies/FeaturedTechnologies';
+import { getFeaturedTechnologies } from '@/lib/getFeaturedTechnologies';
 import BrowseInstitutions from '@/components/technologies/BrowseInstitutions';
 import BrowseSectors from '@/components/technologies/BrowseSectors';
 import Footer from '@/components/Footer';
@@ -17,7 +18,7 @@ export default function TechnologiesPage() {
     <main style={{ backgroundColor: '#F4F7FB' }}>
       <TechnologiesNavbar />
       <TechnologiesHero />
-      <FeaturedTechnologies />
+      <FeaturedTechnologies initialTechnologies={getFeaturedTechnologies()} />
 
       {/* Modern, Premium Browse by Institution Section */}
       <BrowseInstitutions />
