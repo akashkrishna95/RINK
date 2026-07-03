@@ -4,33 +4,38 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
+import institutionLogos from '@/data/institutions_mapped.json';
+import { getProxiedImageUrl } from '@/lib/utils';
+
 interface Institute {
   id: string;
   name: string;
   logoUrl: string;
 }
 
-// 23 logos extracted from RINK KSUM partnered institutions
-const mockInstitutes: Institute[] = Array.from({ length: 23 }, (_, i) => {
-  const num = (i + 1).toString().padStart(3, '0');
-  return {
-    id: `${i + 1}`,
-    name: `Partner Institute ${i + 1}`,
-    logoUrl: `https://rink.startupmission.in/img/logo/logo-${num}.jpg`,
-  };
-});
+const mockInstitutes: Institute[] = institutionLogos
+  .filter(inst => inst.partnered)
+  .map(inst => ({
+    id: String(inst.id),
+    name: inst.name,
+    logoUrl: inst.logo_url
+  }));
 
-export default function PartnerInstitutes() {
+export default function PartnerInstitutes({ initialInstitutes }: { initialInstitutes?: Institute[] }) {
   const [isExpanded, setIsExpanded] = useState(false);
   
+  const activeInstitutes = initialInstitutes && initialInstitutes.length > 0 
+    ? initialInstitutes 
+    : mockInstitutes;
+
   // 18 items = exactly 6 rows on mobile (3 cols) OR 3 rows on desktop (6 cols)
   const INITIAL_VISIBLE_COUNT = 18; 
 
   const visibleInstitutes = isExpanded
-    ? mockInstitutes
-    : mockInstitutes.slice(0, INITIAL_VISIBLE_COUNT);
+    ? activeInstitutes
+    : activeInstitutes.slice(0, INITIAL_VISIBLE_COUNT);
 
-  const hasMore = mockInstitutes.length > INITIAL_VISIBLE_COUNT;
+  const hasMore = activeInstitutes.length > INITIAL_VISIBLE_COUNT;
 
   return (
     <section className="w-full py-16 px-4 md:px-12 bg-white">
@@ -71,7 +76,7 @@ export default function PartnerInstitutes() {
               >
                 <div className="relative w-full h-full flex items-center justify-center">
                   <Image
-                    src={institute.logoUrl}
+                    src={getProxiedImageUrl(institute.logoUrl)}
                     alt={institute.name}
                     fill
                     className="object-contain"

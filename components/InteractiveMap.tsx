@@ -7,19 +7,19 @@ import L from 'leaflet';
 import { useEffect, useState } from 'react';
 
 const createCustomIcon = (isActive: boolean) => {
-  const size = isActive ? 22 : 14;
+  const size = isActive ? 26 : 18;
   return L.divIcon({
     className: 'custom-leaflet-marker',
     html: `<div class="relative flex items-center justify-center">
-             <div class="absolute w-[24px] h-[24px] rounded-full bg-[#ef4444]/20 animate-ping" style="animation-duration: 2s; ${isActive ? 'display: block;' : 'display: none;'}"></div>
+             <div class="absolute w-[32px] h-[32px] rounded-full bg-[#1b60bb]/20 animate-ping" style="animation-duration: 2s; ${isActive ? 'display: block;' : 'display: none;'}"></div>
              <svg 
                xmlns="http://www.w3.org/2000/svg" 
                viewBox="0 0 24 24" 
                width="${size}" 
                height="${size}" 
-               fill="${isActive ? '#ef4444' : '#1b60bb'}" 
+               fill="${isActive ? '#1b60bb' : '#5cc4fe'}" 
                stroke="white" 
-               stroke-width="1.5" 
+               stroke-width="${isActive ? '2' : '1.5'}" 
                stroke-linecap="round" 
                stroke-linejoin="round" 
                class="drop-shadow-md transition-all duration-300 transform ${isActive ? 'scale-110 -translate-y-1' : ''}"
@@ -87,11 +87,20 @@ function MapController({
   }, [activeDistrict, activeInstitution, map, isExpanded, institutions]);
   
   useEffect(() => {
-    // Invalidate size on expand to fix leaflet rendering
-    setTimeout(() => {
+    const container = map.getContainer();
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      // Safely invalidate map size on any container resize (like toggling See More)
       map.invalidateSize();
-    }, 300);
-  }, [isExpanded, map]);
+    });
+
+    resizeObserver.observe(container);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [map]);
 
   return null;
 }
@@ -109,6 +118,7 @@ export default function InteractiveMap({
   const [isMounted, setIsMounted] = useState(false);
   const [districtsGeoJSON, setDistrictsGeoJSON] = useState<any>(null);
   const [stateGeoJSON, setStateGeoJSON] = useState<any>(null);
+  const [mapType, setMapType] = useState<'default' | 'satellite'>('default');
 
   useEffect(() => {
     setIsMounted(true);
@@ -126,7 +136,7 @@ export default function InteractiveMap({
   }, []);
 
   if (!isMounted) {
-    return <div className={`w-full h-full bg-[#0a0a0a] rounded-2xl ${className}`} />;
+    return <div className={`w-full h-full bg-[#eff9ff] rounded-2xl ${className}`} />;
   }
 
   // Center of Kerala roughly
@@ -135,32 +145,60 @@ export default function InteractiveMap({
   return (
     <div className={`w-full h-full relative z-10 ${className}`}>
       <style>{`
-        ${!isExpanded ? '.leaflet-control-attribution { display: none !important; }' : ''}
-        .leaflet-container { background: #0a0a0a !important; }
+        .leaflet-container { background: #eff9ff !important; }
         .custom-popup .leaflet-popup-content-wrapper {
-          background: rgba(10, 10, 10, 0.95) !important;
-          border: 1px solid rgba(239, 68, 68, 0.3) !important;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-          backdrop-filter: blur(8px) !important;
+          background: rgba(255, 255, 255, 0.95) !important;
+          border: 1px solid rgba(27, 96, 187, 0.15) !important;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+          backdrop-filter: blur(12px) !important;
           border-radius: 1rem !important;
           padding: 4px !important;
         }
         .custom-popup .leaflet-popup-tip {
-          background: rgba(10, 10, 10, 0.95) !important;
-          border-left: 1px solid rgba(239, 68, 68, 0.3) !important;
-          border-bottom: 1px solid rgba(239, 68, 68, 0.3) !important;
+          background: rgba(255, 255, 255, 0.95) !important;
+          border-left: 1px solid rgba(27, 96, 187, 0.15) !important;
+          border-bottom: 1px solid rgba(27, 96, 187, 0.15) !important;
         }
         .custom-popup .leaflet-popup-content {
           margin: 12px !important;
         }
         .custom-popup .leaflet-popup-close-button {
-          color: rgba(255, 255, 255, 0.6) !important;
+          color: rgba(27, 96, 187, 0.6) !important;
           padding: 8px 8px 0 0 !important;
         }
         .custom-popup .leaflet-popup-close-button:hover {
-          color: #ef4444 !important;
+          color: #1b60bb !important;
         }
       `}</style>
+      
+      {/* Floating Layer Toggle (moves next to zoom controls when expanded) */}
+      <div 
+        className={`absolute top-4 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-lg border border-[#daf1ff] p-1 flex gap-1 transition-all duration-300 ${
+          isExpanded ? 'left-14' : 'left-4'
+        }`}
+      >
+        <button 
+          onClick={() => setMapType('default')}
+          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 active:scale-95 ${
+            mapType === 'default' 
+              ? 'bg-[#1b60bb] text-white shadow-sm' 
+              : 'text-slate-600 hover:bg-[#eff9ff] hover:text-[#1b60bb]'
+          }`}
+        >
+          Default
+        </button>
+        <button 
+          onClick={() => setMapType('satellite')}
+          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 active:scale-95 ${
+            mapType === 'satellite' 
+              ? 'bg-[#1b60bb] text-white shadow-sm' 
+              : 'text-slate-600 hover:bg-[#eff9ff] hover:text-[#1b60bb]'
+          }`}
+        >
+          Satellite
+        </button>
+      </div>
+
       <MapContainer 
         key={isExpanded ? 'expanded' : 'collapsed'}
         center={center} 
@@ -170,34 +208,39 @@ export default function InteractiveMap({
         touchZoom={isExpanded}
         doubleClickZoom={isExpanded}
         zoomControl={isExpanded}
+        attributionControl={false}
         className="w-full h-full overflow-hidden"
         style={{ borderRadius: isExpanded ? '0' : '1.5rem' }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://carto.com/">CartoDB</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          key={mapType}
+          url={
+            mapType === 'satellite'
+              ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          }
         />
         {/* District boundaries (thin outlines) */}
         {districtsGeoJSON && (
           <GeoJSON 
-            key="kerala-districts"
+            key={`kerala-districts-${mapType}`}
             data={districtsGeoJSON} 
             style={{
-              color: '#ef4444',
-              weight: 0.6,
-              fillColor: '#ef4444',
-              fillOpacity: 0.04,
+              color: mapType === 'satellite' ? '#5cc4fe' : '#1b60bb',
+              weight: 0.8,
+              fillColor: mapType === 'satellite' ? '#bde7ff' : '#90daff',
+              fillOpacity: mapType === 'satellite' ? 0.02 : 0.05,
             }}
           />
         )}
         {/* Outer State boundary (thick border) */}
         {stateGeoJSON && (
           <GeoJSON 
-            key="kerala-state-border"
+            key={`kerala-state-border-${mapType}`}
             data={stateGeoJSON} 
             style={{
-              color: '#ef4444',
-              weight: 2.2,
+              color: mapType === 'satellite' ? '#bde7ff' : '#1b60bb',
+              weight: 2.5,
               fillOpacity: 0,
             }}
           />
@@ -210,34 +253,43 @@ export default function InteractiveMap({
               position={[inst.lat, inst.lng]} 
               icon={createCustomIcon(isActive)}
               eventHandlers={{
-                mouseover: () => {
-                  onDistrictHover?.(inst.district);
-                  onInstitutionHover?.(inst.id);
-                },
-                mouseout: () => {
-                  onDistrictLeave?.();
-                  onInstitutionHover?.(null);
+                click: () => {
+                  if (isExpanded) {
+                    onDistrictHover?.(inst.district);
+                    onInstitutionHover?.(inst.id);
+                  }
                 },
               }}
             >
               {isExpanded && (
                 <Popup className="custom-popup">
-                  <div className="p-1 min-w-[220px] max-w-[280px] flex flex-col gap-2 text-white">
-                    <div className="font-bold text-sm leading-snug text-white font-sans">{inst.name}</div>
+                  <div className="p-1 min-w-[220px] max-w-[280px] flex flex-col gap-2 text-[#153156]">
+                    <div 
+                      className="font-bold text-sm leading-snug text-[#1b60bb]"
+                      style={{ fontFamily: "'Helios Extended', sans-serif" }}
+                    >
+                      {inst.name}
+                    </div>
                     <div className="flex items-center justify-between mt-1 text-[11px]">
-                      <span className="text-slate-400 font-medium font-sans">{inst.district}</span>
-                      <span className="bg-[#ef4444] text-white px-2 py-0.5 rounded font-mono font-semibold">
+                      <span 
+                        className="text-[#1b4f8d] font-semibold"
+                        style={{ fontFamily: "'Helios Extended', sans-serif" }}
+                      >
+                        {inst.district}
+                      </span>
+                      <span className="bg-[#daf1ff] text-[#1b60bb] px-2 py-0.5 rounded font-mono font-semibold">
                         {inst.techCount} Techs
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-400 leading-relaxed font-sans border-t border-white/10 pt-2 mt-1">
+                    <p className="text-[11px] text-slate-600 leading-relaxed font-sans border-t border-[#daf1ff] pt-2 mt-1">
                       A leading Innovation Hub helping transform research into scalable startup products and intellectual property.
                     </p>
                     <a 
                       href={inst.website} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="mt-2 text-center text-xs font-semibold text-white bg-[#ef4444] hover:bg-[#dc2626] py-2 rounded-lg transition-colors flex items-center justify-center gap-1 shadow-[0_2px_8px_rgba(239,68,68,0.3)] font-sans"
+                      className="mt-2 text-center text-xs font-semibold bg-[#1b60bb] hover:bg-[#1872dd] py-2 rounded-lg transition-colors flex items-center justify-center gap-1 shadow-sm font-sans"
+                      style={{ color: '#eff9ff' }}
                     >
                       View on Google Maps
                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

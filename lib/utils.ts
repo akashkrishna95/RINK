@@ -36,3 +36,12 @@ export function formatTechnologyName(name: string | undefined | null): string {
   return name;
 }
 
+export function getProxiedImageUrl(url: string | undefined | null): string {
+  if (!url) return '/placeholder.jpg';
+  // If it's a Google Drive link, route it through our API proxy to prevent 403 blocks
+  if (url.includes('drive.google.com') || url.includes('googleusercontent.com')) {
+    return `/api/image-proxy?url=${encodeURIComponent(url)}`;
+  }
+  return url;
+}
+

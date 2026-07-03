@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, ArrowDownRight, X, Maximize2 } from 'lucide-react';
 import Image from 'next/image';
@@ -11,365 +11,70 @@ const InteractiveMap = dynamic(() => import('./InteractiveMap'), {
   ssr: false,
 });
 
-// Custom Classic Map Pin SVG
-const ClassicMapPin = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    width="32"
-    height="32"
-    fill="#ef4444"
-    stroke="white"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="drop-shadow-md"
-  >
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-    <circle cx="12" cy="10" r="3" fill="white" stroke="none" />
-  </svg>
-);
+import institutionLogosBaseline from '@/data/institutions_mapped.json';
+import { getProxiedImageUrl } from '@/lib/utils';
 
-// 1. Map Coordinates & Added 'techCount' Mock Data
-const mapCoordinates: Record<string, { left: string; top: string; techCount: number }> = {
-  Kasargod: { left: "251.709px", top: "-8.179px", techCount: 8 },
-  Kannur: { left: "263.622px", top: "2.710px", techCount: 14 },
-  Wayanad: { left: "284.617px", top: "11.047px", techCount: 6 },
-  Kozhikode: { left: "274.189px", top: "13.464px", techCount: 22 },
-  Malappuram: { left: "287.673px", top: "21.694px", techCount: 11 },
-  Palakkad: { left: "298.360px", top: "28.333px", techCount: 15 },
-  Thrissur: { left: "290.124px", top: "33.667px", techCount: 18 },
-  Ernakulam: { left: "296.944px", top: "43.738px", techCount: 45 },
-  Idukki: { left: "319.009px", top: "50.612px", techCount: 4 },
-  Kottayam: { left: "304.126px", top: "52.612px", techCount: 12 },
-  Alapuzha: { left: "295.097px", top: "55.774px", techCount: 9 },
-  Pathanamthitta: { left: "317.939px", top: "62.195px", techCount: 7 },
-  Kollam: { left: "314.088px", top: "67.444px", techCount: 16 },
-  Thrivandrum: { left: "322.911px", top: "75.427px", techCount: 38 }
-};
+export interface Institution {
+  id: number;
+  name: string;
+  location: string;
+  district: string;
+  website: string;
+  logo_url: string;
+  partnered: boolean;
+  lat: number;
+  lng: number;
+  techCount: number;
+}
 
-const getResponsivePos = (val: string, isY: boolean = false) => {
-  const num = parseFloat(val.replace('px', ''));
-  const scale = isY ? 1 : 0.25;
-  const offset = isY ? 15 : 0;
-  return `${(num * scale) + offset}%`;
-};
+interface InstitutionsGridProps {
+  initialInstitutions?: Institution[];
+}
 
-// 2. Real Institutions Data (34 total across Kerala with Google Maps URLs and unique lat/lng)
-const institutionLogos = [
-  {
-    id: 1,
-    name: "CSIR - National Institute for Interdisciplinary Science and Technology",
-    website: "https://www.google.com/maps/search/?api=1&query=CSIR-NIIST+Trivandrum",
-    district: "Thrivandrum",
-    techCount: 38,
-    lat: 8.5361,
-    lng: 76.9062
-  },
-  {
-    id: 2,
-    name: "Kerala Agricultural University",
-    website: "https://www.google.com/maps/search/?api=1&query=Kerala+Agricultural+University+Thrissur",
-    district: "Thrissur",
-    techCount: 18,
-    lat: 10.5452,
-    lng: 76.2870
-  },
-  {
-    id: 3,
-    name: "Kerala University of Fisheries and Ocean Studies (KUFOS)",
-    website: "https://www.google.com/maps/search/?api=1&query=KUFOS+Kochi",
-    district: "Ernakulam",
-    techCount: 45,
-    lat: 9.9250,
-    lng: 76.3150
-  },
-  {
-    id: 4,
-    name: "ICAR - Central Plantation Crops Research Institute (CPCRI)",
-    website: "https://www.google.com/maps/search/?api=1&query=CPCRI+Kasaragod",
-    district: "Kasargod",
-    techCount: 8,
-    lat: 12.5190,
-    lng: 74.9920
-  },
-  {
-    id: 5,
-    name: "Centre for Development of Advanced Computing (C-DAC)",
-    website: "https://www.google.com/maps/search/?api=1&query=CDAC+Trivandrum",
-    district: "Thrivandrum",
-    techCount: 38,
-    lat: 8.5300,
-    lng: 76.9200
-  },
-  {
-    id: 6,
-    name: "ICAR - Indian Institute of Spices Research (IISR)",
-    website: "https://www.google.com/maps/search/?api=1&query=IISR+Kozhikode",
-    district: "Kozhikode",
-    techCount: 22,
-    lat: 11.2980,
-    lng: 75.8200
-  },
-  {
-    id: 7,
-    name: "ICAR - Central Tuber Crops Research Institute (CTCRI)",
-    website: "https://www.google.com/maps/search/?api=1&query=CTCRI+Trivandrum",
-    district: "Thrivandrum",
-    techCount: 38,
-    lat: 8.5500,
-    lng: 76.9150
-  },
-  {
-    id: 8,
-    name: "KSCSTE - Kerala Forest Research Institute (KFRI)",
-    website: "https://www.google.com/maps/search/?api=1&query=KFRI+Peechi",
-    district: "Thrissur",
-    techCount: 18,
-    lat: 10.5312,
-    lng: 76.3530
-  },
-  {
-    id: 9,
-    name: "KSCSTE - Centre for Water Resources Development and Management (CWRDM)",
-    website: "https://www.google.com/maps/search/?api=1&query=CWRDM+Kozhikode",
-    district: "Kozhikode",
-    techCount: 22,
-    lat: 11.3050,
-    lng: 75.8750
-  },
-  {
-    id: 10,
-    name: "Centre for Materials for Electronics Technology (C-MET)",
-    website: "https://www.google.com/maps/search/?api=1&query=CMET+Thrissur",
-    district: "Thrissur",
-    techCount: 18,
-    lat: 10.5200,
-    lng: 76.2200
-  },
-  {
-    id: 11,
-    name: "KSCSTE - Jawaharlal Nehru Tropical Botanic Garden and Research Institute",
-    website: "https://www.google.com/maps/search/?api=1&query=JNTBGRI+Palode",
-    district: "Thrivandrum",
-    techCount: 38,
-    lat: 8.7512,
-    lng: 77.0210
-  },
-  {
-    id: 12,
-    name: "KSCSTE - Malabar Botanical Garden and Institute for Plant Sciences",
-    website: "https://www.google.com/maps/search/?api=1&query=Malabar+Botanical+Garden+Kozhikode",
-    district: "Kozhikode",
-    techCount: 22,
-    lat: 11.2720,
-    lng: 75.8450
-  },
-  {
-    id: 13,
-    name: "Institute of Advanced Virology (IAV)",
-    website: "https://www.google.com/maps/search/?api=1&query=IAV+Thonnakkal",
-    district: "Thrivandrum",
-    techCount: 38,
-    lat: 8.6250,
-    lng: 76.8500
-  },
-  {
-    id: 14,
-    name: "KSCSTE - National Transportation Planning and Research Centre (NATPAC)",
-    website: "https://www.google.com/maps/search/?api=1&query=NATPAC+Trivandrum",
-    district: "Thrivandrum",
-    techCount: 38,
-    lat: 8.5200,
-    lng: 76.9300
-  },
-  {
-    id: 15,
-    name: "ICAR - Sugarcane Breeding Institute Research Centre, Kannur",
-    website: "https://www.google.com/maps/search/?api=1&query=Sugarcane+Breeding+Institute+Kannur",
-    district: "Kannur",
-    techCount: 14,
-    lat: 11.8920,
-    lng: 75.3530
-  },
-  {
-    id: 16,
-    name: "Sree Chitra Tirunal Institute for Medical Sciences and Technology",
-    website: "https://www.google.com/maps/search/?api=1&query=SCTIMST+Trivandrum",
-    district: "Thrivandrum",
-    techCount: 38,
-    lat: 8.5218,
-    lng: 76.9270
-  },
-  {
-    id: 17,
-    name: "National Institute of Technology (NIT) Calicut",
-    website: "https://www.google.com/maps/search/?api=1&query=NIT+Calicut",
-    district: "Kozhikode",
-    techCount: 22,
-    lat: 11.3210,
-    lng: 75.9330
-  },
-  {
-    id: 18,
-    name: "Indian Institute of Space Science and Technology (IIST)",
-    website: "https://www.google.com/maps/search/?api=1&query=IIST+Valiamala",
-    district: "Thrivandrum",
-    techCount: 38,
-    lat: 8.6214,
-    lng: 77.1278
-  },
-  {
-    id: 19,
-    name: "Cochin University of Science and Technology (CUSAT)",
-    website: "https://www.google.com/maps/search/?api=1&query=CUSAT+Kochi",
-    district: "Ernakulam",
-    techCount: 45,
-    lat: 10.0430,
-    lng: 76.3244
-  },
-  {
-    id: 20,
-    name: "Kerala Veterinary and Animal Sciences University (KVASU)",
-    website: "https://www.google.com/maps/search/?api=1&query=KVASU+Pookode",
-    district: "Wayanad",
-    techCount: 6,
-    lat: 11.5380,
-    lng: 76.0240
-  },
-  {
-    id: 21,
-    name: "Central University of Kerala, Kasaragod",
-    website: "https://www.google.com/maps/search/?api=1&query=Central+University+of+Kerala+Kasaragod",
-    district: "Kasargod",
-    techCount: 8,
-    lat: 12.3920,
-    lng: 75.0930
-  },
-  {
-    id: 22,
-    name: "Government Engineering College, Thrissur",
-    website: "https://www.google.com/maps/search/?api=1&query=GEC+Thrissur",
-    district: "Thrissur",
-    techCount: 18,
-    lat: 10.5510,
-    lng: 76.2215
-  },
-  {
-    id: 23,
-    name: "College of Engineering Trivandrum (CET)",
-    website: "https://www.google.com/maps/search/?api=1&query=CET+Trivandrum",
-    district: "Thrivandrum",
-    techCount: 38,
-    lat: 8.5444,
-    lng: 76.9048
-  },
-  {
-    id: 24,
-    name: "TKM College of Engineering, Kollam",
-    website: "https://www.google.com/maps/search/?api=1&query=TKM+College+of+Engineering+Kollam",
-    district: "Kollam",
-    techCount: 16,
-    lat: 8.9130,
-    lng: 76.6420
-  },
-  {
-    id: 25,
-    name: "Rajiv Gandhi Centre for Biotechnology (RGCB)",
-    website: "https://www.google.com/maps/search/?api=1&query=RGCB+Trivandrum",
-    district: "Thrivandrum",
-    techCount: 38,
-    lat: 8.4870,
-    lng: 76.9730
-  },
-  {
-    id: 26,
-    name: "Mar Athanasios College for Advanced Studies Tiruvalla (MACFAST)",
-    website: "https://www.google.com/maps/search/?api=1&query=MACFAST+Thiruvalla",
-    district: "Pathanamthitta",
-    techCount: 7,
-    lat: 9.3820,
-    lng: 76.5730
-  },
-  {
-    id: 27,
-    name: "Amal Jyothi College of Engineering",
-    website: "https://www.google.com/maps/search/?api=1&query=Amal+Jyothi+Kanjirappally",
-    district: "Kottayam",
-    techCount: 12,
-    lat: 9.5310,
-    lng: 76.8210
-  },
-  {
-    id: 28,
-    name: "College of Engineering Kidangoor",
-    website: "https://www.google.com/maps/search/?api=1&query=College+of+Engineering+Kidangoor",
-    district: "Kottayam",
-    techCount: 12,
-    lat: 9.6910,
-    lng: 76.6220
-  },
-  {
-    id: 29,
-    name: "NSS College of Engineering, Palakkad",
-    website: "https://www.google.com/maps/search/?api=1&query=NSS+College+of+Engineering+Palakkad",
-    district: "Palakkad",
-    techCount: 15,
-    lat: 10.8240,
-    lng: 76.6930
-  },
-  {
-    id: 30,
-    name: "College of Engineering Karunagappally",
-    website: "https://www.google.com/maps/search/?api=1&query=College+of+Engineering+Karunagappally",
-    district: "Kollam",
-    techCount: 16,
-    lat: 9.0620,
-    lng: 76.5310
-  },
-  {
-    id: 31,
-    name: "MES College of Engineering, Kuttippuram",
-    website: "https://www.google.com/maps/search/?api=1&query=MES+College+of+Engineering+Kuttippuram",
-    district: "Malappuram",
-    techCount: 11,
-    lat: 10.8140,
-    lng: 75.9920
-  },
-  {
-    id: 32,
-    name: "College of Engineering Munnar",
-    website: "https://www.google.com/maps/search/?api=1&query=College+of+Engineering+Munnar",
-    district: "Idukki",
-    techCount: 4,
-    lat: 10.0910,
-    lng: 77.0620
-  },
-  {
-    id: 33,
-    name: "College of Engineering Cherthala",
-    website: "https://www.google.com/maps/search/?api=1&query=College+of+Engineering+Cherthala",
-    district: "Alapuzha",
-    techCount: 9,
-    lat: 9.6820,
-    lng: 76.3210
-  },
-  {
-    id: 34,
-    name: "Mar Athanasius College of Engineering (MACE)",
-    website: "https://www.google.com/maps/search/?api=1&query=MACE+Kothamangalam",
-    district: "Ernakulam",
-    techCount: 45,
-    lat: 10.0610,
-    lng: 76.6200
-  }
-];
+export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGridProps) {
+  const institutionLogos = initialInstitutions && initialInstitutions.length > 0 
+    ? initialInstitutions 
+    : institutionLogosBaseline;
 
-export default function InstitutionsGrid() {
   const [activeDistrict, setActiveDistrict] = useState<string | null>(null);
   const [activeInstitution, setActiveInstitution] = useState<number | null>(null);
+  const [isLocked, setIsLocked] = useState<number | null>(null);
   const [showMore, setShowMore] = useState(false);
   const [isMapExpanded, setIsMapExpanded] = useState(false);
+  const [expandedDistricts, setExpandedDistricts] = useState<Record<string, boolean>>({});
+
+  // Auto-scroll left panel to selected institution
+  useEffect(() => {
+    if (isMapExpanded && activeInstitution) {
+      const element = document.getElementById(`inst-list-${activeInstitution}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }, [activeInstitution, isMapExpanded]);
+
+  // Click outside listener to reset active logo state
+  useEffect(() => {
+    const handleDocumentClick = (e: MouseEvent) => {
+      if (isMapExpanded) return;
+      const target = e.target as HTMLElement;
+      // If clicked inside a logo item or its tooltip, do not reset
+      if (target.closest('.logo-grid-item')) {
+        return;
+      }
+      setIsLocked(null);
+      resetInteractions();
+    };
+
+    document.addEventListener('click', handleDocumentClick);
+    return () => document.removeEventListener('click', handleDocumentClick);
+  }, [isMapExpanded]);
+
+  // Reset interactions and lock state when modal state changes
+  useEffect(() => {
+    setIsLocked(null);
+    resetInteractions();
+  }, [isMapExpanded]);
 
   const handleLogoHover = (id: number, district: string) => {
     setActiveInstitution(id);
@@ -447,15 +152,17 @@ export default function InstitutionsGrid() {
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur shadow-sm p-2 rounded-full z-30 opacity-0 group-hover:opacity-100 transition-opacity">
                   <Maximize2 size={18} className="text-[#1b60bb]" />
                 </div>
-                <InteractiveMap 
-                  activeDistrict={activeDistrict}
-                  activeInstitution={activeInstitution}
-                  onDistrictHover={handleMapHover}
-                  onDistrictLeave={resetInteractions}
-                  onInstitutionHover={setActiveInstitution}
-                  isExpanded={false}
-                  institutions={institutionLogos}
-                />
+                {!isMapExpanded && (
+                  <InteractiveMap 
+                    activeDistrict={activeDistrict}
+                    activeInstitution={activeInstitution}
+                    onDistrictHover={handleMapHover}
+                    onDistrictLeave={resetInteractions}
+                    onInstitutionHover={setActiveInstitution}
+                    isExpanded={false}
+                    institutions={institutionLogos}
+                  />
+                )}
               </div>
             </motion.div>
           </div>
@@ -467,73 +174,214 @@ export default function InstitutionsGrid() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[999] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-8"
+                className="fixed inset-0 z-[999] flex items-center justify-center bg-[#153156]/60 backdrop-blur-md p-4 md:p-8"
               >
-                <div className="relative w-full h-full max-w-7xl bg-[#0a0a0a] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row">
+                <div className="relative w-full h-full max-w-7xl bg-[#eff9ff] rounded-3xl overflow-hidden shadow-2xl flex flex-col-reverse md:flex-row border border-white/40 ring-1 ring-[#1b60bb]/10">
                   {/* Left Side Panel - Institutions info */}
-                  <div className="w-full md:w-[350px] bg-[#111] border-b md:border-b-0 md:border-r border-white/10 p-6 flex flex-col text-white z-40 overflow-y-auto shrink-0 animate-in fade-in slide-in-from-left duration-300">
-                    <h3 className="text-xl font-bold font-sans text-white">Kerala Innovation Hubs</h3>
-                    <p className="text-white/60 text-xs mt-1">Hover or click a location pin to explore</p>
+                  <div className="w-full md:w-[380px] flex-1 md:flex-initial bg-white border-b md:border-b-0 md:border-r border-[#daf1ff] p-6 flex flex-col z-40 overflow-y-auto shrink-0 animate-in fade-in slide-in-from-left duration-300 shadow-sm">
+                    <h3 className="text-xl font-helios text-[#1b60bb]">Kerala Innovation Hubs</h3>
+                    <p className="text-slate-500 text-xs mt-1">Select a location to explore</p>
                     
-                    <div className="mt-8 flex-1">
-                      {activeDistrict ? (
-                        <div>
-                          <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-                            <h4 className="text-lg font-semibold text-[#ef4444]">{activeDistrict}</h4>
-                            <span className="text-xs bg-[#1b60bb] px-2 py-0.5 rounded font-mono text-white">
-                              {mapCoordinates[activeDistrict]?.techCount || 0} Techs
-                            </span>
-                          </div>
-                          
-                          <div className="space-y-3">
-                            {institutionLogos
-                              .filter(inst => inst.district === activeDistrict)
-                              .map(inst => {
-                                const isActive = activeInstitution === inst.id;
-                                return (
-                                  <a 
-                                    key={inst.id} 
-                                    href={inst.website}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onMouseEnter={() => setActiveInstitution(inst.id)}
-                                    onMouseLeave={() => setActiveInstitution(null)}
-                                    className={`block p-3 rounded-xl border transition-all duration-200 ${
-                                      isActive 
-                                        ? 'bg-[#ef4444]/20 border-[#ef4444] scale-[1.02]' 
-                                        : 'bg-white/5 border-white/5 hover:border-white/10 hover:bg-white/10'
-                                    }`}
+                    {activeInstitution ? (
+                      // Detailed View of Selected Institution
+                      (() => {
+                        const inst = institutionLogos.find(i => i.id === activeInstitution);
+                        if (!inst) return null;
+                        return (
+                          <div className="flex-1 flex flex-col justify-between h-full pt-4">
+                            <div className="space-y-6">
+                              {/* Back Button */}
+                              <button 
+                                onClick={() => {
+                                  setActiveInstitution(null);
+                                  setActiveDistrict(null);
+                                }}
+                                className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-[#1b60bb] font-semibold transition-colors"
+                              >
+                                ← Back to list
+                              </button>
+
+                              {/* Institution Logo */}
+                              <div className="relative w-full h-32 bg-white rounded-2xl border border-[#daf1ff] p-4 flex items-center justify-center overflow-hidden shadow-sm">
+                                  {inst.logo_url ? (
+                                    <Image
+                                      src={getProxiedImageUrl(inst.logo_url)}
+                                      alt={inst.name}
+                                      fill
+                                      className="object-contain p-3"
+                                      sizes="300px"
+                                    />
+                                ) : (
+                                  <div className="text-[#1b60bb]/40 font-bold text-lg">LOGO</div>
+                                )}
+                              </div>
+
+                              {/* Details */}
+                              <div className="space-y-4">
+                                <div>
+                                  <span 
+                                    className="text-[10px] bg-[#daf1ff] text-[#1b60bb] px-2 py-0.5 rounded font-semibold uppercase tracking-wider"
+                                    style={{ fontFamily: "'Helios Extended', sans-serif" }}
                                   >
-                                    <div className="font-medium text-sm text-white">{inst.name}</div>
-                                    <div className="text-[11px] text-[#1b60bb] font-semibold mt-1">
+                                    {inst.district}
+                                  </span>
+                                  <h4 
+                                    className="text-lg font-bold text-[#153156] mt-2 leading-snug"
+                                    style={{ fontFamily: "'Helios Extended', sans-serif" }}
+                                  >
+                                    {inst.name}
+                                  </h4>
+                                </div>
+
+                                <div className="space-y-1 text-slate-600 text-xs">
+                                  <div className="font-bold text-[#1b4f8d] uppercase tracking-wide text-[10px] mt-2">Address</div>
+                                  <p className="leading-relaxed">{inst.location}</p>
+                                </div>
+
+                                <div className="bg-[#eff9ff] rounded-xl p-4 border border-[#bde7ff] flex items-center justify-between">
+                                  <div>
+                                    <div className="text-[11px] text-[#1b60bb] font-semibold">Innovation Output</div>
+                                    <div className="text-xl font-black text-[#153156] mt-0.5">
                                       {inst.techCount} Technologies
                                     </div>
-                                  </a>
-                                );
-                              })}
-                            {institutionLogos.filter(inst => inst.district === activeDistrict).length === 0 && (
-                              <div className="text-xs text-white/40 italic">No institutions mapped in this district yet.</div>
-                            )}
+                                  </div>
+                                  <div className="text-xs bg-[#1b60bb] text-white px-2.5 py-1 rounded-lg font-bold">
+                                    Active
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Buttons */}
+                            <div className="space-y-2 mt-8">
+                              {inst.website && (
+                                <a 
+                                  href={inst.website.startsWith('http') ? inst.website : `https://${inst.website}`} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="w-full text-center block text-sm font-semibold text-white bg-[#1b60bb] hover:bg-[#1872dd] py-3 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+                                >
+                                  Visit Website
+                                </a>
+                              )}
+                              <a 
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(inst.name + ', ' + inst.district + ', Kerala')}`}
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="w-full text-center block text-sm font-semibold text-[#1b60bb] bg-white border border-[#bde7ff] hover:bg-slate-50 py-3 rounded-xl transition-all active:scale-[0.98]"
+                              >
+                                View on Google Maps
+                              </a>
+                            </div>
                           </div>
-                        </div>
-                      ) : (
-                        <div className="h-full flex flex-col items-center justify-center text-center text-white/40 text-sm italic px-4 py-12">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mb-3 text-[#1b60bb] animate-bounce">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                            <circle cx="12" cy="10" r="3" />
-                          </svg>
-                          Hover over or click a location pin on the map to view the universities and research hubs.
-                        </div>
-                      )}
-                    </div>
+                        );
+                      })()
+                    ) : (
+                      // List View
+                      <div className="mt-6 flex-1 space-y-6">
+                        {Array.from(new Set(institutionLogos.map(i => i.district))).map((district) => {
+                          const districtInstitutions = institutionLogos.filter(inst => inst.district === district);
+                          const isDistrictActive = activeDistrict === district;
+                          const isExpanded = expandedDistricts[district] ?? isDistrictActive;
+                          return (
+                            <div key={district} className="space-y-3">
+                              <div 
+                                className="flex items-center justify-between border-b border-[#daf1ff] pb-2 cursor-pointer group"
+                                onClick={() => {
+                                  setExpandedDistricts(prev => ({
+                                    ...prev,
+                                    [district]: !prev[district]
+                                  }));
+                                  setActiveDistrict(district);
+                                  setActiveInstitution(null);
+                                }}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    width="14" 
+                                    height="14" 
+                                    viewBox="0 0 24 24" 
+                                    fill="none" 
+                                    stroke="currentColor" 
+                                    strokeWidth="2.5" 
+                                    strokeLinecap="round" 
+                                    strokeLinejoin="round" 
+                                    className={`text-slate-400 group-hover:text-[#1b60bb] transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                                  >
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                  </svg>
+                                  <h4 
+                                    className={`text-sm font-bold transition-colors ${isDistrictActive ? 'text-[#1b60bb]' : 'text-slate-700 group-hover:text-[#36a8fb]'}`}
+                                    style={{ fontFamily: "'Helios Extended', sans-serif" }}
+                                  >
+                                    {district}
+                                  </h4>
+                                </div>
+                                <span className="text-[10px] bg-[#daf1ff] text-[#1b60bb] px-2 py-0.5 rounded font-mono font-semibold">
+                                  {districtInstitutions.length}
+                                </span>
+                              </div>
+                              
+                              <div className="pl-4">
+                                {isExpanded && (
+                                  <div className="space-y-2 mt-2">
+                                    {districtInstitutions.map(inst => {
+                                      const isActive = activeInstitution === inst.id;
+                                      return (
+                                        <div
+                                          key={inst.id} 
+                                          id={`inst-list-${inst.id}`}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setActiveInstitution(inst.id);
+                                            setActiveDistrict(inst.district);
+                                          }}
+                                          className={`flex items-center justify-between p-3 rounded-xl border transition-all duration-300 cursor-pointer ${
+                                            isActive 
+                                              ? 'bg-[#eff9ff] border-[#90daff] shadow-sm scale-[1.01]' 
+                                              : 'bg-white border-slate-100 hover:border-[#bde7ff] hover:bg-slate-50'
+                                          }`}
+                                        >
+                                          <div className="flex-1 pr-3">
+                                            <div className={`font-medium text-[13px] leading-tight ${isActive ? 'text-[#1b60bb]' : 'text-slate-700'}`}>
+                                              {inst.name}
+                                            </div>
+                                            <div className="text-[11px] text-[#5cc4fe] font-semibold mt-1">
+                                              {inst.techCount} Technologies
+                                            </div>
+                                          </div>
+                                          
+                                          {inst.logo_url && (
+                                            <div className="h-10 w-10 shrink-0 rounded-lg border border-slate-100 bg-white flex items-center justify-center p-0.5 shadow-sm relative overflow-hidden">
+                                              <Image
+                                                src={getProxiedImageUrl(inst.logo_url)}
+                                                alt={inst.name}
+                                                fill
+                                                className="object-contain p-0.5"
+                                                sizes="40px"
+                                              />
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
 
                   {/* Right Side Map */}
-                  <div className="flex-1 relative h-[50vh] md:h-full">
+                  <div className="flex-1 relative h-[50vh] md:h-full bg-[#eff9ff]">
                     <div className="absolute top-4 right-4 z-50">
                       <button 
                         onClick={() => setIsMapExpanded(false)}
-                        className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-full backdrop-blur transition-colors"
+                        className="bg-white/80 hover:bg-white text-[#1b60bb] p-2 rounded-full backdrop-blur shadow-sm border border-[#daf1ff] transition-all hover:scale-105"
                       >
                         <X size={24} />
                       </button>
@@ -637,9 +485,35 @@ export default function InstitutionsGrid() {
                           layout
                           initial={{ opacity: 0, scale: 0.8 }}
                           key={institution.id}
-                          onMouseEnter={() => handleLogoHover(institution.id, institution.district)}
-                          onClick={() => handleLogoHover(institution.id, institution.district)}
-                          onMouseLeave={resetInteractions}
+                          onMouseEnter={() => {
+                            if (isLocked === null) {
+                              handleLogoHover(institution.id, institution.district);
+                            }
+                          }}
+                          onMouseLeave={() => {
+                            if (isLocked !== institution.id) {
+                              resetInteractions();
+                            }
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (isLocked === institution.id) {
+                              setIsLocked(null);
+                              resetInteractions();
+                            } else {
+                              setIsLocked(institution.id);
+                              handleLogoHover(institution.id, institution.district);
+                            }
+                          }}
+                          onDoubleClick={(e) => {
+                            e.stopPropagation();
+                            if (institution.website) {
+                              const url = institution.website.startsWith('http') 
+                                ? institution.website 
+                                : `https://${institution.website}`;
+                              window.open(url, '_blank');
+                            }
+                          }}
                           animate={{
                             scale: isActiveDistrict || isActiveLogo ? 1.05 : 1,
                             opacity: isDimmed ? 0.3 : 1,
@@ -647,14 +521,24 @@ export default function InstitutionsGrid() {
                           }}
                           exit={{ opacity: 0, scale: 0.8 }}
                           transition={{ duration: 0.2 }}
-                          className="relative group flex items-center justify-center cursor-pointer"
+                          className="relative group flex items-center justify-center cursor-pointer logo-grid-item"
                         >
-                          {/* Logo Placeholder */}
-                          <div className="h-12 w-12 md:h-16 md:w-16 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center p-2 shadow-sm">
-                            <div className="text-center text-slate-400 text-[9px] md:text-[10px] font-medium leading-tight">
-                              Logo<br />{institution.id}
-                            </div>
-                          </div>
+                           {/* Logo Image / Placeholder */}
+                           <div className="h-12 w-12 md:h-16 md:w-16 rounded-full bg-white border border-slate-100 flex items-center justify-center p-1 shadow-sm relative overflow-hidden">
+                             {institution.logo_url ? (
+                               <Image
+                                 src={getProxiedImageUrl(institution.logo_url)}
+                                 alt={institution.name}
+                                 fill
+                                 className="object-contain p-1"
+                                 sizes="(max-width: 768px) 48px, 64px"
+                               />
+                             ) : (
+                               <div className="text-center text-slate-400 text-[9px] md:text-[10px] font-medium leading-tight">
+                                 Logo<br />{institution.id}
+                               </div>
+                             )}
+                           </div>
 
                           {/* Liquid Glass Tooltip - Smart Positioning */}
                           <AnimatePresence>
@@ -664,7 +548,7 @@ export default function InstitutionsGrid() {
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: isTopRowClipped ? -5 : 5, scale: 0.95 }}
                                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                className={`absolute transform mb-2 p-3 rounded-xl w-44 shadow-[0_8px_32px_0_rgba(27,96,187,0.15)] backdrop-blur-md bg-white/95 border border-white text-center z-[100] pointer-events-none 
+                                className={`absolute transform mb-2 p-3 rounded-xl w-44 shadow-[0_8px_32px_0_rgba(27,96,187,0.15)] backdrop-blur-md bg-white/95 border border-white text-center z-[100] pointer-events-auto 
                                   ${isTopRowClipped ? "top-full mt-2" : "bottom-full mb-2"} 
                                   ${baseAlign} ${mdAlign}
                                 `}
@@ -675,9 +559,17 @@ export default function InstitutionsGrid() {
                                 <div className="text-[11px] text-[#1b60bb] font-medium mb-2">
                                   {institution.techCount} Technologies
                                 </div>
-                                <div className="text-xs text-slate-500 font-medium inline-flex items-center gap-1">
-                                  Visit Website <ArrowUpRight size={12} />
-                                </div>
+                                {institution.website && (
+                                  <a 
+                                    href={institution.website.startsWith('http') ? institution.website : `https://${institution.website}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="text-xs text-[#1b60bb] hover:text-[#1872dd] font-semibold inline-flex items-center gap-1 hover:underline cursor-pointer"
+                                  >
+                                    Visit Website <ArrowUpRight size={12} />
+                                  </a>
+                                )}
                               </motion.div>
                             )}
                           </AnimatePresence>
