@@ -58,6 +58,7 @@ export default function TechnologiesNavbar() {
             alt="Kerala Startup Mission Logo"
             width={120}
             height={40}
+            style={{ width: 'auto' }}
             className="h-8 md:h-10 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
             priority
           />
@@ -69,6 +70,7 @@ export default function TechnologiesNavbar() {
             alt="Research Innovation Network Kerala Logo"
             width={160}
             height={40}
+            style={{ width: 'auto' }}
             className="h-8 md:h-10 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
             priority
           />

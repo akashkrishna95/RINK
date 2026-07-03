@@ -68,21 +68,35 @@ function MapController({
 }) {
   const map = useMap();
   useEffect(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
     if (activeInstitution) {
       const inst = institutions.find(i => i.id === activeInstitution);
       if (inst) {
-        map.flyTo([inst.lat, inst.lng], isExpanded ? 11.5 : 9.5, { duration: 1 });
+        if (isMobile) {
+          map.setView([inst.lat, inst.lng], isExpanded ? 11.5 : 9.5);
+        } else {
+          map.flyTo([inst.lat, inst.lng], isExpanded ? 11.5 : 9.5, { duration: 1 });
+        }
       }
     } else if (activeDistrict) {
       const insts = institutions.filter(i => i.district === activeDistrict);
       if (insts.length > 0) {
         const avgLat = insts.reduce((sum, i) => sum + i.lat, 0) / insts.length;
         const avgLng = insts.reduce((sum, i) => sum + i.lng, 0) / insts.length;
-        map.flyTo([avgLat, avgLng], isExpanded ? 10 : 8, { duration: 1 });
+        if (isMobile) {
+          map.setView([avgLat, avgLng], isExpanded ? 10 : 8);
+        } else {
+          map.flyTo([avgLat, avgLng], isExpanded ? 10 : 8, { duration: 1 });
+        }
       }
     } else {
       // Center of Kerala
-      map.flyTo([10.5, 76.3], isExpanded ? 7 : 6.5, { duration: 1 });
+      if (isMobile) {
+        map.setView([10.5, 76.3], isExpanded ? 7 : 6.5);
+      } else {
+        map.flyTo([10.5, 76.3], isExpanded ? 7 : 6.5, { duration: 1 });
+      }
     }
   }, [activeDistrict, activeInstitution, map, isExpanded, institutions]);
   
@@ -118,7 +132,7 @@ export default function InteractiveMap({
   const [isMounted, setIsMounted] = useState(false);
   const [districtsGeoJSON, setDistrictsGeoJSON] = useState<any>(null);
   const [stateGeoJSON, setStateGeoJSON] = useState<any>(null);
-  const [mapType, setMapType] = useState<'default' | 'satellite'>('default');
+  const [mapType, setMapType] = useState<'default' | 'satellite'>(isExpanded ? 'satellite' : 'default');
 
   useEffect(() => {
     setIsMounted(true);
@@ -173,6 +187,7 @@ export default function InteractiveMap({
       
       {/* Floating Layer Toggle (moves next to zoom controls when expanded) */}
       <div 
+        onClick={(e) => e.stopPropagation()}
         className={`absolute top-4 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-lg border border-[#daf1ff] p-1 flex gap-1 transition-all duration-300 ${
           isExpanded ? 'left-14' : 'left-4'
         }`}

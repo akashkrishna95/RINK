@@ -149,8 +149,16 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                 onClick={() => setIsMapExpanded(true)}
               >
                 <div className="absolute inset-0 bg-black/5 rounded-3xl transition-all duration-300 group-hover:bg-black/0 z-20 pointer-events-none" />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur shadow-sm p-2 rounded-full z-30 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Maximize2 size={18} className="text-[#1b60bb]" />
+                
+                {/* Zoom button - Always visible on mobile, reveals on hover on desktop */}
+                <div 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMapExpanded(true);
+                  }}
+                  className="absolute top-4 right-4 bg-white/95 backdrop-blur shadow-md p-2.5 rounded-full z-30 md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-pointer border border-[#daf1ff] active:scale-95 flex items-center justify-center"
+                >
+                  <Maximize2 size={16} className="text-[#1b60bb]" strokeWidth={2.5} />
                 </div>
                 {!isMapExpanded && (
                   <InteractiveMap 

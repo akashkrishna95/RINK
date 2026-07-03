@@ -174,43 +174,52 @@ export async function getInstitutions(): Promise<Institution[]> {
       let lat = 10.5;
       let lng = 76.3;
 
-      // 1. Try cache by location text
-      if (cleanLoc && globalCache.has(cleanLoc)) {
-        const coords = globalCache.get(cleanLoc)!;
-        lat = coords.lat;
-        lng = coords.lng;
-      }
-      // 2. Try cache by institution name
-      else if (globalCache.has(cleanInstName)) {
-        const coords = globalCache.get(cleanInstName)!;
-        lat = coords.lat;
-        lng = coords.lng;
-      }
-      // 3. Fallback: Geocode dynamically using Nominatim (adds to cache for next loads)
-      else if (location) {
-        const query = `${location}`;
-        const coords = await geocodeNominatim(query);
-        if (coords) {
+      // 0. Try reading coordinates directly from spreadsheet if provided
+      const sheetLat = parseFloat(row['latitude'] || row['lat'] || '');
+      const sheetLng = parseFloat(row['longitude'] || row['lng'] || row['long'] || '');
+
+      if (!isNaN(sheetLat) && !isNaN(sheetLng)) {
+        lat = sheetLat;
+        lng = sheetLng;
+      } else {
+        // 1. Try cache by location text
+        if (cleanLoc && globalCache.has(cleanLoc)) {
+          const coords = globalCache.get(cleanLoc)!;
           lat = coords.lat;
           lng = coords.lng;
-          globalCache.set(cleanLoc, coords);
-          globalCache.set(cleanInstName, coords);
-        } else {
-          // Try name + district
-          const fallbackQuery = `${name}, ${district}, Kerala, India`;
-          const fallbackCoords = await geocodeNominatim(fallbackQuery);
-          if (fallbackCoords) {
-            lat = fallbackCoords.lat;
-            lng = fallbackCoords.lng;
-            globalCache.set(cleanLoc, fallbackCoords);
-            globalCache.set(cleanInstName, fallbackCoords);
+        }
+        // 2. Try cache by institution name
+        else if (globalCache.has(cleanInstName)) {
+          const coords = globalCache.get(cleanInstName)!;
+          lat = coords.lat;
+          lng = coords.lng;
+        }
+        // 3. Fallback: Geocode dynamically using Nominatim (adds to cache for next loads)
+        else if (location) {
+          const query = `${location}`;
+          const coords = await geocodeNominatim(query);
+          if (coords) {
+            lat = coords.lat;
+            lng = coords.lng;
+            globalCache.set(cleanLoc, coords);
+            globalCache.set(cleanInstName, coords);
           } else {
-            // Fallback to district center coordinates
-            const cleanDistrictName = cleanName(district);
-            const distCoords = districtCenters[cleanDistrictName];
-            if (distCoords) {
-              lat = distCoords.lat;
-              lng = distCoords.lng;
+            // Try name + district
+            const fallbackQuery = `${name}, ${district}, Kerala, India`;
+            const fallbackCoords = await geocodeNominatim(fallbackQuery);
+            if (fallbackCoords) {
+              lat = fallbackCoords.lat;
+              lng = fallbackCoords.lng;
+              globalCache.set(cleanLoc, fallbackCoords);
+              globalCache.set(cleanInstName, fallbackCoords);
+            } else {
+              // Fallback to district center coordinates
+              const cleanDistrictName = cleanName(district);
+              const distCoords = districtCenters[cleanDistrictName];
+              if (distCoords) {
+                lat = distCoords.lat;
+                lng = distCoords.lng;
+              }
             }
           }
         }
