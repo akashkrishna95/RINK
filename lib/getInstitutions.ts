@@ -178,9 +178,19 @@ export async function getInstitutions(): Promise<Institution[]> {
       const sheetLat = parseFloat(row['latitude'] || row['lat'] || '');
       const sheetLng = parseFloat(row['longitude'] || row['lng'] || row['long'] || '');
 
+      // Parse coordinates from location text if it's formatted as "lat,lng"
+      const coordMatch = location.trim().match(/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/);
+
       if (!isNaN(sheetLat) && !isNaN(sheetLng)) {
         lat = sheetLat;
         lng = sheetLng;
+      } else if (coordMatch) {
+        const parsedLat = parseFloat(coordMatch[1]);
+        const parsedLng = parseFloat(coordMatch[2]);
+        if (!isNaN(parsedLat) && !isNaN(parsedLng)) {
+          lat = parsedLat;
+          lng = parsedLng;
+        }
       } else {
         // 1. Try cache by location text
         if (cleanLoc && globalCache.has(cleanLoc)) {
