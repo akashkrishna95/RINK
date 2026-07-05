@@ -6,8 +6,9 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import ChatBubble from './RomiAI/ChatBubble';
-import MiniCard from './RomiAI/MiniCard';
+import MiniCard from '@/app/RomiPortal/RomiPortalFeatures/MiniCard';
 
 interface Technology {
   technology_id: string;
@@ -37,6 +38,7 @@ interface Message {
 }
 
 export default function RomiChat() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -139,6 +141,10 @@ export default function RomiChat() {
     setInputText('');
     executeSearch(userMessage);
   };
+
+  if (pathname?.startsWith('/RomiPortal')) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-6 left-4 right-4 md:left-auto md:right-8 md:bottom-8 z-[100] flex flex-col items-end">

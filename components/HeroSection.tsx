@@ -7,10 +7,10 @@ import { ArrowUpRight } from 'lucide-react';
 export default function HeroSection() {
 
   return (
-    <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 py-6 font-sans relative">
+    <div id="hero" className="w-full max-w-[1400px] mx-auto px-4 md:px-8 py-6 font-sans relative">
 
       {/* Hero Banner */}
-      <div className="relative w-full h-[520px] sm:h-[500px] md:h-[500px] rounded-[20px] overflow-hidden mb-4 group shadow-lg md:mt-4">
+      <motion.div layoutId="romi-hero-container" className="relative w-full h-[520px] sm:h-[500px] md:h-[500px] rounded-[20px] overflow-hidden mb-4 group shadow-lg md:mt-4">
         {/* Background Image with Gradient Overlay */}
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -33,7 +33,7 @@ export default function HeroSection() {
             <span style={{ color: '#51B3F9', fontWeight: '600' }}>Kerala&apos;s top</span> research institutions, market-ready IP, and Researchpreneurship.
           </p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Bottom Action Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mt-4 md:mt-6">

@@ -24,8 +24,43 @@ export default function Navbar() {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
   }, [isMobileMenuOpen]);
 
+  // Smooth scroll to element on initial hash load
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash;
+      setTimeout(() => {
+        const id = hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 600);
+    }
+  }, [pathname]);
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href === '/') {
+      if (pathname === '/') {
+        e.preventDefault();
+        document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        e.preventDefault();
+        window.location.href = '/#hero';
+      }
+    } else if (href === '/RomiPortal') {
+      if (pathname === '/RomiPortal') {
+        e.preventDefault();
+        document.getElementById('romi-hero')?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        e.preventDefault();
+        window.location.href = '/RomiPortal#romi-hero';
+      }
+    }
+  };
+
   const navLinks = [
     { href: '/', label: 'Home' },
+    { href: '/RomiPortal', label: 'ROMI AI' },
     { href: '/technologies', label: 'Technologies' },
     { href: '/instrumentation', label: 'Instrumentation' },
     { href: '/events', label: 'Events' },
@@ -40,6 +75,7 @@ export default function Navbar() {
           {/* Brand Logos - Equal sizing, scaled down */}
           <Link
             href="/"
+            onClick={(e) => handleLinkClick(e, '/')}
             className="flex items-center gap-3 md:gap-4 z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1b60bb] rounded-sm group cursor-pointer bg-transparent border-none p-0"
           >
 
@@ -76,6 +112,7 @@ export default function Navbar() {
               <Link
                 key={link.label}
                 href={link.href}
+                onClick={(e) => handleLinkClick(e, link.href)}
                 className="relative font-helios text-[15px] font-medium text-[#1b60bb] hover:text-[#0f3a6d] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1b60bb] rounded-sm px-1 py-1.5 group"
               >
                 {link.label}
@@ -105,10 +142,13 @@ export default function Navbar() {
             {/* Navigation Links */}
             <nav className="flex flex-col w-full">
               {navLinks.map((link) => (
-                <Link
+                 <Link
                   key={link.label}
                   href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => {
+                    handleLinkClick(e, link.href);
+                    setIsMobileMenuOpen(false);
+                  }}
                   className="flex items-center justify-between px-6 py-5 border-b border-gray-100 font-helios font-semibold text-base text-[#1b60bb] hover:bg-gray-50 active:bg-gray-100 transition-colors"
                 >
                   {link.label}
