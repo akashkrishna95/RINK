@@ -273,12 +273,13 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                 </a>
                               )}
                               <a 
-                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(inst.name + ', ' + inst.district + ', Kerala')}`}
+                                href={`https://www.google.com/maps/search/?api=1&query=${inst.lat},${inst.lng}`}
                                 target="_blank" 
                                 rel="noopener noreferrer"
-                                className="w-full text-center block text-sm font-semibold text-[#1b60bb] bg-white border border-[#bde7ff] hover:bg-slate-50 py-3 rounded-xl transition-all active:scale-[0.98]"
+                                className="w-full text-center flex items-center justify-center gap-1.5 text-sm font-semibold text-[#1b60bb] bg-white border border-[#bde7ff] hover:bg-slate-50 py-3 rounded-xl transition-all active:scale-[0.98]"
                               >
                                 View on Google Maps
+                                <ArrowUpRight size={16} />
                               </a>
                             </div>
                           </div>

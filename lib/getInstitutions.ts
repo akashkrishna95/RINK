@@ -132,6 +132,64 @@ async function geocodeNominatim(query: string): Promise<{ lat: number; lng: numb
   return null;
 }
 
+const fs = typeof window === 'undefined' ? require('fs') : null;
+const path = typeof window === 'undefined' ? require('path') : null;
+
+const CACHE_FILE = path ? path.join(process.cwd(), 'data', 'reverse_geocode_cache.json') : '';
+
+let reverseGeocodeCache: Record<string, string> = {};
+let isCacheLoaded = false;
+
+function loadReverseGeocodeCache() {
+  if (isCacheLoaded) return;
+  if (!fs || !fs.existsSync || !fs.readFileSync) {
+    isCacheLoaded = true;
+    return;
+  }
+  try {
+    if (fs.existsSync(CACHE_FILE)) {
+      const content = fs.readFileSync(CACHE_FILE, 'utf8');
+      reverseGeocodeCache = JSON.parse(content);
+    }
+  } catch (error) {
+    console.error("Failed to load reverse geocode cache:", error);
+  }
+  isCacheLoaded = true;
+}
+
+function saveReverseGeocodeCache() {
+  if (!fs || !fs.writeFileSync) return;
+  try {
+    const dir = path.dirname(CACHE_FILE);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(CACHE_FILE, JSON.stringify(reverseGeocodeCache, null, 2), 'utf8');
+  } catch (error) {
+    console.error("Failed to save reverse geocode cache:", error);
+  }
+}
+
+async function reverseGeocodeNominatim(lat: number, lng: number): Promise<string | null> {
+  try {
+    const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`;
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'RINK-KSUM-Website-Builder-Akash'
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.display_name) {
+        return data.display_name;
+      }
+    }
+  } catch (error) {
+    console.error(`Reverse geocoding error for ${lat}, ${lng}:`, error);
+  }
+  return null;
+}
+
 export async function getInstitutions(): Promise<Institution[]> {
   try {
     // Append timestamp & random parameter to bypass caching completely at the Google CDN layer
@@ -247,10 +305,29 @@ export async function getInstitutions(): Promise<Institution[]> {
         }
       }
 
+      // Dynamic Address calculation from lat/lng
+      let finalLocation = location;
+      if (!finalLocation && !isNaN(lat) && !isNaN(lng)) {
+        const cacheKey = `${lat.toFixed(4)},${lng.toFixed(4)}`;
+        loadReverseGeocodeCache();
+        if (reverseGeocodeCache[cacheKey]) {
+          finalLocation = reverseGeocodeCache[cacheKey];
+        } else {
+          const addr = await reverseGeocodeNominatim(lat, lng);
+          if (addr) {
+            finalLocation = addr;
+            reverseGeocodeCache[cacheKey] = addr;
+            saveReverseGeocodeCache();
+          } else {
+            finalLocation = `${name}, ${district}, Kerala`;
+          }
+        }
+      }
+
       return {
         id: index + 1,
         name,
-        location,
+        location: finalLocation,
         district,
         website,
         logo_url,

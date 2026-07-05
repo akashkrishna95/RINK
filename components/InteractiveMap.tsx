@@ -42,6 +42,8 @@ interface Institution {
   techCount: number;
   lat: number;
   lng: number;
+  location?: string;
+  partnered?: boolean;
 }
 
 interface InteractiveMapProps {
@@ -285,9 +287,9 @@ export default function InteractiveMap({
                     >
                       {inst.name}
                     </div>
-                    <div className="flex items-center justify-between mt-1 text-[11px]">
+                    <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px]">
                       <span 
-                        className="text-[#1b4f8d] font-semibold"
+                        className="text-[#1b4f8d] font-semibold bg-[#eff9ff] px-2 py-0.5 rounded"
                         style={{ fontFamily: "'Helios Extended', sans-serif" }}
                       >
                         {inst.district}
@@ -295,12 +297,39 @@ export default function InteractiveMap({
                       <span className="bg-[#daf1ff] text-[#1b60bb] px-2 py-0.5 rounded font-mono font-semibold">
                         {inst.techCount} Techs
                       </span>
+                      {inst.partnered && (
+                        <span className="bg-emerald-600 text-white px-2.5 py-0.5 rounded font-bold text-[9px] shadow-sm">
+                          Partnered
+                        </span>
+                      )}
                     </div>
-                    <p className="text-[11px] text-slate-600 leading-relaxed font-sans border-t border-[#daf1ff] pt-2 mt-1">
+                    <p className="text-[11px] text-slate-500 leading-relaxed font-sans border-t border-[#daf1ff] pt-2 mt-1">
                       A leading Innovation Hub helping transform research into scalable startup products and intellectual property.
                     </p>
+                    
+                    {inst.location && (
+                      <div className="text-[11px] text-slate-600 font-sans mt-0.5 leading-relaxed">
+                        <span className="font-semibold text-[#1b4f8d]">Address: </span>
+                        {inst.location}
+                      </div>
+                    )}
+
+                    {inst.website && (
+                      <div className="text-[11px] text-slate-600 font-sans mt-0.5">
+                        <span className="font-semibold text-[#1b4f8d]">Website: </span>
+                        <a 
+                          href={inst.website.startsWith('http') ? inst.website : `https://${inst.website}`}
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="text-[#1b60bb] hover:underline hover:text-[#1872dd] font-semibold"
+                        >
+                          {inst.website.replace(/^https?:\/\/(www\.)?/, '')}
+                        </a>
+                      </div>
+                    )}
+
                     <a 
-                      href={inst.website} 
+                      href={`https://www.google.com/maps/search/?api=1&query=${inst.lat},${inst.lng}`} 
                       target="_blank" 
                       rel="noopener noreferrer" 
                       className="mt-2 text-center text-xs font-semibold bg-[#1b60bb] hover:bg-[#1872dd] py-2 rounded-lg transition-colors flex items-center justify-center gap-1 shadow-sm font-sans"
