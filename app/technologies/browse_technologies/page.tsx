@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import TechnologiesNavbar from '@/components/technologies/TechnologiesNavbar';
-import BrowseTechnologies from '@/components/technologies/BrowseTechnologies';
-import Footer from '@/components/Footer';
+import TechnologiesNavbar from '@/HomePage/technologies/TechnologiesNavbar';
+import BrowseTechnologies from '@/HomePage/technologies/BrowseTechnologies';
+import Footer from '@/HomePage/Footer';
 
 export const metadata: Metadata = {
   title: 'Browse Technologies - RINK | Advanced Search & Filters',

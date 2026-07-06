@@ -22,9 +22,6 @@ export default function StorageConsentPopup({ onClose, isHighlighted = false }: 
         localStorage.setItem('romi-consent', 'true');
       } else {
         localStorage.removeItem('romi-consent');
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('romi-consent-dismissed', 'true');
-        }
       }
       onClose();
     }, 300);

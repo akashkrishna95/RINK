@@ -42,18 +42,18 @@ export default function Navbar() {
     if (href === '/') {
       if (pathname === '/') {
         e.preventDefault();
-        document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         e.preventDefault();
-        window.location.href = '/#hero';
+        window.location.href = '/';
       }
     } else if (href === '/RomiPortal') {
       if (pathname === '/RomiPortal') {
         e.preventDefault();
-        document.getElementById('romi-hero')?.scrollIntoView({ behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         e.preventDefault();
-        window.location.href = '/RomiPortal#romi-hero';
+        window.location.href = '/RomiPortal';
       }
     }
   };

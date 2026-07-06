@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, ExternalLink, Image as ImageIcon, X } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Navbar from '@/HomePage/Navbar';
+import Footer from '@/HomePage/Footer';
 import { eventsData, RinkEvent } from '@/data/events';
 
 export default function EventsPage() {

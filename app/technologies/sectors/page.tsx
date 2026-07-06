@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Utensils, Wheat, Dna, Zap, Activity, Droplets, Cpu, Building, Bot, Layers, Rocket, ArrowLeft, ShoppingBag } from 'lucide-react';
-import TechnologiesNavbar from '@/components/technologies/TechnologiesNavbar';
-import Footer from '@/components/Footer';
+import TechnologiesNavbar from '@/HomePage/technologies/TechnologiesNavbar';
+import Footer from '@/HomePage/Footer';
 
 export const metadata: Metadata = {
   title: 'All Sectors - RINK',

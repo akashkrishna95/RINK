@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Building2, ArrowLeft } from 'lucide-react';
-import TechnologiesNavbar from '@/components/technologies/TechnologiesNavbar';
-import Footer from '@/components/Footer';
+import TechnologiesNavbar from '@/HomePage/technologies/TechnologiesNavbar';
+import Footer from '@/HomePage/Footer';
 
 export const metadata: Metadata = {
   title: 'All Institutions - RINK',

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import TechnologiesNavbar from '@/components/technologies/TechnologiesNavbar';
-import TechnologyDetails from '@/components/technologies/TechnologyDetails';
-import Footer from '@/components/Footer';
+import TechnologiesNavbar from '@/HomePage/technologies/TechnologiesNavbar';
+import TechnologyDetails from '@/HomePage/technologies/TechnologyDetails';
+import Footer from '@/HomePage/Footer';
 
 export const metadata: Metadata = {
   title: 'Technology Details - RINK | Discover Research Technologies',

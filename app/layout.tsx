@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Poppins } from 'next/font/google'
 import localFont from 'next/font/local'
 import NextTopLoader from 'nextjs-toploader'
-import RomiChat from '@/components/RomiChat'
+import RomiChat from '@/HomePage/RomiChat'
 import './globals.css'
 
 const poppins = Poppins({

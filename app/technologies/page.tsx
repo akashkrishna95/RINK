@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import TechnologiesNavbar from '@/components/technologies/TechnologiesNavbar';
-import TechnologiesHero from '@/components/technologies/TechnologiesHero';
-import FeaturedTechnologies from '@/components/technologies/FeaturedTechnologies';
+import TechnologiesNavbar from '@/HomePage/technologies/TechnologiesNavbar';
+import TechnologiesHero from '@/HomePage/technologies/TechnologiesHero';
+import FeaturedTechnologies from '@/HomePage/technologies/FeaturedTechnologies';
 import { getFeaturedTechnologies } from '@/lib/getFeaturedTechnologies';
-import BrowseInstitutions from '@/components/technologies/BrowseInstitutions';
-import BrowseSectors from '@/components/technologies/BrowseSectors';
-import Footer from '@/components/Footer';
+import BrowseInstitutions from '@/HomePage/technologies/BrowseInstitutions';
+import BrowseSectors from '@/HomePage/technologies/BrowseSectors';
+import Footer from '@/HomePage/Footer';
 
 export const metadata: Metadata = {
   title: 'Technologies - RINK | Browse Research Technologies',

@@ -1,10 +1,10 @@
-import Navbar from '@/components/Navbar';
-import HeroSection from '@/components/HeroSection';
-import InstitutionsGrid from '@/components/InstitutionsGrid';
-import FeaturedTechnologies from '@/components/FeaturedTechnologies';
-import AboutRink from '@/components/AboutRink';
-import PartnerInstitutes from '@/components/PartnerInstitutes';
-import Footer from '@/components/Footer';
+import Navbar from '@/HomePage/Navbar';
+import HeroSection from '@/HomePage/HeroSection';
+import InstitutionsGrid from '@/HomePage/InstitutionsGrid';
+import FeaturedTechnologies from '@/HomePage/FeaturedTechnologies';
+import AboutRink from '@/HomePage/AboutRink';
+import PartnerInstitutes from '@/HomePage/PartnerInstitutes';
+import Footer from '@/HomePage/Footer';
 import { getFeaturedTechnologies } from '@/lib/getFeaturedTechnologies';
 import { getInstitutions } from '@/lib/getInstitutions';
 

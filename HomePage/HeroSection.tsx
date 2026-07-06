@@ -7,7 +7,7 @@ import { ArrowUpRight } from 'lucide-react';
 export default function HeroSection() {
 
   return (
-    <div id="hero" className="w-full max-w-[1400px] mx-auto px-4 md:px-8 py-6 font-sans relative">
+    <div id="hero" className="w-full max-w-[1400px] mx-auto px-4 md:px-8 py-6 font-sans relative scroll-mt-20">
 
       {/* Hero Banner */}
       <motion.div layoutId="romi-hero-container" className="relative w-full h-[520px] sm:h-[500px] md:h-[500px] rounded-[20px] overflow-hidden mb-4 group shadow-lg md:mt-4">

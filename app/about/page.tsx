@@ -3,8 +3,8 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, FlaskConical, Presentation, FileBadge, Coins, MapPin, Phone, Mail, Building2, Users, Network, Target } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Navbar from '@/HomePage/Navbar';
+import Footer from '@/HomePage/Footer';
 
 export default function AboutRinkPage() {
   const initiatives = [

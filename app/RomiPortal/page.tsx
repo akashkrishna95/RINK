@@ -6,11 +6,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUp, Mic, BarChart3, Search, Lightbulb, Zap, Filter, Database, TrendingUp, User, Check, X as CloseIcon, ArrowRight, Scale, Users, Shield, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, Fragment } from 'react';
-import RomiPortalLayout from './RomiPortalFeatures/RomiPortalLayout';
+import RomiPortalLayout from './RomiPortalLayout';
 import StorageConsentPopup from './RomiPortalFeatures/StorageConsentPopup';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/HomePage/Navbar';
 import MiniCard from './RomiPortalFeatures/MiniCard';
-import Footer from '@/components/Footer';
+import Footer from '@/HomePage/Footer';
 
 const tabs = ['search', 'analyze', 'compare', 'researchpreneurship'];
 
@@ -123,6 +123,15 @@ export default function RomiPortalPage() {
   const [activePipelineStep, setActivePipelineStep] = useState(0);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
 
+  // Auto-close mobile dropdown on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsMobileDropdownOpen(false);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Animated placeholder state
   const [currentPlaceholder, setCurrentPlaceholder] = useState(tabPlaceholders['search']);
 
@@ -198,12 +207,12 @@ export default function RomiPortalPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full min-h-[85vh] rounded-[40px] overflow-hidden relative shadow-2xl border border-gray-100 flex flex-col items-center justify-between pt-24 pb-12 bg-cover bg-center shrink-0 mb-8"
+              className="w-full min-h-[85vh] rounded-[40px] relative shadow-2xl border border-gray-100 flex flex-col items-center justify-between pt-24 pb-12 bg-cover bg-center shrink-0 mb-8 scroll-mt-20"
               style={{
                 backgroundImage: "url('/images/ROMI-PORTAL-BG.webp')",
               }}
             >
-              <div className="absolute inset-0 bg-white/20 pointer-events-none"></div>
+              <div className="absolute inset-0 bg-white/20 pointer-events-none rounded-[40px]"></div>
 
               <div className="z-20 flex flex-col items-center text-center max-w-4xl px-4 mt-8 translate-y-20 md: translate-y-8">
                 <motion.h1
@@ -298,12 +307,12 @@ export default function RomiPortalPage() {
                               animate={{ opacity: 1, y: 0, scale: 1 }}
                               exit={{ opacity: 0, y: -10, scale: 0.95 }}
                               transition={{ duration: 0.15 }}
-                              className="absolute top-10 left-0 bg-white border border-gray-100 rounded-2xl shadow-xl p-2.5 z-30 w-48 flex flex-col gap-1"
+                              className="absolute top-full mt-2.5 left-0 bg-white border border-gray-100 rounded-2xl shadow-xl p-2.5 z-30 w-48 flex flex-col gap-1"
                             >
                               {[
-                                { id: 'search', label: 'semantic search', icon: <Search size={14} /> },
-                                { id: 'analyze', label: 'market research', icon: <BarChart3 size={14} /> },
-                                { id: 'compare', label: 'IP & licensing', icon: <Shield size={14} /> },
+                                { id: 'search', label: 'search', icon: <Search size={14} /> },
+                                { id: 'analyze', label: 'analyze', icon: <BarChart3 size={14} /> },
+                                { id: 'compare', label: 'compare', icon: <Shield size={14} /> },
                                 { id: 'researchpreneurship', label: 'researchpreneurship', icon: <Lightbulb size={14} /> }
                               ].map((option) => (
                                 <button
@@ -350,11 +359,11 @@ export default function RomiPortalPage() {
                       </div>
                       <button
                         onClick={showConsent ? handleInputClick : handleSearch}
-                        className={`w-12 h-12 bg-gradient-to-tr from-[#1b60bb] to-indigo-500 rounded-2xl flex items-center justify-center text-white hover:shadow-lg hover:shadow-blue-500/20 active:scale-95 transition-all shrink-0 z-10 ${
+                        className={`w-12 h-12 bg-black hover:bg-gray-800 rounded-full flex items-center justify-center text-white active:scale-95 transition-all shrink-0 z-10 ${
                           showConsent ? 'opacity-40 cursor-not-allowed' : ''
                         }`}
                       >
-                        <ArrowUp size={22} className="transform -rotate-45" />
+                        <ArrowUp size={22} className="text-white" />
                       </button>
                     </div>
                   </div>

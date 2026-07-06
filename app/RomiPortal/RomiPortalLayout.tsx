@@ -1,25 +1,34 @@
-//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\RomiPortal\RomiPortalFeatures\RomiPortalLayout.tsx
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Settings, Download, Share2, ThumbsUp, ThumbsDown, User, Bot, AlertCircle, ArrowUp } from 'lucide-react';
-import DataVisualizationPanel from './DataVisualizationPanel';
-import RomiThinkingIndicator from './RomiThinkingIndicator';
-import IPProtectionNotice from './IPProtectionNotice';
-import StorageConsentPopup from './StorageConsentPopup';
+import { MessageSquare, Settings, Download, Share2, ThumbsUp, ThumbsDown, User, Bot, ArrowUp } from 'lucide-react';
+import DataVisualizationPanel from './RomiPortalFeatures/DataVisualizationPanel';
+import RomiThinkingIndicator from './RomiPortalFeatures/RomiThinkingIndicator';
+import IPProtectionNotice from './RomiPortalFeatures/IPProtectionNotice';
+import StorageConsentPopup from './RomiPortalFeatures/StorageConsentPopup';
 
-import RomiBarChart from './RomiBarChart';
-import RomiLineChart from './RomiLineChart';
-import RomiPieChart from './RomiPieChart';
-import RomiProgressBar from './RomiProgressBar';
-import RomiTreeMap from './RomiTreeMap';
-import RomiFeatures from './RomiFeatures';
+import RomiBarChart from './RomiPortalFeatures/RomiBarChart';
+import RomiLineChart from './RomiPortalFeatures/RomiLineChart';
+import RomiPieChart from './RomiPortalFeatures/RomiPieChart';
+import RomiProgressBar from './RomiPortalFeatures/RomiProgressBar';
+import RomiTreeMap from './RomiPortalFeatures/RomiTreeMap';
+import RomiFeatures from './RomiPortalFeatures/RomiFeatures';
+
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import ComparisonTable, { TableHead, TableRow, TableHeaderCell, TableCell } from '../../HomePage/RomiAI/ComparisonTable';
+import MiniCard from './RomiPortalFeatures/MiniCard';
 
 interface RomiPortalLayoutProps {
   query: string;
   onReset: () => void;
+}
+
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+  technologies?: any[];
 }
 
 export default function RomiPortalLayout({ query, onReset }: RomiPortalLayoutProps) {
@@ -29,8 +38,8 @@ export default function RomiPortalLayout({ query, onReset }: RomiPortalLayoutPro
   const [showConsent, setShowConsent] = useState(false);
   const [isConsentHighlighted, setIsConsentHighlighted] = useState(false);
   
-  const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string | React.ReactNode }[]>([]);
-  const [isThinking, setIsThinking] = useState(true);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isThinking, setIsThinking] = useState(false);
   const [inputVal, setInputVal] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -40,13 +49,12 @@ export default function RomiPortalLayout({ query, onReset }: RomiPortalLayoutPro
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const consent = localStorage.getItem('romi-consent');
-      const dismissed = sessionStorage.getItem('romi-consent-dismissed');
       
       const hasConsent = consent === 'true';
       setConsentStatus(hasConsent);
       
-      // Show consent popup if not consented and not dismissed yet
-      if (!consent && !dismissed) {
+      // Show consent popup if not consented
+      if (!consent) {
         setShowConsent(true);
       }
       
@@ -62,43 +70,111 @@ export default function RomiPortalLayout({ query, onReset }: RomiPortalLayoutPro
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isThinking]);
 
+  // Unified function to transmit search queries to your FastAPI server
+  const executeSearch = async (queryText: string, currentMessages: Message[]) => {
+    setIsThinking(true);
+    
+    // Pass conversation history for context
+    const history = currentMessages.map(m => ({
+      role: m.role,
+      content: m.content
+    }));
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/api/search`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: queryText,
+          limit: 20,
+          history: history.slice(-6)
+        }),
+      });
+
+      if (!response.ok) throw new Error("API Connection Failed");
+
+      const resData = await response.json();
+
+      if (resData.status === "success" || resData.ai_answer) {
+        setMessages(prev => [
+          ...prev,
+          {
+            role: 'assistant',
+            content: resData.ai_answer || `I found ${resData.match_count || 0} market-ready asset match(es) in the RINK database corresponding to your request.`,
+            technologies: resData.data || []
+          }
+        ]);
+      } else {
+        setMessages(prev => [
+          ...prev,
+          {
+            role: 'assistant',
+            content: "I couldn't find any technologies matching that specific description. Try modifying your terms or sector tags."
+          }
+        ]);
+      }
+    } catch (error) {
+      console.warn("ROMI API connection issue: Backend may not be running.");
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: "Oops! I'm having trouble accessing my central database brain right now. Make sure your local FastAPI backend server is up and running!"
+        }
+      ]);
+    } finally {
+      setIsThinking(false);
+    }
+  };
+
   // Initial user query response simulation
   useEffect(() => {
     if (query) {
-      setMessages([{ role: 'user', content: query }]);
-      
-      setTimeout(() => {
-        setIsThinking(false);
-        setMessages(prev => [
-          ...prev, 
-          { 
-            role: 'assistant', 
-            content: (
-              <div className="flex flex-col gap-6 w-full">
-                <div>
-                  <p className="mb-4">Here is the market analysis for your query based on our advanced AI estimation model. The global market size is projected to reach <strong className="text-[#1b60bb]">$500B by 2030</strong>.</p>
-                  <p>Top competitors currently dominate 60% of the market share, leaving significant room for disruption by emerging technologies.</p>
-                </div>
-                
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-                  <RomiLineChart />
-                  <RomiPieChart />
-                </div>
-
-                <RomiProgressBar overallProgressPercent={65} />
-              </div>
-            ) 
-          }
-        ]);
+      // Avoid starting the query twice on duplicate triggers
+      const hasInitialQuery = messages.some(m => m.role === 'user' && m.content === query);
+      if (!hasInitialQuery) {
+        const initialMsg: Message = { role: 'user', content: query };
+        setMessages([initialMsg]);
+        executeSearch(query, [initialMsg]);
         
         // Show IP Notice after first response if not dismissed
         const dismissedIP = localStorage.getItem('romi-ipr-dismissed') === 'true';
         if (!dismissedIP) {
-          setTimeout(() => setShowIPNotice(true), 2000);
+          setTimeout(() => setShowIPNotice(true), 4000);
         }
-      }, 3000);
+      }
     }
   }, [query]);
+
+  // Helper to render visuals/charts inline based on response text keywords
+  const renderInlineVisuals = (text: string) => {
+    const lower = text.toLowerCase();
+    const charts: React.ReactNode[] = [];
+    
+    if (lower.includes('bar chart') || lower.includes('growth breakdown') || lower.includes('yo-yo growth') || lower.includes('growth projection')) {
+      charts.push(<RomiBarChart key="bar" />);
+    }
+    if (lower.includes('line chart') || lower.includes('projection chart') || lower.includes('revenue projection')) {
+      charts.push(<RomiLineChart key="line" />);
+    }
+    if (lower.includes('pie chart') || lower.includes('donut chart') || lower.includes('market share') || lower.includes('share distribution')) {
+      charts.push(<RomiPieChart key="pie" />);
+    }
+    if (lower.includes('progress bar') || lower.includes('checklist') || lower.includes('stage mapping') || lower.includes('progress checklist') || lower.includes('researchpreneurship flow')) {
+      charts.push(<RomiProgressBar key="progress" overallProgressPercent={80} />);
+    }
+    if (lower.includes('treemap') || lower.includes('sector distribution') || lower.includes('patent distribution')) {
+      charts.push(<RomiTreeMap key="treemap" />);
+    }
+    
+    if (charts.length === 0) return null;
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full mt-6">
+        {charts}
+      </div>
+    );
+  };
 
   // Handle Input Lock Clicks
   const handleInputClick = () => {
@@ -109,84 +185,16 @@ export default function RomiPortalLayout({ query, onReset }: RomiPortalLayoutPro
   };
 
   // Send Message Logic
-  // BACKEND API INTEGRATION HINT:
-  // To connect the chat UI directly to your AI backend (e.g. FastAPI, Node, or Python frameworks):
-  // You would replace the local setTimeout block inside handleSendMessage with an async API fetch call:
-  // 
-  //   const res = await fetch('/api/chat', { 
-  //     method: 'POST', 
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({ message: userMessage }) 
-  //   });
-  //   const data = await res.json();
-  //   setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
-  //
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (showConsent || !inputVal.trim()) return;
 
-    const userMessage = inputVal;
+    const userMessage = inputVal.trim();
     setInputVal('');
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
-    setIsThinking(true);
-
-    // Simulate AI thinking and rendering premium charts dynamically
-    setTimeout(() => {
-      setIsThinking(false);
-      const lower = userMessage.toLowerCase();
-      let response: React.ReactNode;
-
-      if (lower.includes('bar') || lower.includes('growth') || lower.includes('estimate')) {
-        response = (
-          <div className="flex flex-col gap-4 w-full">
-            <p>Based on our AI estimation index, here is the YoY growth breakdown for the requested technology segment.</p>
-            <RomiBarChart />
-          </div>
-        );
-      } else if (lower.includes('line') || lower.includes('projection') || lower.includes('revenue')) {
-        response = (
-          <div className="flex flex-col gap-4 w-full">
-            <p>Here is the 5-year revenue and expansion projection chart derived from active Kerala university research licenses.</p>
-            <RomiLineChart />
-          </div>
-        );
-      } else if (lower.includes('pie') || lower.includes('share') || lower.includes('donut')) {
-        response = (
-          <div className="flex flex-col gap-4 w-full">
-            <p>This donut visualization details the market share distribution among key competitors and emerging RINK ecosystem startups.</p>
-            <RomiPieChart />
-          </div>
-        );
-      } else if (lower.includes('progress') || lower.includes('stage') || lower.includes('check')) {
-        response = (
-          <div className="flex flex-col gap-4 w-full">
-            <p>Here is your current stage mapping and checklist progress for the ResearchPreneurship workflow validation.</p>
-            <RomiProgressBar overallProgressPercent={80} />
-          </div>
-        );
-      } else if (lower.includes('treemap') || lower.includes('sector') || lower.includes('distribution')) {
-        response = (
-          <div className="flex flex-col gap-4 w-full">
-            <p>Our semantic indexing model has mapped technology patent distributions across major commercial sectors:</p>
-            <RomiTreeMap />
-          </div>
-        );
-      } else {
-        response = (
-          <div className="flex flex-col gap-4 w-full">
-            <p>I have processed your search query against the RINK database. Please let me know if you would like me to render a <strong>bar chart</strong>, <strong>line chart</strong>, <strong>pie chart</strong>, <strong>progress checklist</strong>, or <strong>sector treemap</strong> for this analysis.</p>
-          </div>
-        );
-      }
-
-      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
-
-      // Prompt IP notice if not dismissed
-      const dismissedIP = localStorage.getItem('romi-ipr-dismissed') === 'true';
-      if (!dismissedIP) {
-        setTimeout(() => setShowIPNotice(true), 1500);
-      }
-    }, 2000);
+    const newMsg: Message = { role: 'user', content: userMessage };
+    const updatedMessages = [...messages, newMsg];
+    setMessages(updatedMessages);
+    executeSearch(userMessage, updatedMessages);
   };
 
   const handleConsentClose = () => {
@@ -195,10 +203,6 @@ export default function RomiPortalLayout({ query, onReset }: RomiPortalLayoutPro
     setConsentStatus(consent);
     if (consent) {
       setSidebarOpen(true);
-    }
-    // Set dismiss flag for session if skipped
-    if (!consent) {
-      sessionStorage.setItem('romi-consent-dismissed', 'true');
     }
   };
 
@@ -274,7 +278,42 @@ export default function RomiPortalLayout({ query, onReset }: RomiPortalLayoutPro
                 </div>
               )}
               <div className={`p-5 rounded-2xl ${msg.role === 'user' ? 'bg-gray-100 rounded-tr-sm' : 'bg-white border border-gray-100 shadow-sm rounded-tl-sm'} font-montserrat text-xs sm:text-sm text-gray-800 leading-relaxed max-w-3xl w-full`}>
-                {msg.content}
+                {msg.role === 'user' ? (
+                  <span className="whitespace-pre-line">{msg.content}</span>
+                ) : (
+                  <div className="prose prose-sm max-w-none prose-slate text-gray-800 text-[13px] leading-relaxed">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        table: ({ children }) => <ComparisonTable>{children}</ComparisonTable>,
+                        thead: ({ children }) => <TableHead>{children}</TableHead>,
+                        tr: ({ children }) => <TableRow>{children}</TableRow>,
+                        th: ({ children }) => <TableHeaderCell>{children}</TableHeaderCell>,
+                        td: ({ children }) => <TableCell>{children}</TableCell>,
+                        ul: ({ children }) => <ul className="list-disc pl-5 my-2 space-y-1">{children}</ul>,
+                        ol: ({ children }) => <ol className="list-decimal pl-5 my-2 space-y-1">{children}</ol>,
+                        li: ({ children }) => <li className="my-0.5">{children}</li>,
+                        p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>,
+                        strong: ({ children }) => <strong className="font-bold text-[#1b60bb]">{children}</strong>,
+                      }}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
+
+                    {/* Render matching technologies if available */}
+                    {msg.technologies && msg.technologies.length > 0 && (
+                      <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-gray-100">
+                        <p className="font-semibold text-gray-700 mb-1">Matching Technologies:</p>
+                        {msg.technologies.map((tech) => (
+                          <MiniCard key={tech.technology_id} technology={tech} />
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Render inline charts/visuals dynamically */}
+                    {renderInlineVisuals(msg.content)}
+                  </div>
+                )}
                 
                 {msg.role === 'assistant' && (
                   <div className="flex items-center gap-2 mt-4 pt-4 border-t border-gray-50 text-gray-400">
@@ -293,15 +332,27 @@ export default function RomiPortalLayout({ query, onReset }: RomiPortalLayoutPro
           )}
 
           {/* KSUM Eligibility and stats wrapper */}
-          {!isThinking && messages.length > 1 && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mr-auto w-full max-w-4xl"
-            >
-              <RomiFeatures />
-            </motion.div>
-          )}
+          {!isThinking && (() => {
+            const lastMsg = [...messages].reverse().find(m => m.role === 'assistant');
+            const showRomiFeatures = lastMsg && (
+              lastMsg.content.toLowerCase().includes('eligibility') || 
+              lastMsg.content.toLowerCase().includes('ksum') || 
+              lastMsg.content.toLowerCase().includes('startup mission') ||
+              lastMsg.content.toLowerCase().includes('program') ||
+              lastMsg.content.toLowerCase().includes('funding') ||
+              lastMsg.content.toLowerCase().includes('assessment')
+            );
+            if (!showRomiFeatures) return null;
+            return (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mr-auto w-full max-w-4xl"
+              >
+                <RomiFeatures />
+              </motion.div>
+            );
+          })()}
 
           <div ref={chatEndRef} />
         </div>
@@ -325,9 +376,9 @@ export default function RomiPortalLayout({ query, onReset }: RomiPortalLayoutPro
             <button 
               type="submit"
               disabled={showConsent || !inputVal.trim()}
-              className="absolute right-2 p-2.5 bg-[#1b60bb] hover:bg-[#154d96] text-white rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
+              className="absolute right-2 w-9 h-9 bg-black hover:bg-gray-800 text-white rounded-full flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
             >
-              <ArrowUp size={16} />
+              <ArrowUp size={16} className="text-white" />
             </button>
           </form>
           <p className="text-[9px] text-center text-gray-400 mt-2 font-montserrat">
@@ -408,4 +459,3 @@ export default function RomiPortalLayout({ query, onReset }: RomiPortalLayoutPro
     </div>
   );
 }
-

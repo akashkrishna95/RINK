@@ -2,8 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { ArrowRight, Coins, Settings, Microscope, Rocket } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Navbar from '@/HomePage/Navbar';
+import Footer from '@/HomePage/Footer';
 
 export default function RandDGrantPage() {
   return (

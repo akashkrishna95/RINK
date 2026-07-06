@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ArrowRight, CheckCircle2, UserCheck, Search, Lightbulb, FileText, TrendingUp, MapPin, Award, BookOpen, Rocket, Users } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Navbar from '@/HomePage/Navbar';
+import Footer from '@/HomePage/Footer';
 
 function AnimatedCounter({ end, suffix = "+" }: { end: number, suffix?: string }) {
   const [count, setCount] = useState(0);
