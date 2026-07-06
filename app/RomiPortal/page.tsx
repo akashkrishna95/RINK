@@ -455,7 +455,7 @@ export default function RomiPortalPage() {
               </div>
 
               {/* 3. Capabilities / Ecosystem Context (Animated Bento Grid) */}
-              <div className="py-24 px-4 md:px-8 max-w-7xl mx-auto bg-white border-t border-gray-100 w-full flex flex-col items-center">
+              <div className="py-24 px-4 md:px-8 max-w-7xl mx-auto bg-white w-full flex flex-col items-center">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -463,10 +463,7 @@ export default function RomiPortalPage() {
                   transition={{ duration: 0.6 }}
                   className="text-center mb-16 w-full flex flex-col items-center justify-center"
                 >
-                  <span className="text-xs font-bold uppercase tracking-widest text-[#1b60bb] bg-blue-50 px-3.5 py-1.5 rounded-full shadow-inner font-helios inline-block mb-4">
-                    Capabilities
-                  </span>
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
+                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
                     Engineered for Research & Scale
                   </h2>
                   <p className="text-gray-500 font-montserrat max-w-2xl mx-auto text-center">
@@ -599,7 +596,7 @@ export default function RomiPortalPage() {
                 </motion.div>
               </div>
               {/*ROMI Synthesized IP Query Pipeline (Animated Grid) */}
-              <div className="w-full bg-[#FCFAF8] py-20 border-b border-gray-100 rounded-[40px] shadow-sm my-4 flex items-center justify-center relative overflow-hidden">
+              <div className="w-full bg-[#FCFAF8] py-20 rounded-[40px] shadow-sm my-4 flex items-center justify-center relative overflow-hidden">
                 <style>{`
                   @keyframes flowParticles {
                     from { stroke-dashoffset: 40; }
@@ -625,9 +622,6 @@ export default function RomiPortalPage() {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-12 relative z-10 w-full flex flex-col items-center"
                   >
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#1b60bb] bg-blue-50 px-3.5 py-1.5 rounded-full shadow-inner font-helios inline-block mb-4">
-                      RAG Architecture
-                    </span>
                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
                       Romi AI Architecture: Deep-Tech Data Flow
                     </h2>
@@ -773,11 +767,9 @@ export default function RomiPortalPage() {
               </div>
 
               {/* 4. Comparative Advantage Section */}
-              <div className="py-20 px-4 md:px-8 max-w-7xl mx-auto border-b border-gray-100 w-full flex flex-col items-center">
+              <div className="py-20 px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center">
                 <div className="text-center mb-16 w-full flex flex-col items-center">
-                  <span className="text-xs font-bold uppercase tracking-widest text-[#219653] bg-green-50 px-3.5 py-1.5 rounded-full shadow-inner font-helios inline-block mb-4">
-                    Comparison
-                  </span>
+                  
                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
                     Why ROMI AI Stands Alone
                   </h2>
@@ -835,12 +827,9 @@ export default function RomiPortalPage() {
               </div>
 
               {/* Target Use Case Grid */}
-              <div className="py-24 px-4 md:px-8 max-w-7xl mx-auto border-t border-gray-100 w-full flex flex-col items-center">
+              <div className="py-24 px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center">
                 <div className="text-center mb-16 w-full flex flex-col items-center">
-                  <span className="text-xs font-bold uppercase tracking-widest text-green-700 bg-green-50 px-3.5 py-1.5 rounded-full shadow-inner font-helios inline-block mb-4">
-                    Use Cases
-                  </span>
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
+                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
                     Tailored for Every Stakeholder
                   </h2>
                   <p className="text-gray-500 font-montserrat max-w-2xl mx-auto text-center">
@@ -867,7 +856,7 @@ export default function RomiPortalPage() {
               </div>
 
               {/* 5. Sample Conversation & Market Intelligence Preview */}
-              <div className="py-20 bg-[#FCFAF8] border-t border-b border-gray-100 relative overflow-hidden w-full flex items-center justify-center rounded-[40px] shadow-sm my-4">
+              <div className="py-20 bg-[#FCFAF8] relative overflow-hidden w-full flex items-center justify-center rounded-[40px] shadow-sm my-4">
                 <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full relative z-10">
 
                   {/* Left Column Text Content */}
