@@ -121,10 +121,21 @@ export default function Navbar() {
             ))}
           </div>
 
+          {/* Mobile ROMI AI Quick Access Link */}
+          <div className="flex md:hidden items-center ml-auto mr-3 z-50">
+            <Link
+              href="/RomiPortal"
+              onClick={(e) => handleLinkClick(e, '/RomiPortal')}
+              className="font-helios text-[15px] font-bold text-[#1b60bb] hover:text-[#0f3a6d] transition-colors focus:outline-none py-1.5"
+            >
+              ROMI AI
+            </Link>
+          </div>
+
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 -mr-2 text-[#1b60bb] hover:bg-[#1b60bb]/5 rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1b60bb]"
+            className="md:hidden p-2 -mr-2 text-[#1b60bb] hover:bg-[#1b60bb]/5 rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1b60bb] z-50"
             aria-label={isMobileMenuOpen ? "Close Menu" : "Open Menu"}
             aria-expanded={isMobileMenuOpen}
           >

@@ -5,7 +5,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUp, Mic, BarChart3, Search, Lightbulb, Zap, Filter, Database, TrendingUp, User, Check, X as CloseIcon, ArrowRight, Scale, Users, Shield, Plus } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import RomiPortalLayout from './RomiPortalFeatures/RomiPortalLayout';
 import StorageConsentPopup from './RomiPortalFeatures/StorageConsentPopup';
 import Navbar from '@/components/Navbar';
@@ -35,6 +35,43 @@ const tabPlaceholders: Record<string, string> = {
   researchpreneurship: "Assess my robotics research idea for commercialization..."
 };
 
+const comparisonRows = [
+  {
+    feature: "IP Search",
+    romi: "Indexes 160+ university tech libraries dynamically.",
+    other: "Offline static training data; no local library access."
+  },
+  {
+    feature: "Market Value",
+    romi: "Generates live TAM/SAM/SOM charts with web sources.",
+    other: "Static general estimates prone to hallucinations."
+  },
+  {
+    feature: "Patent Scan",
+    romi: "Semantic screening of research abstracts vs global patents.",
+    other: "Frequent citation errors and history hallucinations."
+  },
+  {
+    feature: "KSUM Link",
+    romi: "Auto-routes concepts directly to incubation programs.",
+    other: "Isolated text box; no connection to local networks."
+  },
+  {
+    feature: "IP Privacy",
+    romi: "Keeps ideas secure with zero-trust local storage.",
+    other: "Uploads inputs to public clouds, risking leaks."
+  },
+  {
+    feature: "Incubator Docs",
+    romi: "Single-click export of KSUM Word diagnostics (.docx).",
+    other: "Outputs unformatted raw text requiring manual layout."
+  }
+];
+
+
+
+
+
 // Animation Variants for Staggered Children
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -52,9 +89,10 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 100, damping: 20 }
+    transition: { type: "spring" as const, stiffness: 100, damping: 20 }
   }
 };
+
 
 export default function RomiPortalPage() {
   const [showConsent, setShowConsent] = useState(false);
@@ -722,6 +760,68 @@ export default function RomiPortalPage() {
                       );
                     })}
                   </motion.div>
+                </div>
+              </div>
+
+              {/* 4. Comparative Advantage Section */}
+              <div className="py-20 px-4 md:px-8 max-w-7xl mx-auto border-b border-gray-100 w-full flex flex-col items-center">
+                <div className="text-center mb-16 w-full flex flex-col items-center">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[#219653] bg-green-50 px-3.5 py-1.5 rounded-full shadow-inner font-helios inline-block mb-4">
+                    Comparison
+                  </span>
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
+                    Why ROMI AI Stands Alone
+                  </h2>
+                  <p className="text-gray-500 font-montserrat max-w-2xl mx-auto text-center">
+                    Purpose-built for deep-tech incubators. Compare how ROMI AI outperforms public AI models across every critical workflow.
+                  </p>
+                </div>
+
+                {/* 3-Column Comparative Table */}
+                <div className="w-[calc(100%+1rem)] -mx-2 md:w-full md:mx-auto max-w-4xl overflow-hidden rounded-3xl border border-gray-150 bg-white shadow-[0_20px_45px_-15px_rgba(27,96,187,0.12)]">
+                  <table className="w-full text-left border-collapse font-sans text-xs md:text-sm table-fixed">
+                    <thead>
+                      <tr className="border-b border-gray-100 bg-gray-50/50">
+                        <th className="w-[30%] md:w-[22%] p-2.5 md:p-5 font-helios font-bold text-gray-500 text-xs md:text-sm">
+                          Features
+                        </th>
+                        <th className="w-[35%] md:w-[39%] p-2.5 md:p-5 text-center font-helios font-bold text-[#219653] text-xs md:text-sm border-r border-l border-gray-100 bg-green-50/5">
+                          ROMI AI
+                        </th>
+                        <th className="w-[35%] md:w-[39%] p-2.5 md:p-5 text-center font-helios font-bold text-gray-500 text-xs md:text-sm bg-red-50/5">
+                          Other AI
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100/80">
+                      {comparisonRows.map((row, idx) => (
+                        <tr key={idx} className="hover:bg-gray-50/10 transition-colors">
+                          {/* Feature Name */}
+                          <td className="px-2.5 py-3 md:p-5 font-helios font-bold text-gray-800 text-[11px] md:text-sm align-top leading-tight break-normal">
+                            {row.feature}
+                          </td>
+                          {/* ROMI AI */}
+                          <td className="px-2.5 py-3 md:p-5 bg-green-50/5 border-r border-l border-gray-100 align-top">
+                            <div className="flex items-start gap-1.5 md:gap-2">
+                              <Check size={14} className="text-green-600 shrink-0 mt-0.5" strokeWidth={3.5} />
+                              <span className="text-gray-700 text-[10px] md:text-sm font-medium leading-relaxed font-montserrat">
+                                {row.romi}
+                              </span>
+                            </div>
+                          </td>
+                          {/* Other AI */}
+                          <td className="px-2.5 py-3 md:p-5 align-top bg-red-50/5">
+                            <div className="flex items-start gap-1.5 md:gap-2">
+                              <CloseIcon size={14} className="text-red-500 shrink-0 mt-0.5" strokeWidth={3.5} />
+                              <span className="text-gray-500 text-[10px] md:text-sm font-medium leading-relaxed font-montserrat">
+                                {row.other}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
