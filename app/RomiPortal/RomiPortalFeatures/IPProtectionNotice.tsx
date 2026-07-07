@@ -28,7 +28,7 @@ export default function IPProtectionNotice({ onClose }: { onClose: () => void })
           initial={{ opacity: 0, x: 200 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 200 }}
-          className="fixed bottom-6 right-6 z-40 max-w-sm bg-white rounded-3xl p-6 shadow-2xl border border-gray-100 flex flex-col items-start"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 z-40 w-[90%] sm:max-w-sm bg-white rounded-3xl p-6 shadow-2xl border border-gray-100 flex flex-col items-start"
         >
           <div className="flex justify-between items-center w-full mb-3">
             <div className="flex items-center gap-2">

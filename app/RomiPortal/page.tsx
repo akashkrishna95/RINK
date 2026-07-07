@@ -207,19 +207,19 @@ export default function RomiPortalPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full min-h-[85vh] rounded-[40px] relative shadow-2xl border border-gray-100 flex flex-col items-center justify-between pt-24 pb-12 bg-cover bg-center shrink-0 mb-8 scroll-mt-20"
+              className="w-full min-h-[70vh] md:min-h-[85vh] rounded-[40px] relative shadow-2xl border border-gray-100 flex flex-col items-center justify-between pt-24 pb-12 bg-cover bg-center shrink-0 mb-8 scroll-mt-20"
               style={{
                 backgroundImage: "url('/images/ROMI-PORTAL-BG.webp')",
               }}
             >
               <div className="absolute inset-0 bg-white/20 pointer-events-none rounded-[40px]"></div>
 
-              <div className="z-20 flex flex-col items-center text-center max-w-4xl px-4 mt-8 translate-y-20 md: translate-y-8">
+              <div className="z-20 flex flex-col items-center text-center max-w-4xl px-4 mt-8 translate-y-10 sm:translate-y-12 md:translate-y-8">
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="font-helios text-5xl sm:text-6xl md:text-8xl text-black tracking-tight animate-fade-in whitespace-nowrap text-center"
+                  className="font-helios text-4xl sm:text-6xl md:text-8xl text-black tracking-tight animate-fade-in md:whitespace-nowrap text-center"
                 >
                   Meet <span className="text-[#219653]">ROMI AI</span>
                 </motion.h1>
@@ -264,7 +264,7 @@ export default function RomiPortalPage() {
                             placeholder={showConsent ? "Please save the storage consent popup on the right to unlock searching..." : currentPlaceholder}
                             disabled={showConsent}
                             onClick={handleInputClick}
-                            className={`w-full bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400 text-lg md:text-2xl font-sans font-medium px-2 md:px-4 pt-1 md:pt-2 pb-4 md:pb-6 ${
+                            className={`w-full bg-transparent border-none outline-none text-black placeholder:text-gray-400 text-base sm:text-lg md:text-2xl font-sans font-medium px-2 md:px-4 pt-1 md:pt-2 pb-3 md:pb-6 ${
                               showConsent ? 'cursor-not-allowed text-gray-400' : ''
                             }`}
                             value={query}
@@ -779,8 +779,8 @@ export default function RomiPortalPage() {
                 </div>
 
                 {/* 3-Column Comparative Table */}
-                <div className="w-[calc(100%+1rem)] -mx-2 md:w-full md:mx-auto max-w-4xl overflow-hidden rounded-3xl border border-gray-150 bg-white shadow-[0_20px_45px_-15px_rgba(27,96,187,0.12)]">
-                  <table className="w-full text-left border-collapse font-sans text-xs md:text-sm table-fixed">
+                <div className="w-[calc(100%+1rem)] -mx-2 md:w-full md:mx-auto max-w-4xl overflow-x-auto md:overflow-hidden rounded-3xl border border-gray-150 bg-white shadow-[0_20px_45px_-15px_rgba(27,96,187,0.12)]">
+                  <table className="w-full text-left border-collapse font-sans text-xs md:text-sm table-fixed min-w-[500px] md:min-w-0">
                     <thead>
                       <tr className="border-b border-gray-100 bg-gray-50/50">
                         <th className="w-[30%] md:w-[22%] p-2.5 md:p-5 font-helios font-bold text-gray-500 text-xs md:text-sm">

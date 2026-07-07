@@ -34,7 +34,7 @@ export default function StorageConsentPopup({ onClose, isHighlighted = false }: 
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
-          className="fixed bottom-6 right-6 z-50 w-[90%] sm:w-[400px]"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 z-50 w-[90%] sm:w-[400px]"
         >
           {/* Inline styles for custom shake animation */}
           <style dangerouslySetInnerHTML={{ __html: `
