@@ -1,0 +1,27 @@
+{
+  "name": "@ksum/romi-chat-core",
+  "version": "1.0.0",
+  "description": "Shared Romi AI chat widget core for all KSUM RINK websites",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "framer-motion": ">=10",
+    "lucide-react": ">=0.300.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@types/react": "^18.2.0"
+  },
+  "dependencies": {
+    "react-markdown": "^9.0.0",
+    "remark-gfm": "^4.0.0"
+  }
+}

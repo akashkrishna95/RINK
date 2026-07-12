@@ -1,3 +1,5 @@
+// C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\page.tsx
+
 import Navbar from '@/HomePage/Navbar';
 import HeroSection from '@/HomePage/HeroSection';
 import InstitutionsGrid from '@/HomePage/InstitutionsGrid';

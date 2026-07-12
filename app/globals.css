@@ -1,3 +1,4 @@
+/* C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\globals.css */
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
@@ -208,4 +209,28 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* THE FIX: Makes chatbot markdown tables horizontally scrollable with expanded columns */
+.prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.prose th, .prose td {
+  min-width: 150px; /* Base width for standard columns */
+  white-space: normal; /* Lets text wrap inside the column */
+  vertical-align: top;
+}
+
+/* Force specific heavy-text columns to be super wide! */
+.prose th:nth-child(6), .prose td:nth-child(6) {
+  min-width: 250px; /* Problem Solved */
+}
+
+.prose th:nth-child(7), .prose td:nth-child(7),
+.prose th:nth-child(8), .prose td:nth-child(8) {
+  min-width: 350px; /* Description & Applications */
 }

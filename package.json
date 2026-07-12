@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
+    "@ksum/romi-chat-core": "file:./packages/romi-chat-core",
+    "@ksum/romi-widget-instrumentation": "file:./packages/romi-widget-instrumentation",
+    "@ksum/romi-widget-rink": "file:./packages/romi-widget-rink",
+    "@ksum/romi-widget-technologies": "file:./packages/romi-widget-technologies",
     "@vercel/analytics": "1.6.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

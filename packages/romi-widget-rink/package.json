@@ -1,0 +1,12 @@
+{
+  "name": "@ksum/romi-widget-rink",
+  "version": "1.0.0",
+  "description": "Preconfigured Romi AI widget for its KSUM site",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": { "build": "tsc" },
+  "dependencies": { "@ksum/romi-chat-core": "workspace:*" },
+  "peerDependencies": { "react": ">=18", "react-dom": ">=18" },
+  "devDependencies": { "typescript": "^5.4.0", "@types/react": "^18.2.0" }
+}

@@ -1,4 +1,4 @@
-//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\components\RomiAI\ComparisonTable.tsx
+// C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\RomiAI\ComparisonTable.tsx
 
 'use client';
 

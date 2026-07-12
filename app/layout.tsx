@@ -1,9 +1,11 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\layout.tsx
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Poppins } from 'next/font/google'
 import localFont from 'next/font/local'
 import NextTopLoader from 'nextjs-toploader'
-import RomiChat from '@/HomePage/RomiChat'
+// 1. IMPORT REPLACED HERE
+import RomiRinkWidget from '@ksum/romi-widget-rink'
 import './globals.css'
 
 const poppins = Poppins({
@@ -56,7 +58,8 @@ export default function RootLayout({
       <body className="font-poppins antialiased" style={{ backgroundColor: '#F4F7FB' }}>
         <NextTopLoader color="#1b60bb" showSpinner={false} height={3} />
         {children}
-        <RomiChat />
+        {/* 2. COMPONENT REPLACED HERE */}
+        <RomiRinkWidget apiUrl={process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"} avatarSrc="/images/romi-avatar.png" />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

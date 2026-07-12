@@ -1,3 +1,5 @@
+// C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\about\page.tsx
+
 'use client';
 
 import { motion } from 'framer-motion';
@@ -68,7 +70,7 @@ export default function AboutRinkPage() {
       {/* Hero Section with Sarvam.ai-style Indian Pattern Background */}
       <section className="relative pt-32 pb-20 px-4 md:px-8 w-full min-h-[500px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#F4F7FB] via-[#e5eef9] to-[#F4F7FB]">
         {/* Abstract Indian Line Art / Mandala Pattern */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.08] pointer-events-none"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0L64.3 22.3C65.5 28.5 70.3 33.3 76.5 34.5L98.8 38.8L76.5 43C70.3 44.2 65.5 49 64.3 55.2L60 77.5L55.7 55.2C54.5 49 49.7 44.2 43.5 43L21.2 38.8L43.5 34.5C49.7 33.3 54.5 28.5 55.7 22.3L60 0Z' fill='%231b60bb' fill-rule='evenodd'/%3E%3C/svg%3E")`,
@@ -97,7 +99,7 @@ export default function AboutRinkPage() {
       {/* Mission Split Section */}
       <section className="py-20 px-4 md:px-8 max-w-[1400px] mx-auto">
         <div className="bg-white rounded-[2.5rem] p-5 md:p-16 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col lg:flex-row items-center gap-16">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -114,7 +116,7 @@ export default function AboutRinkPage() {
             <p className="text-slate-600 font-poppins text-lg leading-relaxed">
               We empower the research fraternity by providing the necessary resources, mentorship, and funding required to build and scale deep-tech ventures. By cultivating a collaborative ecosystem, we aim to position Kerala as a global hub for research-driven entrepreneurship.
             </p>
-            
+
             <div className="grid grid-cols-2 gap-6 pt-4">
               <div className="space-y-2">
                 <h3 className="font-helios text-4xl font-bold text-[#5cc4fe]">50+</h3>
@@ -126,8 +128,8 @@ export default function AboutRinkPage() {
               </div>
             </div>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -135,8 +137,8 @@ export default function AboutRinkPage() {
             className="lg:w-1/2 w-full"
           >
             <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80" 
+              <img
+                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80"
                 alt="Research Laboratory"
                 className="w-full h-full object-cover"
               />
@@ -199,11 +201,11 @@ export default function AboutRinkPage() {
                       <ArrowRight size={20} className="text-slate-400 group-hover:text-white transition-colors" />
                     </div>
                   </div>
-                  
+
                   <h3 className="font-helios text-2xl md:text-3xl font-bold text-slate-800 mb-4 group-hover:text-[#1b60bb] transition-colors">
                     {item.title}
                   </h3>
-                  
+
                   <p className="text-slate-600 font-poppins text-base leading-relaxed">
                     {item.description}
                   </p>
@@ -294,13 +296,13 @@ export default function AboutRinkPage() {
             className="lg:col-span-7 bg-white p-4 rounded-3xl shadow-sm border border-slate-100"
           >
             <div className="w-full h-[400px] lg:h-[100%] min-h-[400px] rounded-2xl overflow-hidden bg-slate-100">
-              <iframe 
-                src="https://maps.google.com/maps?q=Kerala+Startup+Mission+(KSUM),+Thiruvananthapuram&t=&z=16&ie=UTF8&iwloc=&output=embed" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
+              <iframe
+                src="https://maps.google.com/maps?q=Kerala+Startup+Mission+(KSUM),+Thiruvananthapuram&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               ></iframe>
             </div>
