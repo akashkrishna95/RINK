@@ -3,7 +3,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp, Mic, BarChart3, Search, Lightbulb, Zap, Filter, Database, TrendingUp, User, Check, X as CloseIcon, ArrowRight, Scale, Users, Shield, Plus } from 'lucide-react';
+import { ArrowUp, Mic, BarChart3, Search, Lightbulb, Zap, Filter, Database, TrendingUp, User, Check, X as CloseIcon, ArrowRight, Scale, Users, Shield, Plus, Cpu, Wrench } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, Fragment } from 'react';
 import RomiPortalLayout from './RomiPortalLayout';
@@ -11,7 +11,7 @@ import Navbar from '@/HomePage/Navbar';
 import MiniCard from './RomiPortalFeatures/MiniCard';
 import Footer from '@/HomePage/Footer';
 
-const tabs = ['search', 'analyze', 'compare', 'researchpreneurship'];
+const tabs = ['search', 'technologies', 'instrumentation', 'researchpreneurship'];
 
 const mockTech = {
   technology_id: 'TECH-001',
@@ -29,8 +29,8 @@ const sectors = ['Agriculture', 'Biotechnology', 'Food Processing', 'Electronics
 // Dynamic Placeholders tied to tabs
 const tabPlaceholders: Record<string, string> = {
   search: "Find ready-to-license Agritech AI models...",
-  analyze: "Give Market Value of Agritech in 2026?",
-  compare: "Compare drone mapping vs satellite IP yields...",
+  technologies: "Find ready-to-license drone mapping and IoT technologies...",
+  instrumentation: "Find ready-to-use high-precision scientific instrumentation...",
   researchpreneurship: "Assess my robotics research idea for commercialization..."
 };
 
@@ -269,8 +269,8 @@ export default function RomiPortalPage() {
                             >
                               {[
                                 { id: 'search', label: 'search', icon: <Search size={14} /> },
-                                { id: 'analyze', label: 'analyze', icon: <BarChart3 size={14} /> },
-                                { id: 'compare', label: 'compare', icon: <Shield size={14} /> },
+                                { id: 'technologies', label: 'technologies', icon: <Cpu size={14} /> },
+                                { id: 'instrumentation', label: 'instrumentation', icon: <Wrench size={14} /> },
                                 { id: 'researchpreneurship', label: 'researchpreneurship', icon: <Lightbulb size={14} /> }
                               ].map((option) => (
                                 <button
