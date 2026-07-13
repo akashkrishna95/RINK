@@ -7,7 +7,6 @@ import { ArrowUp, Mic, BarChart3, Search, Lightbulb, Zap, Filter, Database, Tren
 import Link from 'next/link';
 import { useState, useEffect, Fragment } from 'react';
 import RomiPortalLayout from './RomiPortalLayout';
-import StorageConsentPopup from './RomiPortalFeatures/StorageConsentPopup';
 import Navbar from '@/HomePage/Navbar';
 import MiniCard from './RomiPortalFeatures/MiniCard';
 import Footer from '@/HomePage/Footer';
@@ -95,28 +94,9 @@ const itemVariants = {
 
 
 export default function RomiPortalPage() {
-  const [showConsent, setShowConsent] = useState(false);
-  const [isConsentHighlighted, setIsConsentHighlighted] = useState(false);
   const [hasEntered, setHasEntered] = useState(false);
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState('search');
-
-  // Check consent on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const consent = localStorage.getItem('romi-consent');
-      if (consent !== 'true') {
-        setShowConsent(true);
-      }
-    }
-  }, []);
-
-  const handleInputClick = () => {
-    if (showConsent) {
-      setIsConsentHighlighted(true);
-      setTimeout(() => setIsConsentHighlighted(false), 500);
-    }
-  };
 
   // For Live Stats counting up
   const [stats, setStats] = useState({ tech: 0, inst: 0, sec: 0, found: 0 });
@@ -163,10 +143,6 @@ export default function RomiPortalPage() {
   }, [hasEntered]);
 
   const handleSearch = () => {
-    if (showConsent) {
-      handleInputClick();
-      return;
-    }
     if (query.trim() || activeTab) {
       if (!query.trim()) {
         setQuery(activeTab + ' ');
@@ -176,10 +152,6 @@ export default function RomiPortalPage() {
   };
 
   const handleSectorClick = (sector: string) => {
-    if (showConsent) {
-      handleInputClick();
-      return;
-    }
     setQuery(`Show me ${sector} technologies`);
     setHasEntered(true);
   };
@@ -187,13 +159,6 @@ export default function RomiPortalPage() {
   return (
     <main className={`bg-[#FDFDF9] relative font-sans flex flex-col ${hasEntered ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
       <Navbar />
-
-      {!hasEntered && showConsent && (
-        <StorageConsentPopup 
-          onClose={() => setShowConsent(false)} 
-          isHighlighted={isConsentHighlighted} 
-        />
-      )}
 
       {/* Main Animated Container */}
       <div className={`w-full flex-1 relative flex flex-col ${hasEntered ? 'p-4 md:p-6 overflow-hidden' : 'p-4 md:p-8'}`}>
@@ -261,21 +226,14 @@ export default function RomiPortalPage() {
                             exit={{ opacity: 0, y: 5 }}
                             transition={{ duration: 0.2 }}
                             type="text"
-                            placeholder={showConsent ? "Please save the storage consent popup on the right to unlock searching..." : currentPlaceholder}
-                            disabled={showConsent}
-                            onClick={handleInputClick}
-                            className={`w-full bg-transparent border-none outline-none text-black placeholder:text-gray-400 text-[10px] min-[360px]:text-xs min-[400px]:text-sm sm:text-lg md:text-2xl font-sans font-medium px-1 md:px-4 pt-1 md:pt-2 pb-3 md:pb-6 ${
-                              showConsent ? 'cursor-not-allowed text-gray-400' : ''
-                            }`}
+                            placeholder={currentPlaceholder}
+                            disabled={false}
+                            className="w-full bg-transparent border-none outline-none text-black placeholder:text-gray-400 text-[10px] min-[360px]:text-xs min-[400px]:text-sm sm:text-lg md:text-2xl font-sans font-medium px-1 md:px-4 pt-1 md:pt-2 pb-3 md:pb-6"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
-                                if (showConsent) {
-                                  handleInputClick();
-                                } else {
-                                  handleSearch();
-                                }
+                                handleSearch();
                               }
                             }}
                           />
@@ -358,10 +316,8 @@ export default function RomiPortalPage() {
                         ))}
                       </div>
                       <button
-                        onClick={showConsent ? handleInputClick : handleSearch}
-                        className={`w-8 h-8 md:w-12 md:h-12 bg-black hover:bg-gray-800 rounded-full flex items-center justify-center text-white active:scale-95 transition-all shrink-0 z-10 ${
-                          showConsent ? 'opacity-40 cursor-not-allowed' : ''
-                        }`}
+                        onClick={handleSearch}
+                        className="w-8 h-8 md:w-12 md:h-12 bg-black hover:bg-gray-800 rounded-full flex items-center justify-center text-white active:scale-95 transition-all shrink-0 z-10"
                       >
                         <ArrowUp className="text-white w-4 h-4 md:w-[22px] md:h-[22px]" />
                       </button>
@@ -839,9 +795,9 @@ export default function RomiPortalPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
                   {[
-                    { title: 'For Founders & Entrepreneurs', desc: 'Discover ready-to-license technologies from Kerala universities, analyze IP validation, and calculate TAM/SAM/SOM to write pitch decks.', icon: <Users size={22} />, color: 'text-blue-600 bg-blue-50' },
-                    { title: 'For Researchers & Academics', desc: 'Assess research commercial potential, screen against conflicting patents, and identify industry alignment opportunities for tech transfer.', icon: <Lightbulb size={22} />, color: 'text-amber-600 bg-amber-50' },
-                    { title: 'For Universities & Incubators', desc: 'Index institution IP libraries, monitor startup pipelines, and showcase market-ready assets directly to KSUM networks.', icon: <Scale size={22} />, color: 'text-green-600 bg-green-50' }
+                    { title: 'For Entrepreneurs and Industries', desc: "Discover, compare, and analyse commercialisable technologies from Kerala's leading R&D institutes. Find instruments and specialised services from research institutions and startups to accelerate your R&D.", icon: <Users size={22} />, color: 'text-blue-600 bg-blue-50' },
+                    { title: 'For Researchers and Innovators', desc: 'Refine your idea through AI-guided brainstorming, analyse market opportunities, and prepare your Researchpreneurship Program application for commercial potential validation.', icon: <Lightbulb size={22} />, color: 'text-amber-600 bg-amber-50' },
+                    { title: 'For Institutions', desc: 'Transform institutional research into startup and industry opportunities through AI-powered technology profiling, collaboration discovery, and enhanced visibility of research infrastructure.', icon: <Scale size={22} />, color: 'text-green-600 bg-green-50' }
                   ].map((useCase, idx) => (
                     <div key={idx} className="bg-white border border-gray-100 rounded-3xl p-8 hover:shadow-lg transition-all duration-300 group flex flex-col justify-between w-full mx-auto">
                       <div>

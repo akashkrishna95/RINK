@@ -9,9 +9,10 @@ import { ShieldCheck } from 'lucide-react';
 interface StorageConsentPopupProps {
   onClose: () => void;
   isHighlighted?: boolean;
+  isCentered?: boolean;
 }
 
-export default function StorageConsentPopup({ onClose, isHighlighted = false }: StorageConsentPopupProps) {
+export default function StorageConsentPopup({ onClose, isHighlighted = false, isCentered = false }: StorageConsentPopupProps) {
   const [agreed, setAgreed] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -27,15 +28,38 @@ export default function StorageConsentPopup({ onClose, isHighlighted = false }: 
     }, 300);
   };
 
+  const motionProps = isCentered
+    ? {
+        initial: { x: "-50%", y: "-40%", opacity: 0 },
+        animate: { x: "-50%", y: "-50%", opacity: 1 },
+        exit: { x: "-50%", y: "-40%", opacity: 0 },
+        style: { left: "50%", top: "50%", position: "absolute" as const }
+      }
+    : {
+        initial: { y: 100, opacity: 0 },
+        animate: { y: 0, opacity: 1 },
+        exit: { y: 100, opacity: 0 }
+      };
+
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 z-50 w-[90%] sm:w-[400px]"
-        >
+        <>
+          {isCentered && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm z-40"
+            />
+          )}
+          <motion.div
+            {...motionProps}
+            className={isCentered 
+              ? "z-50 w-[90%] sm:w-[400px]" 
+              : "fixed bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 z-50 w-[90%] sm:w-[400px]"
+            }
+          >
           {/* Inline styles for custom shake animation */}
           <style dangerouslySetInnerHTML={{ __html: `
             @keyframes custom-shake {
@@ -102,6 +126,7 @@ export default function StorageConsentPopup({ onClose, isHighlighted = false }: 
             </div>
           </div>
         </motion.div>
+        </>
       )}
     </AnimatePresence>
   );

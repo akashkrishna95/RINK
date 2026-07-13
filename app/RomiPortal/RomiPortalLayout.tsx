@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Settings, Download, Share2, User, Bot, ArrowUp } from 'lucide-react';
+import { MessageSquare, Settings, Download, Share2, User, Bot, ArrowUp, Trash2 } from 'lucide-react';
 
 import DataVisualizationPanel from './RomiPortalFeatures/DataVisualizationPanel';
 import RomiThinkingIndicator from './RomiPortalFeatures/RomiThinkingIndicator';
@@ -41,6 +41,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
   const [showIPNotice, setShowIPNotice] = useState(false);
   const [showConsent, setShowConsent] = useState(false);
   const [isConsentHighlighted, setIsConsentHighlighted] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
   
   const [messages, setMessages] = useState<Message[]>([]);
   const [isThinking, setIsThinking] = useState(false);
@@ -62,12 +63,81 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
       const consent = localStorage.getItem('romi-consent');
       const hasConsent = consent === 'true';
       setConsentStatus(hasConsent);
-      if (!consent) setShowConsent(true);
       
       const isMobile = window.innerWidth < 768;
       setSidebarOpen(!isMobile && hasConsent);
     }
   }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (localStorage.getItem('romi-consent') === 'true') return;
+      e.preventDefault();
+      e.returnValue = '';
+      return '';
+    };
+
+    const handleVisibilityChange = () => {
+      if (localStorage.getItem('romi-consent') === 'true') return;
+      if (document.visibilityState === 'hidden') {
+        setShowConsent(true);
+      }
+    };
+
+    const handleGlobalClick = (e: MouseEvent) => {
+      if (localStorage.getItem('romi-consent') === 'true') return;
+
+      const target = e.target as HTMLElement;
+      const anchor = target.closest('a');
+      if (!anchor) return;
+
+      const href = anchor.getAttribute('href');
+      if (!href) return;
+
+      const isHash = href.startsWith('#') || href.startsWith('javascript:');
+      const isBlobOrDownload = href.startsWith('blob:') || anchor.hasAttribute('download');
+      
+      if (!isHash && !isBlobOrDownload) {
+        e.preventDefault();
+        e.stopPropagation();
+        setPendingNavigation(href);
+        setShowConsent(true);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('click', handleGlobalClick, true);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener('click', handleGlobalClick, true);
+    };
+  }, []);
+
+  const handleConsentPopupClose = () => {
+    const hasConsent = localStorage.getItem('romi-consent') === 'true';
+    setConsentStatus(hasConsent);
+    setShowConsent(false);
+
+    if (pendingNavigation) {
+      const destination = pendingNavigation;
+      setPendingNavigation(null);
+      window.location.href = destination;
+    }
+  };
+
+  const handleClearHistory = () => {
+    if (window.confirm("Are you sure you want to delete all conversations? This will erase your local chat history and reset storage settings.")) {
+      setMessages([]);
+      clearAllHistory();
+      localStorage.removeItem('romi-consent');
+      setConsentStatus(false);
+      hasFiredInitial.current = false;
+      onReset();
+    }
+  };
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -210,6 +280,17 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
             </div>
             <h2 className="font-semibold text-gray-800 text-sm border-l border-gray-200 pl-4">Research Analysis</h2>
           </div>
+          {messages.length > 0 && (
+            <button
+              onClick={handleClearHistory}
+              type="button"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-red-200 text-red-600 bg-red-50 hover:bg-red-150 hover:text-red-700 active:scale-95 transition-all font-montserrat text-xs font-semibold cursor-pointer shadow-sm"
+              title="Delete all conversations"
+            >
+              <Trash2 size={14} />
+              <span className="hidden sm:inline">Clear Chat</span>
+            </button>
+          )}
         </header>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth flex flex-col gap-8 pb-32">
@@ -306,6 +387,14 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showConsent && (
+        <StorageConsentPopup
+          onClose={handleConsentPopupClose}
+          isHighlighted={isConsentHighlighted}
+          isCentered={true}
+        />
+      )}
     </div>
   );
 }
