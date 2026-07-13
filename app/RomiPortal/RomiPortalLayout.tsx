@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Settings, Download, Share2, User, Bot, ArrowUp, Trash2 } from 'lucide-react';
+import { MessageSquare, Settings, Download, Share2, User, Bot, ArrowUp, Trash2, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 
 import DataVisualizationPanel from './RomiPortalFeatures/DataVisualizationPanel';
 import RomiThinkingIndicator from './RomiPortalFeatures/RomiThinkingIndicator';
@@ -56,7 +56,8 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
   const sessionRef = useRef<string>(`romi-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
 
   const [consentStatus, setConsentStatus] = useState<boolean>(false);
-  const { sessions, currentSessionId, createNewSession, updateCurrentSession, loadSession, clearAllHistory } = useRomiStorage(consentStatus);
+  const { sessions, currentSessionId, setCurrentSessionId, createNewSession, updateCurrentSession, loadSession, deleteSession, clearAllHistory } = useRomiStorage(consentStatus);
+  const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -64,8 +65,16 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
       const hasConsent = consent === 'true';
       setConsentStatus(hasConsent);
       
+      const handleResize = () => {
+        setIsMobileView(window.innerWidth < 768);
+      };
+      
+      handleResize();
       const isMobile = window.innerWidth < 768;
       setSidebarOpen(!isMobile && hasConsent);
+      
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
     }
   }, []);
 
@@ -136,6 +145,32 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
       setConsentStatus(false);
       hasFiredInitial.current = false;
       onReset();
+    }
+  };
+
+  const handleNewChat = () => {
+    setMessages([]);
+    setCurrentSessionId(null);
+    hasFiredInitial.current = false;
+    sessionRef.current = `romi-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  };
+
+  const handleSelectSession = (id: string) => {
+    const loadedMessages = loadSession(id);
+    if (loadedMessages) {
+      setMessages(loadedMessages);
+      sessionRef.current = id;
+    }
+  };
+
+  const handleDeleteSession = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this chat session?")) {
+      deleteSession(id);
+      if (currentSessionId === id) {
+        setMessages([]);
+        hasFiredInitial.current = false;
+        sessionRef.current = `romi-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      }
     }
   };
 
@@ -228,7 +263,10 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
       hasFiredInitial.current = true;
       const initialMsg: Message = { role: 'user', content: query };
       setMessages([initialMsg]);
-      if (typeof window !== 'undefined' && localStorage.getItem('romi-consent') === 'true') createNewSession(initialMsg);
+      if (typeof window !== 'undefined' && localStorage.getItem('romi-consent') === 'true') {
+        const newId = createNewSession(initialMsg);
+        if (newId) sessionRef.current = newId;
+      }
       executeSearch(query, [initialMsg]);
     }
   }, [query]);
@@ -248,8 +286,12 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
     const updatedMessages = [...messages, newMsg];
     setMessages(updatedMessages);
     if (consentStatus) {
-      if (!currentSessionId) createNewSession(newMsg);
-      else updateCurrentSession(updatedMessages);
+      if (!currentSessionId) {
+        const newId = createNewSession(newMsg);
+        if (newId) sessionRef.current = newId;
+      } else {
+        updateCurrentSession(updatedMessages);
+      }
     }
     executeSearch(userMessage, updatedMessages);
   };
@@ -271,26 +313,107 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
 
   return (
     <div className="flex w-full h-full bg-[#FDFDF9] overflow-hidden relative">
+      {/* Sidebar - ChatGPT/Gemini Style */}
+      <AnimatePresence>
+        {sidebarOpen && consentStatus && (
+          <>
+            {/* Backdrop overlay for mobile */}
+            {isMobileView && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.4 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setSidebarOpen(false)}
+                className="absolute inset-0 bg-black z-35 cursor-pointer"
+              />
+            )}
+
+            <motion.div
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: isMobileView ? 280 : 260, opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute md:relative top-0 left-0 h-full bg-[#FAF9F5] border-r border-gray-150 flex flex-col shrink-0 overflow-hidden z-40 shadow-2xl md:shadow-none"
+            >
+              <div className="w-[280px] md:w-[260px] flex flex-col h-full p-4 gap-4">
+                {/* New Chat Button */}
+                <button
+                  onClick={handleNewChat}
+                  type="button"
+                  className="w-full flex items-center gap-2.5 px-4 py-3 rounded-2xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-sm font-bold transition-all shadow-sm active:scale-98 cursor-pointer font-helios"
+                >
+                  <Plus size={16} className="text-[#1b60bb]" />
+                  New Chat
+                </button>
+
+                {/* Scrollable list of recent sessions */}
+                <div className="flex-1 overflow-y-auto flex flex-col gap-1.5 pr-1">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 px-2 block mb-1">Recent Chats</span>
+                  {sessions.length === 0 ? (
+                    <p className="text-xs text-gray-400 italic px-2">No recent chats</p>
+                  ) : (
+                    sessions.map(session => (
+                      <div
+                        key={session.id}
+                        className={`group flex items-center justify-between rounded-xl px-3 py-2.5 transition-all cursor-pointer ${
+                          currentSessionId === session.id 
+                            ? 'bg-blue-50/70 border border-blue-100 text-[#1b60bb] font-semibold' 
+                            : 'hover:bg-gray-100 text-gray-600'
+                        }`}
+                        onClick={() => handleSelectSession(session.id)}
+                      >
+                        <div className="flex items-center gap-2 overflow-hidden flex-1">
+                          <MessageSquare size={14} className={currentSessionId === session.id ? 'text-[#1b60bb]' : 'text-gray-400'} />
+                          <span className="text-xs truncate">{session.title}</span>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteSession(session.id);
+                          }}
+                          type="button"
+                          className="opacity-100 md:opacity-0 md:group-hover:opacity-100 p-1 hover:bg-gray-200 rounded-lg text-gray-400 hover:text-red-600 transition-all cursor-pointer shrink-0"
+                          title="Delete Chat"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* Bottom Section */}
+                <div className="border-t border-gray-200 pt-4 mt-auto">
+                  <button
+                    onClick={handleClearHistory}
+                    type="button"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl border border-red-100 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition-all cursor-pointer active:scale-98 font-helios"
+                  >
+                    <Trash2 size={14} />
+                    Delete all chats
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       <div className="flex-1 flex flex-col h-full relative overflow-hidden">
         <header className="h-16 border-b border-gray-100 bg-white/80 backdrop-blur-md flex items-center justify-between px-6 z-10">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#1b60bb] rounded-lg flex items-center justify-center text-white font-bold text-sm">R</div>
-              <span className="font-bold text-[#333] hidden sm:inline">Romi AI</span>
-            </div>
-            <h2 className="font-semibold text-gray-800 text-sm border-l border-gray-200 pl-4">Research Analysis</h2>
+            {consentStatus && (
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                type="button"
+                className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700 transition-colors flex items-center justify-center cursor-pointer border border-gray-200 shadow-sm"
+                title={sidebarOpen ? "Hide chat history" : "Show chat history"}
+              >
+                {sidebarOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+              </button>
+            )}
+            <span className="font-helios font-bold text-gray-900 text-base sm:text-lg tracking-tight uppercase">ROMI AI</span>
           </div>
-          {messages.length > 0 && (
-            <button
-              onClick={handleClearHistory}
-              type="button"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-red-200 text-red-600 bg-red-50 hover:bg-red-150 hover:text-red-700 active:scale-95 transition-all font-montserrat text-xs font-semibold cursor-pointer shadow-sm"
-              title="Delete all conversations"
-            >
-              <Trash2 size={14} />
-              <span className="hidden sm:inline">Clear Chat</span>
-            </button>
-          )}
         </header>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth flex flex-col gap-8 pb-32">

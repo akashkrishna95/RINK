@@ -85,6 +85,18 @@ export function useRomiStorage(consentStatus: boolean) {
     return null;
   };
 
+  // Delete a specific session
+  const deleteSession = (id: string) => {
+    const updated = sessions.filter(s => s.id !== id);
+    setSessions(updated);
+    if (currentSessionId === id) {
+      setCurrentSessionId(updated.length > 0 ? updated[0].id : null);
+    }
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('romi-chat-sessions', JSON.stringify(updated));
+    }
+  };
+
   // Delete all history
   const clearAllHistory = () => {
     setSessions([]);
@@ -101,6 +113,7 @@ export function useRomiStorage(consentStatus: boolean) {
     createNewSession,
     updateCurrentSession,
     loadSession,
+    deleteSession,
     clearAllHistory
   };
 }
