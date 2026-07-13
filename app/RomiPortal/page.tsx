@@ -207,14 +207,14 @@ export default function RomiPortalPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full min-h-[70vh] md:min-h-[85vh] rounded-[40px] relative shadow-2xl border border-gray-100 flex flex-col items-center justify-between pt-24 pb-12 bg-cover bg-center shrink-0 mb-8 scroll-mt-20"
+              className="w-full min-h-[70vh] md:min-h-[85vh] rounded-[40px] relative shadow-2xl border border-gray-100 flex flex-col items-center justify-between pt-20 md:pt-28 pb-8 md:pb-16 bg-cover bg-center shrink-0 mb-8 scroll-mt-20 gap-8 md:gap-12"
               style={{
                 backgroundImage: "url('/images/ROMI-PORTAL-BG.webp')",
               }}
             >
               <div className="absolute inset-0 bg-white/20 pointer-events-none rounded-[40px]"></div>
 
-              <div className="z-20 flex flex-col items-center text-center max-w-4xl px-4 mt-8 translate-y-10 sm:translate-y-12 md:translate-y-8">
+              <div className="z-20 flex flex-col items-center text-center max-w-4xl px-4 mt-4 md:mt-10">
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -230,10 +230,10 @@ export default function RomiPortalPage() {
                   transition={{ delay: 0.3 }}
                   className="mt-4 flex flex-col items-center"
                 >
-                  <p className="text-gray-800 text-base sm:text-xl md:text-2xl font-base mb-3">
+                  <p className="text-gray-800 text-[10px] min-[360px]:text-xs sm:text-lg md:text-2xl font-base mb-3 whitespace-nowrap">
                     RINK's Advanced AI model that help you
                   </p>
-                  <div className="bg-white/80 backdrop-blur-md px-4 sm:px-6 py-1.5 sm:py-2 rounded-full border border-white/50 text-[#219653] text-sm sm:text-base md:text-xl font-medium shadow-sm flex items-center gap-2">
+                  <div className="bg-white/80 backdrop-blur-md px-4 sm:px-6 py-1.5 sm:py-2 rounded-full border border-white/50 text-[#219653] text-xs sm:text-base md:text-xl font-medium shadow-sm flex items-center gap-2 whitespace-nowrap">
                     Discover <span className="text-sm">➔</span> Analyze <span className="text-sm">➔</span> Scale.
                   </div>
                 </motion.div>
@@ -244,12 +244,12 @@ export default function RomiPortalPage() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
-                className="mt-auto w-full max-w-4xl px-4 relative z-20 mb-12"
+                className="mt-auto w-full max-w-4xl px-4 relative z-20 mb-4 md:mb-8"
               >
-                <div className="relative rounded-[32px] p-2 shadow-2xl border border-white/40 bg-white/30 backdrop-blur-xl" style={{
+                <div className="relative rounded-[32px] p-1.5 md:p-2 shadow-2xl border border-white/40 bg-white/30 backdrop-blur-xl" style={{
                   boxShadow: '0 30px 60px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8)'
                 }}>
-                  <div className="bg-white/95 backdrop-blur-md rounded-3xl p-4 md:p-5 flex flex-col gap-4 shadow-xl border border-white/80 focus-within:shadow-[0_15px_40px_rgba(27,96,187,0.06)] focus-within:border-[#1b60bb]/30 transition-all duration-300">
+                  <div className="bg-white/95 backdrop-blur-md rounded-3xl p-3 md:p-5 flex flex-col gap-4 shadow-xl border border-white/80 focus-within:shadow-[0_15px_40px_rgba(27,96,187,0.06)] focus-within:border-[#1b60bb]/30 transition-all duration-300">
                     <div className="flex items-center relative overflow-hidden">
                       {/* Animated Placeholder wrapper to smooth out text changes */}
                       <div className="relative w-full">
@@ -264,7 +264,7 @@ export default function RomiPortalPage() {
                             placeholder={showConsent ? "Please save the storage consent popup on the right to unlock searching..." : currentPlaceholder}
                             disabled={showConsent}
                             onClick={handleInputClick}
-                            className={`w-full bg-transparent border-none outline-none text-black placeholder:text-gray-400 text-base sm:text-lg md:text-2xl font-sans font-medium px-2 md:px-4 pt-1 md:pt-2 pb-3 md:pb-6 ${
+                            className={`w-full bg-transparent border-none outline-none text-black placeholder:text-gray-400 text-[10px] min-[360px]:text-xs min-[400px]:text-sm sm:text-lg md:text-2xl font-sans font-medium px-1 md:px-4 pt-1 md:pt-2 pb-3 md:pb-6 ${
                               showConsent ? 'cursor-not-allowed text-gray-400' : ''
                             }`}
                             value={query}
@@ -359,11 +359,11 @@ export default function RomiPortalPage() {
                       </div>
                       <button
                         onClick={showConsent ? handleInputClick : handleSearch}
-                        className={`w-12 h-12 bg-black hover:bg-gray-800 rounded-full flex items-center justify-center text-white active:scale-95 transition-all shrink-0 z-10 ${
+                        className={`w-8 h-8 md:w-12 md:h-12 bg-black hover:bg-gray-800 rounded-full flex items-center justify-center text-white active:scale-95 transition-all shrink-0 z-10 ${
                           showConsent ? 'opacity-40 cursor-not-allowed' : ''
                         }`}
                       >
-                        <ArrowUp size={22} className="text-white" />
+                        <ArrowUp className="text-white w-4 h-4 md:w-[22px] md:h-[22px]" />
                       </button>
                     </div>
                   </div>

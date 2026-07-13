@@ -22,7 +22,7 @@ export default function RomiFeatures() {
                 cx="50" cy="50" r="40" 
                 fill="transparent" 
                 stroke="#f3f4f6" 
-                strokeWidth="12" 
+                strokeWidth="12"   
                 strokeDasharray="251.2" 
                 strokeDashoffset="0"
               />

@@ -35,6 +35,7 @@ export default function TechnologiesNavbar() {
 
   const navLinks = [
     { href: '/', label: 'Home' },
+    { href: '/RomiPortal', label: 'ROMI AI', isScroll: false },
     { href: '/technologies', label: 'Technologies', isScroll: false },
     { href: '/technologies/institutions', label: 'Institutions', isScroll: false },
     { href: '/technologies/sectors', label: 'Sector', isScroll: false },
