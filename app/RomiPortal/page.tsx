@@ -207,19 +207,19 @@ export default function RomiPortalPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full min-h-[70vh] md:min-h-[85vh] rounded-[40px] relative shadow-2xl border border-gray-100 flex flex-col items-center justify-between pt-20 md:pt-28 pb-8 md:pb-16 bg-cover bg-center shrink-0 mb-8 scroll-mt-20 gap-8 md:gap-12"
+              className="w-full min-h-[70vh] md:min-h-[85vh] rounded-[40px] relative shadow-2xl border border-gray-100 flex flex-col items-center justify-center pt-24 pb-16 md:pt-32 md:pb-24 bg-cover bg-center shrink-0 mb-8 scroll-mt-20 gap-8 md:gap-12"
               style={{
                 backgroundImage: "url('/images/ROMI-PORTAL-BG.webp')",
               }}
             >
               <div className="absolute inset-0 bg-white/20 pointer-events-none rounded-[40px]"></div>
 
-              <div className="z-20 flex flex-col items-center text-center max-w-4xl px-4 mt-4 md:mt-10">
+              <div className="z-20 flex flex-col items-center text-center max-w-4xl px-4 mt-0">
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="font-helios text-4xl sm:text-6xl md:text-8xl text-black tracking-tight animate-fade-in md:whitespace-nowrap text-center"
+                  className="font-helios text-[32px] min-[360px]:text-4xl min-[400px]:text-5xl sm:text-7xl md:text-8xl text-black tracking-tight animate-fade-in whitespace-nowrap text-center"
                 >
                   Meet <span className="text-[#219653]">ROMI AI</span>
                 </motion.h1>
@@ -244,7 +244,7 @@ export default function RomiPortalPage() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
-                className="mt-auto w-full max-w-4xl px-4 relative z-20 mb-4 md:mb-8"
+                className="w-full max-w-4xl px-4 relative z-20"
               >
                 <div className="relative rounded-[32px] p-1.5 md:p-2 shadow-2xl border border-white/40 bg-white/30 backdrop-blur-xl" style={{
                   boxShadow: '0 30px 60px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8)'

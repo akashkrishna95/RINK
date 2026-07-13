@@ -76,7 +76,7 @@ export default function Navbar() {
           <Link
             href="/"
             onClick={(e) => handleLinkClick(e, '/')}
-            className="flex items-center gap-3 md:gap-4 z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1b60bb] rounded-sm group cursor-pointer bg-transparent border-none p-0"
+            className="flex items-center gap-1.5 min-[360px]:gap-2 md:gap-4 z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1b60bb] rounded-sm group cursor-pointer bg-transparent border-none p-0"
           >
 
             {/* KSUM Logo */}
@@ -86,12 +86,12 @@ export default function Navbar() {
               width={120}
               height={40}
               style={{ width: 'auto' }}
-              className="h-8 md:h-10 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
+              className="h-6 min-[360px]:h-7 min-[400px]:h-8 md:h-10 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
               priority
             />
 
             {/* Divider */}
-            <div className="w-px h-8 md:h-10 bg-[#1b60bb]/20"></div>
+            <div className="w-px h-6 min-[360px]:h-7 min-[400px]:h-8 md:h-10 bg-[#1b60bb]/20"></div>
 
             {/* RINK Logo */}
             <Image
@@ -100,7 +100,7 @@ export default function Navbar() {
               width={160}
               height={40}
               style={{ width: 'auto' }}
-              className="h-8 md:h-10 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
+              className="h-6 min-[360px]:h-7 min-[400px]:h-8 md:h-10 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
               priority
             />
 
@@ -122,11 +122,11 @@ export default function Navbar() {
           </div>
 
           {/* Mobile ROMI AI Quick Access Link */}
-          <div className="flex md:hidden items-center ml-auto mr-3 z-50">
+          <div className="flex md:hidden items-center ml-auto mr-1.5 min-[360px]:mr-2.5 z-50">
             <Link
               href="/RomiPortal"
               onClick={(e) => handleLinkClick(e, '/RomiPortal')}
-              className="font-helios text-[15px] font-bold text-[#1b60bb] hover:text-[#0f3a6d] transition-colors focus:outline-none py-1.5"
+              className="font-helios text-[11px] min-[360px]:text-xs min-[400px]:text-sm font-bold text-[#1b60bb] hover:text-[#0f3a6d] transition-colors focus:outline-none py-1.5 whitespace-nowrap"
             >
               ROMI AI
             </Link>
