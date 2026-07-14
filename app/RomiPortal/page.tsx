@@ -67,10 +67,6 @@ const comparisonRows = [
   }
 ];
 
-
-
-
-
 // Animation Variants for Staggered Children
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -91,7 +87,6 @@ const itemVariants = {
     transition: { type: "spring" as const, stiffness: 100, damping: 20 }
   }
 };
-
 
 export default function RomiPortalPage() {
   const [hasEntered, setHasEntered] = useState(false);
@@ -909,7 +904,12 @@ export default function RomiPortalPage() {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="flex-1 w-full bg-white rounded-[40px] overflow-hidden shadow-2xl border border-gray-100 flex flex-col mx-auto"
           >
-            <RomiPortalLayout query={query} onReset={() => { setHasEntered(false); setQuery(''); }} />
+            {/* CRITICAL FIX: Sending activeTab down as activeMode */}
+            <RomiPortalLayout 
+              query={query} 
+              activeMode={activeTab} 
+              onReset={() => { setHasEntered(false); setQuery(''); }} 
+            />
           </motion.div>
         )}
       </div>

@@ -1,4 +1,4 @@
-//components/InteractiveMap.tsx
+// C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\InteractiveMap.tsx
 'use client';
 
 import { MapContainer, TileLayer, Marker, Popup, useMap, GeoJSON } from 'react-leaflet';

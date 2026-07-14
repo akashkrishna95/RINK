@@ -179,7 +179,7 @@ export default function Footer() {
             style={{
               fontSize: '13vw', // Adjusted strictly to safe bounds
               lineHeight: '0.75', 
-              marginBottom: '-0.5vw' // Sits perfectly on the floor
+              marginBottom: '-0vw' // Sits perfectly on the floor
             }}
           >
             KSUM ✦ RINK

@@ -192,12 +192,12 @@ async function reverseGeocodeNominatim(lat: number, lng: number): Promise<string
 
 export async function getInstitutions(): Promise<Institution[]> {
   try {
-    // Append timestamp & random parameter to bypass caching completely at the Google CDN layer
-    const sheetUrl = `https://docs.google.com/spreadsheets/d/1HXlzT504-AhqzfU6Nm3bktAspIjaQm2l1z45qROZrFc/export?format=csv&gid=1582106736&t=${Date.now()}&cb=${Math.random()}`;
+    // Removed dynamic timestamp to allow Next.js ISR caching
+    const sheetUrl = `https://docs.google.com/spreadsheets/d/1HXlzT504-AhqzfU6Nm3bktAspIjaQm2l1z45qROZrFc/export?format=csv&gid=1582106736`;
     
-    // Fetch from sheet in real-time
+    // Fetch from sheet with ISR caching (1 hour)
     const response = await fetch(sheetUrl, { 
-      cache: 'no-store',
+      next: { revalidate: 3600 },
       headers: {
         'User-Agent': 'Mozilla/5.0'
       }

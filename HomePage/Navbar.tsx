@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, Phone, ChevronRight, Mail } from 'lucide-react';
-
 import { usePathname } from 'next/navigation';
+import { motion, useScroll, useSpring } from 'framer-motion';
 
 const cn = (...classes: (string | undefined | null | false)[]) =>
   classes.filter(Boolean).join(' ');
@@ -19,6 +19,13 @@ const LinkedinIcon = ({ className }: { className?: string }) => (
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
@@ -69,6 +76,10 @@ export default function Navbar() {
 
   return (
     <>
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[3px] bg-[#1b60bb] origin-left z-[100]"
+        style={{ scaleX }}
+      />
       <header className="w-full sticky top-0 z-50 bg-[#F4F7FB] border-b border-gray-200 transition-colors duration-300">
         <nav className="w-full max-w-7xl mx-auto px-5 md:px-8 py-4 flex items-center justify-between relative z-50">
 

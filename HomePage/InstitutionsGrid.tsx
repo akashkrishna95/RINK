@@ -1,3 +1,4 @@
+// C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\InstitutionsGrid.tsx
 'use client';
 
 import { useState, useEffect } from 'react';

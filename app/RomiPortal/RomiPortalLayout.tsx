@@ -242,8 +242,11 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
         body: JSON.stringify({
           query: queryText,
           limit: 5,
-          history: history.slice(-6),
-          current_package: activeMode,          
+          history: history.slice(-8),
+          
+          // CRITICAL FIX: Dynamically send the current mode to the backend router!
+          current_package: activeMode || "search",          
+          
           session_id: sessionRef.current,       
         }),
       });
