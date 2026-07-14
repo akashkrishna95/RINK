@@ -37,7 +37,7 @@ export default function MiniCard({ technology }: MiniCardProps) {
     <Link href={`/technologies/${technology.technology_id}`} className="block w-full">
       <motion.div
         layout
-        className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-3 relative overflow-hidden group"
+        className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-3 shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-3 relative overflow-hidden group"
       >
         {/* Ribbon Badge over the whole card */}
         {(technology.featured || technology.is_top_tech) && (
@@ -47,7 +47,7 @@ export default function MiniCard({ technology }: MiniCardProps) {
         )}
 
         {/* Square Image with Cornered Edges */}
-        <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-lg overflow-hidden border border-gray-100 relative">
+        <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 dark:bg-zinc-800 rounded-lg overflow-hidden border border-gray-100 dark:border-zinc-800 relative">
           {technology.image_url ? (
             <img
               src={technology.image_url}
@@ -55,7 +55,7 @@ export default function MiniCard({ technology }: MiniCardProps) {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-[#1b60bb]/5 text-[#1b60bb]">
+            <div className="w-full h-full flex items-center justify-center bg-[#1b60bb]/5 dark:bg-[#1b60bb]/10 text-[#1b60bb] dark:text-blue-400">
               <span className="font-helios font-bold text-xl">{formatTechnologyName(technology.technology_name).charAt(0)}</span>
             </div>
           )}
@@ -64,15 +64,15 @@ export default function MiniCard({ technology }: MiniCardProps) {
         {/* Content */}
         <div className="flex-1 min-w-0 flex flex-col justify-center">
           <div className="flex justify-between items-start gap-2">
-            <h4 className="font-helios font-bold text-xs text-gray-900 leading-snug truncate pr-6">
+            <h4 className="font-helios font-bold text-xs text-gray-900 dark:text-zinc-100 leading-snug truncate pr-6">
               {formatTechnologyName(technology.technology_name)}
             </h4>
             <ArrowUpRight size={14} className="text-gray-400 group-hover:text-[#1b60bb] transition-colors flex-shrink-0 mt-0.5" />
           </div>
-          <p className="font-poppins text-[10px] text-gray-500 font-medium mb-0.5 truncate">
+          <p className="font-poppins text-[10px] text-gray-500 dark:text-zinc-400 font-medium mb-0.5 truncate">
             {technology.institution}
           </p>
-          <p className="font-poppins text-xs text-gray-600 leading-relaxed mt-1">
+          <p className="font-poppins text-xs text-gray-600 dark:text-zinc-300 leading-relaxed mt-1">
             {expanded 
               ? (technology.brief_description_abstract || technology.description || "No description provided.") 
               : (technology.brief_description_abstract 

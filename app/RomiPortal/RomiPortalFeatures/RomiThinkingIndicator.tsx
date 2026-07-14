@@ -7,7 +7,7 @@ import { Search } from 'lucide-react';
 
 export default function RomiThinkingIndicator() {
   return (
-    <div className="flex items-center gap-4 bg-white/80 p-4 rounded-2xl border border-blue-100 shadow-sm max-w-sm">
+    <div className="flex items-center gap-4 bg-white/80 dark:bg-zinc-900/85 p-4 rounded-2xl border border-blue-100 dark:border-zinc-800 shadow-sm max-w-sm">
       <div className="relative flex items-center justify-center w-10 h-10">
         <motion.div 
           animate={{ rotate: 360 }}
@@ -23,14 +23,14 @@ export default function RomiThinkingIndicator() {
         </motion.div>
       </div>
       <div className="flex flex-col">
-        <span className="font-helios font-bold text-gray-800 text-sm flex items-center gap-1">
+        <span className="font-helios font-bold text-gray-800 dark:text-zinc-200 text-sm flex items-center gap-1">
           Romi is thinking
           <motion.span
             animate={{ opacity: [0, 1, 0] }}
             transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
           >...</motion.span>
         </span>
-        <span className="font-montserrat text-xs text-gray-500">Researching market data via DuckDuckGo</span>
+        <span className="font-montserrat text-xs text-gray-500 dark:text-zinc-400">Researching market data via DuckDuckGo</span>
       </div>
     </div>
   );

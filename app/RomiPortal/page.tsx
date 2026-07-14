@@ -152,7 +152,14 @@ export default function RomiPortalPage() {
   };
 
   return (
-    <main className={`bg-[#FDFDF9] relative font-sans flex flex-col ${hasEntered ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
+    <main 
+      className={`bg-[#FDFDF9] dark:bg-zinc-950 relative font-sans flex flex-col ${hasEntered ? 'h-screen overflow-hidden' : 'min-h-screen'} transition-colors duration-300`}
+      style={hasEntered ? {
+        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('/images/ROMI-PORTAL-BG.webp')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      } : undefined}
+    >
       <Navbar />
 
       {/* Main Animated Container */}
@@ -902,7 +909,7 @@ export default function RomiPortalPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 w-full bg-white rounded-[40px] overflow-hidden shadow-2xl border border-gray-100 flex flex-col mx-auto"
+            className="flex-1 w-full bg-white dark:bg-zinc-900 rounded-[40px] overflow-hidden shadow-[0_25px_80px_-15px_rgba(0,0,0,0.2)] dark:shadow-none border border-gray-100 dark:border-zinc-800 flex flex-col mx-auto"
           >
             {/* CRITICAL FIX: Sending activeTab down as activeMode */}
             <RomiPortalLayout 

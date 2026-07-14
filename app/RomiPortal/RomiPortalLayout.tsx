@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Settings, Download, Share2, User, Bot, ArrowUp, Trash2, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { MessageSquare, Settings, Download, Share2, User, Bot, ArrowUp, Trash2, ChevronLeft, ChevronRight, Plus, Sun, Moon, Search, Cpu, Wrench, Lightbulb } from 'lucide-react';
 
 import DataVisualizationPanel from './RomiPortalFeatures/DataVisualizationPanel';
 import RomiThinkingIndicator from './RomiPortalFeatures/RomiThinkingIndicator';
@@ -54,6 +54,20 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
   const chatEndRef = useRef<HTMLDivElement>(null);
   const hasFiredInitial = useRef<boolean>(false); 
   const textareaRef = useRef<HTMLTextAreaElement>(null); // NEW: Ref for the expanding textarea
+  const [darkMode, setDarkMode] = useState(false);
+  const [mode, setMode] = useState<string>(activeMode);
+  const [showModeDropdown, setShowModeDropdown] = useState(false);
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => {}
+  });
 
   const sessionRef = useRef<string>(`romi-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
 
@@ -189,14 +203,19 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
   };
 
   const handleClearHistory = () => {
-    if (window.confirm("Are you sure you want to delete all conversations? This will erase your local chat history and reset storage settings.")) {
-      setMessages([]);
-      clearAllHistory();
-      localStorage.removeItem('romi-consent');
-      setConsentStatus(false);
-      hasFiredInitial.current = false;
-      onReset();
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: "Delete all chats?",
+      message: "Are you sure you want to delete all conversations? This will erase your local chat history and reset storage settings.",
+      onConfirm: () => {
+        setMessages([]);
+        clearAllHistory();
+        localStorage.removeItem('romi-consent');
+        setConsentStatus(false);
+        hasFiredInitial.current = false;
+        onReset();
+      }
+    });
   };
 
   const handleNewChat = () => {
@@ -215,14 +234,19 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
   };
 
   const handleDeleteSession = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this chat session?")) {
-      deleteSession(id);
-      if (currentSessionId === id) {
-        setMessages([]);
-        hasFiredInitial.current = false;
-        sessionRef.current = `romi-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    setConfirmModal({
+      isOpen: true,
+      title: "Delete chat session?",
+      message: "Are you sure you want to delete this chat session?",
+      onConfirm: () => {
+        deleteSession(id);
+        if (currentSessionId === id) {
+          setMessages([]);
+          hasFiredInitial.current = false;
+          sessionRef.current = `romi-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        }
       }
-    }
+    });
   };
 
   useEffect(() => {
@@ -245,7 +269,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
           history: history.slice(-8),
           
           // CRITICAL FIX: Dynamically send the current mode to the backend router!
-          current_package: activeMode || "search",          
+          current_package: mode || "search",          
           
           session_id: sessionRef.current,       
         }),
@@ -350,9 +374,14 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
 
   // NEW: Dynamic Textarea Auto-Resize Logic
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputVal(e.target.value);
-    e.target.style.height = 'auto'; // Reset height briefly to recalculate
-    e.target.style.height = `${Math.min(e.target.scrollHeight, 200)}px`; // Expand up to 200px, then scroll
+    const val = e.target.value;
+    setInputVal(val);
+    if (val.length <= 200) {
+      e.target.style.height = 'auto'; // Reset height briefly to recalculate
+      e.target.style.height = `${e.target.scrollHeight}px`;
+    } else {
+      e.target.style.height = '120px'; // Cap height
+    }
   };
 
   // NEW: Submit on 'Enter', New Line on 'Shift + Enter'
@@ -364,7 +393,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
   };
 
   return (
-    <div className="flex w-full h-full bg-[#FDFDF9] overflow-hidden relative">
+    <div className={`flex w-full h-full bg-[#FDFDF9] overflow-hidden relative ${darkMode ? 'dark' : ''}`}>
       {/* Sidebar - ChatGPT/Gemini Style */}
       <AnimatePresence>
         {sidebarOpen && consentStatus && (
@@ -385,22 +414,22 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
               animate={{ width: isMobileView ? 280 : 260, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute md:relative top-0 left-0 h-full bg-[#FAF9F5] border-r border-gray-150 flex flex-col shrink-0 overflow-hidden z-40 shadow-2xl md:shadow-none"
+              className="absolute md:relative top-0 left-0 h-full bg-gradient-to-b from-[#EAE8E2] via-[#E2E0D8] to-[#D9D7CE] dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-900 border-r border-gray-300 dark:border-zinc-800 flex flex-col shrink-0 overflow-hidden z-40 shadow-[4px_0_24px_rgba(0,0,0,0.04)] dark:shadow-none"
             >
               <div className="w-[280px] md:w-[260px] flex flex-col h-full p-4 gap-4">
                 {/* New Chat Button */}
                 <button
                   onClick={handleNewChat}
                   type="button"
-                  className="w-full flex items-center gap-2.5 px-4 py-3 rounded-2xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 text-sm font-bold transition-all shadow-sm active:scale-98 cursor-pointer font-helios"
+                  className="w-full flex items-center gap-2.5 px-4 py-3 rounded-2xl border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 text-gray-800 dark:text-gray-200 text-sm font-bold transition-all shadow-md active:scale-98 cursor-pointer font-helios"
                 >
-                  <Plus size={16} className="text-[#1b60bb]" />
+                  <Plus size={16} className="text-[#1b60bb] dark:text-blue-400" />
                   New Chat
                 </button>
 
                 {/* Scrollable list of recent sessions */}
                 <div className="flex-1 overflow-y-auto flex flex-col gap-1.5 pr-1">
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 px-2 block mb-1">Recent Chats</span>
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-gray-500 dark:text-zinc-500 px-2 block mb-1">Recent Chats</span>
                   {sessions.length === 0 ? (
                     <p className="text-xs text-gray-400 italic px-2">No recent chats</p>
                   ) : (
@@ -409,13 +438,13 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                         key={session.id}
                         className={`group flex items-center justify-between rounded-xl px-3 py-2.5 transition-all cursor-pointer ${
                           currentSessionId === session.id 
-                            ? 'bg-blue-50/70 border border-blue-100 text-[#1b60bb] font-semibold' 
-                            : 'hover:bg-gray-100 text-gray-600'
+                            ? 'bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 text-black dark:text-white font-bold shadow-md shadow-black/5' 
+                            : 'hover:bg-[#d5d2c6]/60 dark:hover:bg-zinc-800/45 text-gray-700 dark:text-zinc-300'
                         }`}
                         onClick={() => handleSelectSession(session.id)}
                       >
                         <div className="flex items-center gap-2 overflow-hidden flex-1">
-                          <MessageSquare size={14} className={currentSessionId === session.id ? 'text-[#1b60bb]' : 'text-gray-400'} />
+                          <MessageSquare size={14} className={currentSessionId === session.id ? 'text-[#1b60bb] dark:text-blue-400' : 'text-gray-500 dark:text-zinc-400'} />
                           <span className="text-xs truncate">{session.title}</span>
                         </div>
                         <button
@@ -424,7 +453,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                             handleDeleteSession(session.id);
                           }}
                           type="button"
-                          className="opacity-100 md:opacity-0 md:group-hover:opacity-100 p-1 hover:bg-gray-200 rounded-lg text-gray-400 hover:text-red-600 transition-all cursor-pointer shrink-0"
+                          className="opacity-100 md:opacity-0 md:group-hover:opacity-100 p-1 hover:bg-[#d5d2c6]/60 dark:hover:bg-zinc-800/60 rounded-lg text-gray-500 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 transition-all cursor-pointer shrink-0"
                           title="Delete Chat"
                         >
                           <Trash2 size={14} />
@@ -435,11 +464,11 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                 </div>
 
                 {/* Bottom Section */}
-                <div className="border-t border-gray-200 pt-4 mt-auto">
+                <div className="border-t border-gray-200 dark:border-zinc-800 pt-4 mt-auto">
                   <button
                     onClick={handleClearHistory}
                     type="button"
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl border border-red-100 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition-all cursor-pointer active:scale-98 font-helios"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl border border-red-200/80 dark:border-red-950/35 bg-red-50 dark:bg-red-950/10 hover:bg-red-100 dark:hover:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-bold transition-all shadow-[0_2px_8px_rgba(239,68,68,0.02)] cursor-pointer active:scale-98 font-helios"
                   >
                     <Trash2 size={14} />
                     Delete all chats
@@ -451,36 +480,92 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
         )}
       </AnimatePresence>
 
-      <div className="flex-1 flex flex-col h-full relative overflow-hidden">
-        <header className="h-16 border-b border-gray-100 bg-white/80 backdrop-blur-md flex items-center justify-between px-6 z-10">
-          <div className="flex items-center gap-4">
+      <div 
+        className="flex-1 flex flex-col h-full relative overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/ROMI-PORTAL-BG.webp')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {/* Blurred backdrop layer */}
+        <div className="absolute inset-0 bg-[#eae7dc]/90 dark:bg-zinc-950/93 backdrop-blur-[1px] pointer-events-none" />
+
+        <header className="h-16 border-b border-gray-100 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md flex items-center justify-between px-6 z-10 relative shadow-[0_2px_12px_rgba(0,0,0,0.015)]">
+          <div className="flex items-center gap-2.5">
             {consentStatus && (
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 type="button"
-                className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-500 hover:text-gray-700 transition-colors flex items-center justify-center cursor-pointer border border-gray-200 shadow-sm"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-850 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors flex items-center justify-center cursor-pointer border border-gray-200 dark:border-zinc-700 shadow-sm bg-white dark:bg-zinc-800"
                 title={sidebarOpen ? "Hide chat history" : "Show chat history"}
               >
                 {sidebarOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
               </button>
             )}
-            <span className="font-helios font-bold text-gray-900 text-base sm:text-lg tracking-tight uppercase">ROMI AI</span>
+            <span className="font-helios font-bold text-gray-900 dark:text-zinc-100 text-base sm:text-lg tracking-tight uppercase">ROMI AI</span>
+            
+            <div className="px-3 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-gray-800 dark:text-zinc-200 text-[10px] font-bold shadow-[0_4px_12px_rgba(0,0,0,0.06)] uppercase tracking-wider flex items-center gap-1.5 font-sans leading-none z-10 relative">
+              {mode === 'search' && <Search size={12} className="text-[#1b60bb] dark:text-blue-400" />}
+              {mode === 'technologies' && <Cpu size={12} className="text-[#219653] dark:text-green-400" />}
+              {mode === 'instrumentation' && <Wrench size={12} className="text-amber-500 dark:text-amber-400" />}
+              {mode === 'researchpreneurship' && <Lightbulb size={12} className="text-indigo-500 dark:text-indigo-400" />}
+              <span className="translate-y-[0.5px]">{mode}</span>
+            </div>
           </div>
+
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            type="button"
+            className="w-10 h-10 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-gray-50 dark:hover:bg-zinc-800 text-amber-500 dark:text-yellow-400 transition-all shadow-sm flex items-center justify-center cursor-pointer active:scale-95 overflow-hidden relative"
+            title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={darkMode ? "dark" : "light"}
+                initial={{ y: 25, rotate: -90, opacity: 0 }}
+                animate={{ y: 0, rotate: 0, opacity: 1 }}
+                exit={{ y: 25, rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="absolute flex items-center justify-center"
+              >
+                {darkMode ? <Moon size={18} className="text-indigo-400" /> : <Sun size={18} className="text-amber-500" />}
+              </motion.div>
+            </AnimatePresence>
+          </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth flex flex-col gap-8 pb-32">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth flex flex-col gap-8 pb-32 relative z-10">
           {assessmentState.progress > 0 && (
              <RomiProgressBar overallProgressPercent={assessmentState.progress} stages={assessmentState.stages} />
           )}
 
           {messages.map((msg, idx) => (
-            <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex gap-4 max-w-4xl w-full ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
-              <div className={`p-5 rounded-2xl ${msg.role === 'user' ? 'bg-gray-100 rounded-tr-sm' : 'bg-white border border-gray-100 shadow-sm rounded-tl-sm'} text-sm text-gray-800 w-full`}>
-                
+            <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex gap-3 max-w-4xl w-full ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
+              
+              {/* Avatar Icon */}
+              <div className="shrink-0 flex items-start justify-center">
                 {msg.role === 'user' ? (
-                  <span className="whitespace-pre-line">{msg.content}</span>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm border ${
+                    msg.role === 'user' 
+                      ? 'bg-gray-200 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-600 dark:text-gray-300' 
+                      : 'bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 overflow-hidden'
+                  }`}>
+                    <User size={16} />
+                  </div>
                 ) : (
-                  <div className="prose prose-sm max-w-none prose-slate">
+                  <img src="/romi-avatar.png" alt="Romi" className="w-12 h-12 object-contain" />
+                )}
+              </div>
+
+              {/* Message Bubble */}
+              {msg.role === 'user' ? (
+                <div className="p-4 rounded-2xl rounded-tr-sm bg-gray-200 dark:bg-zinc-800 shadow-md border border-gray-300/30 dark:border-zinc-700/30 text-sm text-gray-900 dark:text-white max-w-[80%] whitespace-pre-line relative z-10">
+                  {msg.content}
+                </div>
+              ) : (
+                <div className="text-sm text-gray-800 dark:text-zinc-200 w-full py-1">
+                  <div className="prose prose-sm max-w-none prose-slate dark:prose-invert">
                     {(() => {
                       const { cleanText, charts } = parseRomiVisuals(msg.content);
                       return (
@@ -523,34 +608,100 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                       );
                     })()}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </motion.div>
           ))}
-          {isThinking && <div className="mr-auto"><RomiThinkingIndicator /></div>}
+          {isThinking && (
+            <div className="flex gap-3 max-w-4xl w-full mr-auto items-center">
+              <div className="shrink-0 flex items-center justify-center">
+                <img src="/romi-avatar.png" alt="Romi" className="w-12 h-12 object-contain" />
+              </div>
+              <div className="mr-auto pl-1">
+                <RomiThinkingIndicator />
+              </div>
+            </div>
+          )}
           <div ref={chatEndRef} />
         </div>
 
-        <div className="absolute bottom-0 inset-x-0 p-5 z-20 bg-gradient-to-t from-white to-transparent">
-          <form onSubmit={handleSendMessage} className="max-w-4xl mx-auto relative flex items-end">
-            <textarea
-              ref={textareaRef}
-              rows={1}
-              value={inputVal}
-              onChange={handleInput}
-              onKeyDown={handleKeyDown}
-              disabled={showConsent}
-              placeholder="Ask Romi..."
-              className="w-full bg-white text-gray-900 placeholder:text-gray-400 border rounded-2xl py-3.5 pl-5 pr-14 shadow-lg focus:outline-none focus:ring-2 focus:ring-[#1b60bb]/20 resize-none overflow-y-auto"
-              style={{ minHeight: '52px', maxHeight: '200px' }}
-            />
-            <button 
-              type="submit" 
-              disabled={showConsent || !inputVal.trim()} 
-              className="absolute right-2 bottom-[8px] w-9 h-9 bg-black text-white rounded-full flex items-center justify-center disabled:opacity-50 transition-opacity"
-            >
-              <ArrowUp size={16} />
-            </button>
+        <div className="absolute bottom-0 inset-x-0 p-5 z-20 bg-gradient-to-t from-[#FDFDF9] dark:from-zinc-950 to-transparent pointer-events-none">
+          <form onSubmit={handleSendMessage} className="max-w-4xl mx-auto relative flex items-end pointer-events-auto">
+            
+            {/* Input Box Wrapper */}
+            <div className="relative flex-1 flex items-end">
+              
+              {/* Mode Switcher Popover Panel Container - positioned absolutely inside the textarea wrapper on the left */}
+              <div className="absolute left-2 bottom-[8px] z-30">
+                <button
+                  type="button"
+                  onClick={() => setShowModeDropdown(!showModeDropdown)}
+                  className="w-9 h-9 border border-gray-250 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-gray-50 dark:hover:bg-zinc-800 text-gray-500 dark:text-gray-400 rounded-full flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(0,0,0,0.05)] active:scale-95 transition-all cursor-pointer"
+                  title="Switch mode"
+                >
+                  <Plus size={16} className={`transition-transform duration-200 ${showModeDropdown ? 'rotate-45 text-red-500' : 'text-[#1b60bb] dark:text-blue-400'}`} />
+                </button>
+
+                <AnimatePresence>
+                  {showModeDropdown && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute bottom-11 left-0 mb-2 bg-white dark:bg-zinc-900 border border-gray-150 dark:border-zinc-800 rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.12)] p-2 z-30 w-48 flex flex-col gap-1"
+                    >
+                      {[
+                        { id: 'search', label: 'Search', icon: <Search size={14} /> },
+                        { id: 'technologies', label: 'Technologies', icon: <Cpu size={14} /> },
+                        { id: 'instrumentation', label: 'Instrumentation', icon: <Wrench size={14} /> },
+                        { id: 'researchpreneurship', label: 'Researchpreneurship', icon: <Lightbulb size={14} /> }
+                      ].map((option) => (
+                        <button
+                          key={option.id}
+                          type="button"
+                          onClick={() => {
+                            setMode(option.id);
+                            setShowModeDropdown(false);
+                          }}
+                          className={`w-full text-left px-3 py-2.5 text-xs rounded-xl transition-all font-medium font-sans flex items-center gap-2.5 ${
+                            mode === option.id 
+                              ? 'bg-black dark:bg-white text-white dark:text-black font-semibold shadow-sm' 
+                              : 'text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800/60'
+                          }`}
+                        >
+                          <span className={mode === option.id ? 'text-white dark:text-black' : 'text-gray-400 dark:text-zinc-500'}>
+                            {option.icon}
+                          </span>
+                          <span className="capitalize">{option.label}</span>
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <textarea
+                ref={textareaRef}
+                rows={1}
+                value={inputVal}
+                onChange={handleInput}
+                onKeyDown={handleKeyDown}
+                disabled={showConsent}
+                placeholder={`Ask Romi (${mode})...`}
+                className={`w-full bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 placeholder:text-gray-400 dark:placeholder:text-zinc-500 border border-gray-250 dark:border-zinc-800 rounded-2xl py-3.5 pl-14 pr-14 shadow-[0_15px_40px_rgba(0,0,0,0.14)] dark:shadow-none focus:outline-none focus:ring-2 focus:ring-[#1b60bb]/20 resize-none font-sans font-medium ${
+                  inputVal.length > 200 ? 'overflow-y-auto textarea-micro-scrollbar' : 'overflow-hidden scrollbar-hide'
+                }`}
+                style={{ minHeight: '52px', maxHeight: '200px' }}
+              />
+              <button 
+                type="submit" 
+                disabled={showConsent || !inputVal.trim()} 
+                className="absolute right-2 bottom-[8px] w-9 h-9 bg-black dark:bg-zinc-800 text-white dark:text-zinc-300 rounded-full flex items-center justify-center disabled:opacity-50 transition-opacity"
+              >
+                <ArrowUp size={16} />
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -570,6 +721,42 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
           isCentered={true}
         />
       )}
+
+      {/* Premium Custom Confirmation Card Modal */}
+      <AnimatePresence>
+        {confirmModal.isOpen && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-6 shadow-2xl max-w-sm w-full mx-4 flex flex-col gap-4 relative z-50"
+            >
+              <h3 className="font-helios font-bold text-gray-900 dark:text-zinc-100 text-lg leading-tight">{confirmModal.title}</h3>
+              <p className="font-montserrat text-sm text-gray-500 dark:text-zinc-400 leading-relaxed">{confirmModal.message}</p>
+              <div className="flex gap-3 justify-end mt-2">
+                <button
+                  type="button"
+                  onClick={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+                  className="px-4 py-2.5 text-xs font-semibold text-gray-500 hover:text-gray-700 dark:text-zinc-400 dark:hover:text-zinc-200 border border-gray-250 dark:border-zinc-700 rounded-xl hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    confirmModal.onConfirm();
+                    setConfirmModal(prev => ({ ...prev, isOpen: false }));
+                  }}
+                  className="px-5 py-2.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors cursor-pointer shadow-sm shadow-red-500/10"
+                >
+                  Delete
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

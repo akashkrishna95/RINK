@@ -224,3 +224,21 @@
 .prose th:nth-child(8), .prose td:nth-child(8) {
   min-width: 350px; /* Description & Applications */
 }
+
+/* Micro scrollbar style for Chat Textarea */
+.textarea-micro-scrollbar::-webkit-scrollbar {
+  display: block !important;
+  width: 4px !important;
+}
+.textarea-micro-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.textarea-micro-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4) !important;
+  border-radius: 10px !important;
+}
+.textarea-micro-scrollbar {
+  -ms-overflow-style: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(156, 163, 175, 0.4) transparent !important;
+}
