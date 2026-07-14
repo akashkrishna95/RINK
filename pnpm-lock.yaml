@@ -11,18 +11,6 @@ importers:
       '@base-ui/react':
         specifier: ^1.5.0
         version: 1.5.0(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@ksum/romi-chat-core':
-        specifier: file:./packages/romi-chat-core
-        version: file:packages/romi-chat-core(@types/react@19.2.14)(framer-motion@12.41.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lucide-react@1.17.0(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@ksum/romi-widget-instrumentation':
-        specifier: file:./packages/romi-widget-instrumentation
-        version: file:packages/romi-widget-instrumentation(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@ksum/romi-widget-rink':
-        specifier: file:./packages/romi-widget-rink
-        version: file:packages/romi-widget-rink(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@ksum/romi-widget-technologies':
-        specifier: file:./packages/romi-widget-technologies
-        version: file:packages/romi-widget-technologies(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@vercel/analytics':
         specifier: 1.6.1
         version: 1.6.1(next@16.2.6(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
@@ -575,32 +563,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
-
-  '@ksum/romi-chat-core@file:packages/romi-chat-core':
-    resolution: {directory: packages/romi-chat-core, type: directory}
-    peerDependencies:
-      framer-motion: '>=10'
-      lucide-react: '>=0.300.0'
-      react: '>=18'
-      react-dom: '>=18'
-
-  '@ksum/romi-widget-instrumentation@file:packages/romi-widget-instrumentation':
-    resolution: {directory: packages/romi-widget-instrumentation, type: directory}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
-
-  '@ksum/romi-widget-rink@file:packages/romi-widget-rink':
-    resolution: {directory: packages/romi-widget-rink, type: directory}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
-
-  '@ksum/romi-widget-technologies@file:packages/romi-widget-technologies':
-    resolution: {directory: packages/romi-widget-technologies, type: directory}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
 
   '@modelcontextprotocol/sdk@1.29.0':
     resolution: {integrity: sha512-zo37mZA9hJWpULgkRpowewez1y6ML5GsXJPY8FI0tBBCd77HEvza4jDqRKOXgHNn867PVGCyTdzqpz0izu5ZjQ==}
@@ -2943,36 +2905,6 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@ksum/romi-chat-core@file:packages/romi-chat-core(@types/react@19.2.14)(framer-motion@12.41.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lucide-react@1.17.0(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
-    dependencies:
-      framer-motion: 12.41.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      lucide-react: 1.17.0(react@19.2.4)
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-      react-markdown: 9.1.0(@types/react@19.2.14)(react@19.2.4)
-      remark-gfm: 4.0.1
-    transitivePeerDependencies:
-      - '@types/react'
-      - supports-color
-
-  '@ksum/romi-widget-instrumentation@file:packages/romi-widget-instrumentation(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
-    dependencies:
-      '@ksum/romi-chat-core': link:packages/romi-chat-core
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-
-  '@ksum/romi-widget-rink@file:packages/romi-widget-rink(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
-    dependencies:
-      '@ksum/romi-chat-core': link:packages/romi-chat-core
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-
-  '@ksum/romi-widget-technologies@file:packages/romi-widget-technologies(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
-    dependencies:
-      '@ksum/romi-chat-core': link:packages/romi-chat-core
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-
   '@modelcontextprotocol/sdk@1.29.0(zod@3.25.76)':
     dependencies:
       '@hono/node-server': 1.19.14(hono@4.12.25)
@@ -4585,24 +4517,6 @@ snapshots:
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
       '@types/react': 18.3.31
-      devlop: 1.1.0
-      hast-util-to-jsx-runtime: 2.3.6
-      html-url-attributes: 3.0.1
-      mdast-util-to-hast: 13.2.1
-      react: 19.2.4
-      remark-parse: 11.0.0
-      remark-rehype: 11.1.2
-      unified: 11.0.5
-      unist-util-visit: 5.1.0
-      vfile: 6.0.3
-    transitivePeerDependencies:
-      - supports-color
-
-  react-markdown@9.1.0(@types/react@19.2.14)(react@19.2.4):
-    dependencies:
-      '@types/hast': 3.0.4
-      '@types/mdast': 4.0.4
-      '@types/react': 19.2.14
       devlop: 1.1.0
       hast-util-to-jsx-runtime: 2.3.6
       html-url-attributes: 3.0.1
