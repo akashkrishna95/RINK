@@ -42,6 +42,8 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
   const [showConsent, setShowConsent] = useState(false);
   const [isConsentHighlighted, setIsConsentHighlighted] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const [isBackNavigationPending, setIsBackNavigationPending] = useState(false);
+  const ignorePopStateRef = useRef(false);
   
   const [messages, setMessages] = useState<Message[]>([]);
   const [isThinking, setIsThinking] = useState(false);
@@ -114,14 +116,47 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
       }
     };
 
+    const handlePopState = (event: PopStateEvent) => {
+      if (ignorePopStateRef.current) {
+        ignorePopStateRef.current = false;
+        return;
+      }
+
+      if (localStorage.getItem('romi-consent') === 'true') return;
+
+      // User pressed back button:
+      // Show warning consent popup, mark back navigation as pending
+      setIsBackNavigationPending(true);
+      setShowConsent(true);
+      // Re-push state to keep the back prevention block active
+      window.history.pushState({ romiPreventBack: true }, '');
+    };
+
+    // If consent has not been granted, push dummy state to prevent back navigation
+    if (typeof window !== 'undefined' && localStorage.getItem('romi-consent') !== 'true') {
+      window.history.pushState({ romiPreventBack: true }, '');
+    }
+
     window.addEventListener('beforeunload', handleBeforeUnload);
     document.addEventListener('visibilitychange', handleVisibilityChange);
     document.addEventListener('click', handleGlobalClick, true);
+    window.addEventListener('popstate', handlePopState);
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       document.removeEventListener('click', handleGlobalClick, true);
+      window.removeEventListener('popstate', handlePopState);
+
+      // Clean up the dummy state on unmount if it's still present in the history state
+      if (
+        typeof window !== 'undefined' &&
+        window.history.state?.romiPreventBack &&
+        localStorage.getItem('romi-consent') !== 'true'
+      ) {
+        ignorePopStateRef.current = true;
+        window.history.back();
+      }
     };
   }, []);
 
@@ -129,6 +164,22 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
     const hasConsent = localStorage.getItem('romi-consent') === 'true';
     setConsentStatus(hasConsent);
     setShowConsent(false);
+
+    if (!hasConsent) {
+      // If the user skipped/declined consent, delete the active temporary chat session from device storage
+      if (sessionRef.current) {
+        deleteSession(sessionRef.current);
+      }
+    }
+
+    if (isBackNavigationPending) {
+      setIsBackNavigationPending(false);
+      // We need to navigate back past the pushed states. Since we pushed states twice
+      // (one on mount/reset and one when popstate fired), we need to go back 2 steps in history.
+      ignorePopStateRef.current = true;
+      window.history.go(-2);
+      return;
+    }
 
     if (pendingNavigation) {
       const destination = pendingNavigation;
@@ -240,7 +291,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
           content: resData.ai_answer.replace(/\[REDIRECT:.*?\]/, ''),
           actionTrigger: { label: "Open in Romi Portal →", url: urlMatch ? urlMatch[1] : 'http://localhost:3000/RomiPortal' }
         };
-        setMessages(prev => { const updated = [...prev, botMsg]; if (consentStatus) updateCurrentSession(updated); return updated; });
+        setMessages(prev => { const updated = [...prev, botMsg]; updateCurrentSession(updated); return updated; });
         return;
       }
 
@@ -250,7 +301,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
         technologies: resData.data || []
       };
       
-      setMessages(prev => { const updated = [...prev, botMsg]; if (consentStatus) updateCurrentSession(updated); return updated; });
+      setMessages(prev => { const updated = [...prev, botMsg]; updateCurrentSession(updated); return updated; });
     } catch (error) {
       setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the backend. Please check if your local FastAPI server is running on port 8000." }]);
     } finally {
@@ -263,7 +314,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
       hasFiredInitial.current = true;
       const initialMsg: Message = { role: 'user', content: query };
       setMessages([initialMsg]);
-      if (typeof window !== 'undefined' && localStorage.getItem('romi-consent') === 'true') {
+      if (typeof window !== 'undefined') {
         const newId = createNewSession(initialMsg);
         if (newId) sessionRef.current = newId;
       }
@@ -285,13 +336,11 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
     const newMsg: Message = { role: 'user', content: userMessage };
     const updatedMessages = [...messages, newMsg];
     setMessages(updatedMessages);
-    if (consentStatus) {
-      if (!currentSessionId) {
-        const newId = createNewSession(newMsg);
-        if (newId) sessionRef.current = newId;
-      } else {
-        updateCurrentSession(updatedMessages);
-      }
+    if (!currentSessionId) {
+      const newId = createNewSession(newMsg);
+      if (newId) sessionRef.current = newId;
+    } else {
+      updateCurrentSession(updatedMessages);
     }
     executeSearch(userMessage, updatedMessages);
   };

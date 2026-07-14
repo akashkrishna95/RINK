@@ -21,21 +21,23 @@ export function useRomiStorage(consentStatus: boolean) {
 
   // Load all sessions on mount
   useEffect(() => {
-    if (consentStatus && typeof window !== 'undefined') {
-      const stored = localStorage.getItem('romi-chat-sessions');
-      if (stored) {
-        setSessions(JSON.parse(stored));
+    if (typeof window !== 'undefined') {
+      const consent = localStorage.getItem('romi-consent') === 'true';
+      if (consent) {
+        const stored = localStorage.getItem('romi-chat-sessions');
+        if (stored) {
+          setSessions(JSON.parse(stored));
+        }
+      } else {
+        // If consent is not granted, clear any temporary session data left over in localStorage
+        localStorage.removeItem('romi-chat-sessions');
+        setSessions([]);
       }
-    } else if (!consentStatus && typeof window !== 'undefined') {
-      // If consent is revoked, clear state (but actual deletion is handled by UI buttons)
-      setSessions([]);
     }
   }, [consentStatus]);
 
   // Create a new session
   const createNewSession = (initialMessage: Message) => {
-    if (!consentStatus) return null;
-
     const newId = `session-${Date.now()}`;
     // Auto-generate a short title from the first message
     let title = initialMessage.content.substring(0, 30);
@@ -48,7 +50,20 @@ export function useRomiStorage(consentStatus: boolean) {
       updatedAt: Date.now()
     };
 
-    const updatedSessions = [newSession, ...sessions];
+    // Load existing sessions directly from localStorage to prevent overwriting
+    let currentSessions: ChatSession[] = [];
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('romi-chat-sessions');
+      if (stored) {
+        try {
+          currentSessions = JSON.parse(stored);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
+    const updatedSessions = [newSession, ...currentSessions];
     setSessions(updatedSessions);
     setCurrentSessionId(newId);
     
@@ -60,9 +75,22 @@ export function useRomiStorage(consentStatus: boolean) {
 
   // Update current session with new messages
   const updateCurrentSession = (newMessages: Message[]) => {
-    if (!consentStatus || !currentSessionId) return;
+    if (!currentSessionId) return;
 
-    const updatedSessions = sessions.map(session => {
+    // Load existing sessions directly from localStorage to prevent using stale state
+    let currentSessions: ChatSession[] = [];
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('romi-chat-sessions');
+      if (stored) {
+        try {
+          currentSessions = JSON.parse(stored);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
+    const updatedSessions = currentSessions.map(session => {
       if (session.id === currentSessionId) {
         return { ...session, messages: newMessages, updatedAt: Date.now() };
       }
@@ -87,7 +115,20 @@ export function useRomiStorage(consentStatus: boolean) {
 
   // Delete a specific session
   const deleteSession = (id: string) => {
-    const updated = sessions.filter(s => s.id !== id);
+    // Load existing sessions directly from localStorage to prevent stale state issues
+    let currentSessions: ChatSession[] = [];
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('romi-chat-sessions');
+      if (stored) {
+        try {
+          currentSessions = JSON.parse(stored);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
+    const updated = currentSessions.filter(s => s.id !== id);
     setSessions(updated);
     if (currentSessionId === id) {
       setCurrentSessionId(updated.length > 0 ? updated[0].id : null);
