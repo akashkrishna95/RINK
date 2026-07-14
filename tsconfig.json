@@ -25,18 +25,6 @@
     "paths": {
       "@/*": [
         "./*"
-      ],
-      "@ksum/romi-chat-core": [
-        "./packages/romi-chat-core/src/index.tsx"
-      ],
-      "@ksum/romi-widget-rink": [
-        "./packages/romi-widget-rink/src/index.tsx"
-      ],
-      "@ksum/romi-widget-technologies": [
-        "./packages/romi-widget-technologies/src/index.tsx"
-      ],
-      "@ksum/romi-widget-instrumentation": [
-        "./packages/romi-widget-instrumentation/src/index.tsx"
       ]
     }
   },

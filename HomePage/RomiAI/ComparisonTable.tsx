@@ -2,7 +2,7 @@
 
 'use client';
 
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 export default function ComparisonTable({ children }: { children: ReactNode }) {
   return (

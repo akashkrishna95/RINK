@@ -209,7 +209,7 @@ export default function RomiPortalPage() {
                 <div className="relative rounded-[32px] p-1.5 md:p-2 shadow-2xl border border-white/40 bg-white/30 backdrop-blur-xl" style={{
                   boxShadow: '0 30px 60px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8)'
                 }}>
-                  <div className="bg-white/95 backdrop-blur-md rounded-3xl p-3 md:p-5 flex flex-col gap-4 shadow-xl border border-white/80 focus-within:shadow-[0_15px_40px_rgba(27,96,187,0.06)] focus-within:border-[#1b60bb]/30 transition-all duration-300">
+                  <div className="bg-white/95 backdrop-blur-md rounded-[26px] md:rounded-[24px] p-3 md:p-5 flex flex-col gap-4 shadow-xl border border-white/80 focus-within:shadow-[0_15px_40px_rgba(27,96,187,0.06)] focus-within:border-[#1b60bb]/30 transition-all duration-300">
                     <div className="flex items-center relative overflow-hidden">
                       {/* Animated Placeholder wrapper to smooth out text changes */}
                       <div className="relative w-full">

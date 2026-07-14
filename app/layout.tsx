@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from 'next'
 import { Poppins } from 'next/font/google'
 import localFont from 'next/font/local'
 import NextTopLoader from 'nextjs-toploader'
+import RomiRedirectWidget from '@/HomePage/RomiAI/RomiRedirectWidget'
 
 import './globals.css'
 
@@ -58,6 +59,8 @@ export default function RootLayout({
         <NextTopLoader color="#1b60bb" showSpinner={false} height={3} />
         
         {children}
+        
+        <RomiRedirectWidget />
         
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
