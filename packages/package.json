@@ -1,5 +1,0 @@
-{
-  "name": "romi-packages",
-  "private": true,
-  "workspaces": ["romi-chat-core", "romi-widget-rink", "romi-widget-technologies", "romi-widget-instrumentation"]
-}

@@ -5,8 +5,6 @@ import { Poppins } from 'next/font/google'
 import localFont from 'next/font/local'
 import NextTopLoader from 'nextjs-toploader'
 
-// 1. IMPORT OUR NEW SMART WRAPPER FROM YOUR FOLDER STRUCTURE
-import ClientWidget from '@/HomePage/RomiAI/ClientWidget'
 import './globals.css'
 
 const poppins = Poppins({
@@ -60,9 +58,6 @@ export default function RootLayout({
         <NextTopLoader color="#1b60bb" showSpinner={false} height={3} />
         
         {children}
-        
-        {/* 2. THE WIDGET IS MOUNTED HERE */}
-        <ClientWidget />
         
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
