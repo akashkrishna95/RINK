@@ -393,7 +393,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
   };
 
   return (
-    <div className={`flex w-full h-full bg-[#FDFDF9] overflow-hidden relative ${darkMode ? 'dark' : ''}`}>
+    <div className={`flex flex-1 min-h-0 w-full h-full bg-[#FDFDF9] overflow-hidden relative ${darkMode ? 'dark' : ''}`}>
       {/* Sidebar - ChatGPT/Gemini Style */}
       <AnimatePresence>
         {sidebarOpen && consentStatus && (

@@ -93,6 +93,28 @@ export default function RomiPortalPage() {
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState('search');
 
+  // Prevent background/outside conversational area scrolling when chat is active
+  useEffect(() => {
+    if (hasEntered) {
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalBodyHeight = document.body.style.height;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const originalHtmlHeight = document.documentElement.style.height;
+
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100dvh';
+      document.documentElement.style.overflow = 'hidden';
+      document.documentElement.style.height = '100dvh';
+
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.body.style.height = originalBodyHeight;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+        document.documentElement.style.height = originalHtmlHeight;
+      };
+    }
+  }, [hasEntered]);
+
   // For Live Stats counting up
   const [stats, setStats] = useState({ tech: 0, inst: 0, sec: 0, found: 0 });
   const [activePipelineStep, setActivePipelineStep] = useState(0);
@@ -153,11 +175,14 @@ export default function RomiPortalPage() {
 
   return (
     <main 
-      className={`bg-[#FDFDF9] dark:bg-zinc-950 relative font-sans flex flex-col ${hasEntered ? 'h-screen overflow-hidden' : 'min-h-screen'} transition-colors duration-300`}
+      className={`bg-[#FDFDF9] dark:bg-zinc-950 relative font-sans flex flex-col ${hasEntered ? 'h-screen h-[100dvh] max-h-[100dvh] overflow-hidden' : 'min-h-screen'} transition-colors duration-300`}
       style={hasEntered ? {
         backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('/images/ROMI-PORTAL-BG.webp')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        height: '100dvh',
+        maxHeight: '100dvh',
+        overflow: 'hidden',
       } : undefined}
     >
       <Navbar />
