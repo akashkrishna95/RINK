@@ -1,150 +1,116 @@
 // C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\RomiPortal\useRomiStorage.ts
+import { useState, useCallback } from 'react';
+import Dexie, { Table } from 'dexie';
+import { useLiveQuery } from 'dexie-react-hooks';
 
-import { useState, useEffect } from 'react';
-
-export interface Message {
+// 1. Define the TypeScript interfaces for our Database
+export interface RomiMessage {
+  id?: number; // Auto-incremented by Dexie
+  sessionId: string;
   role: 'user' | 'assistant';
   content: string;
   technologies?: any[];
+  actionTrigger?: { label: string; url: string; };
+  timestamp: number;
 }
 
 export interface ChatSession {
   id: string;
   title: string;
-  messages: Message[];
   updatedAt: number;
+  summary?: string; // For future rolling-context feature
 }
 
-export function useRomiStorage(consentStatus: boolean) {
-  const [sessions, setSessions] = useState<ChatSession[]>([]);
+// 2. Initialize the Dexie Database
+class RomiDatabase extends Dexie {
+  sessions!: Table<ChatSession, string>;
+  messages!: Table<RomiMessage, number>;
+
+  constructor() {
+    super('RomiDB');
+    this.version(1).stores({
+      sessions: 'id, updatedAt', // Primary key and indexed props
+      messages: '++id, sessionId, timestamp'
+    });
+  }
+}
+
+const db = new RomiDatabase();
+
+// 3. The Custom Hook
+export function useRomiStorage(consentGranted: boolean) {
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
 
-  // Load all sessions on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const consent = localStorage.getItem('romi-consent') === 'true';
-      if (consent) {
-        const stored = localStorage.getItem('romi-chat-sessions');
-        if (stored) {
-          setSessions(JSON.parse(stored));
-        }
-      } else {
-        // If consent is not granted, clear any temporary session data left over in localStorage
-        localStorage.removeItem('romi-chat-sessions');
-        setSessions([]);
-      }
-    }
-  }, [consentStatus]);
+  // Auto-subscribe to the sessions table (only if consent is granted)
+  const sessions = useLiveQuery(
+    () => {
+      if (!consentGranted) return [];
+      return db.sessions.orderBy('updatedAt').reverse().toArray();
+    },
+    [consentGranted],
+    []
+  );
 
-  // Create a new session
-  const createNewSession = (initialMessage: Message) => {
-    const newId = `session-${Date.now()}`;
-    // Auto-generate a short title from the first message
-    let title = initialMessage.content.substring(0, 30);
-    if (initialMessage.content.length > 30) title += '...';
-
-    const newSession: ChatSession = {
-      id: newId,
-      title: title,
-      messages: [initialMessage],
-      updatedAt: Date.now()
-    };
-
-    // Load existing sessions directly from localStorage to prevent overwriting
-    let currentSessions: ChatSession[] = [];
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('romi-chat-sessions');
-      if (stored) {
-        try {
-          currentSessions = JSON.parse(stored);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    }
-
-    const updatedSessions = [newSession, ...currentSessions];
-    setSessions(updatedSessions);
+  const createNewSession = async (initialMessage: Omit<RomiMessage, 'sessionId' | 'timestamp'>) => {
+    const newId = `romi-${Date.now()}`;
     setCurrentSessionId(newId);
+
+    if (!consentGranted) return newId; // Temporary RAM session only
+
+    const title = initialMessage.content.slice(0, 30) + (initialMessage.content.length > 30 ? '...' : '');
     
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('romi-chat-sessions', JSON.stringify(updatedSessions));
-    }
+    await db.sessions.add({
+      id: newId,
+      title,
+      updatedAt: Date.now()
+    });
+
+    await db.messages.add({
+      ...initialMessage,
+      sessionId: newId,
+      timestamp: Date.now()
+    });
+
     return newId;
   };
 
-  // Update current session with new messages
-  const updateCurrentSession = (newMessages: Message[]) => {
-    if (!currentSessionId) return;
+  const updateCurrentSession = async (messages: Omit<RomiMessage, 'sessionId' | 'timestamp'>[]) => {
+    if (!consentGranted || !currentSessionId) return;
 
-    // Load existing sessions directly from localStorage to prevent using stale state
-    let currentSessions: ChatSession[] = [];
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('romi-chat-sessions');
-      if (stored) {
-        try {
-          currentSessions = JSON.parse(stored);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    }
+    // Get the latest message to add to the DB
+    const latestMessage = messages[messages.length - 1];
+    
+    await db.messages.add({
+      ...latestMessage,
+      sessionId: currentSessionId,
+      timestamp: Date.now()
+    });
 
-    const updatedSessions = currentSessions.map(session => {
-      if (session.id === currentSessionId) {
-        return { ...session, messages: newMessages, updatedAt: Date.now() };
-      }
-      return session;
-    }).sort((a, b) => b.updatedAt - a.updatedAt); // Keep newest at top
-
-    setSessions(updatedSessions);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('romi-chat-sessions', JSON.stringify(updatedSessions));
-    }
+    // Bump the updatedAt timestamp so it jumps to the top of the sidebar
+    await db.sessions.update(currentSessionId, { updatedAt: Date.now() });
   };
 
-  // Load a specific session
-  const loadSession = (id: string): Message[] | null => {
-    const session = sessions.find(s => s.id === id);
-    if (session) {
-      setCurrentSessionId(session.id);
-      return session.messages;
-    }
-    return null;
+  const loadSession = async (id: string) => {
+    if (!consentGranted) return [];
+    
+    // Fetch all messages for this session, sorted by time
+    const history = await db.messages
+      .where('sessionId')
+      .equals(id)
+      .sortBy('timestamp');
+      
+    return history;
   };
 
-  // Delete a specific session
-  const deleteSession = (id: string) => {
-    // Load existing sessions directly from localStorage to prevent stale state issues
-    let currentSessions: ChatSession[] = [];
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('romi-chat-sessions');
-      if (stored) {
-        try {
-          currentSessions = JSON.parse(stored);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    }
-
-    const updated = currentSessions.filter(s => s.id !== id);
-    setSessions(updated);
-    if (currentSessionId === id) {
-      setCurrentSessionId(updated.length > 0 ? updated[0].id : null);
-    }
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('romi-chat-sessions', JSON.stringify(updated));
-    }
+  const deleteSession = async (id: string) => {
+    if (!consentGranted) return;
+    await db.sessions.delete(id);
+    await db.messages.where('sessionId').equals(id).delete();
   };
 
-  // Delete all history
-  const clearAllHistory = () => {
-    setSessions([]);
-    setCurrentSessionId(null);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('romi-chat-sessions');
-    }
+  const clearAllHistory = async () => {
+    await db.sessions.clear();
+    await db.messages.clear();
   };
 
   return {

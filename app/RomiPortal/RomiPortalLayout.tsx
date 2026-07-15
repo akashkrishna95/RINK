@@ -17,7 +17,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import ComparisonTable, { TableHead, TableRow, TableHeaderCell, TableCell } from '@/HomePage/RomiAI/ComparisonTable';
 import MiniCard from './RomiPortalFeatures/MiniCard';
-import { useRomiStorage } from './useRomiStorage';
+import { useRomiStorage, ChatSession } from './useRomiStorage';
 
 import { parseRomiVisuals, renderSourceLinks, SourceAnchor, VizGrid } from './RomiPortalFeatures/VizRenderer';
 
@@ -207,9 +207,9 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
       isOpen: true,
       title: "Delete all chats?",
       message: "Are you sure you want to delete all conversations? This will erase your local chat history and reset storage settings.",
-      onConfirm: () => {
+      onConfirm: async () => {
         setMessages([]);
-        clearAllHistory();
+        await clearAllHistory();
         localStorage.removeItem('romi-consent');
         setConsentStatus(false);
         hasFiredInitial.current = false;
@@ -225,10 +225,12 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
     sessionRef.current = `romi-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   };
 
-  const handleSelectSession = (id: string) => {
-    const loadedMessages = loadSession(id);
-    if (loadedMessages) {
-      setMessages(loadedMessages);
+  const handleSelectSession = async (id: string) => {
+    // ADDED: await to handle the Dexie DB fetch
+    const loadedMessages = await loadSession(id);
+    if (loadedMessages && loadedMessages.length > 0) {
+      // Cast it back to the UI's expected Message format
+      setMessages(loadedMessages as Message[]);
       sessionRef.current = id;
     }
   };
@@ -238,8 +240,8 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
       isOpen: true,
       title: "Delete chat session?",
       message: "Are you sure you want to delete this chat session?",
-      onConfirm: () => {
-        deleteSession(id);
+      onConfirm: async () => {
+        await deleteSession(id);
         if (currentSessionId === id) {
           setMessages([]);
           hasFiredInitial.current = false;
@@ -303,11 +305,14 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
           a.click(); URL.revokeObjectURL(a.href);
         };
 
-        setMessages(prev => [...prev, {
+        const botMsg: Message = {
           role: 'assistant',
           content: resData.ai_answer,
           actionTrigger: { label: "Download DOCX Concept Note ↓", url: "#" }, 
-        }]);
+        };
+        const updated = [...currentMessages, botMsg];
+        setMessages(updated);
+        await updateCurrentSession(updated);
         return;
       }
 
@@ -321,7 +326,9 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
           content: resData.ai_answer.replace(/\[REDIRECT:.*?\]/, ''),
           actionTrigger: isRomiPortal ? undefined : { label: "Open Link →", url: redirectUrl }
         };
-        setMessages(prev => { const updated = [...prev, botMsg]; updateCurrentSession(updated); return updated; });
+        const updated = [...currentMessages, botMsg];
+        setMessages(updated);
+        await updateCurrentSession(updated);
         return;
       }
 
@@ -331,7 +338,9 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
         technologies: resData.data || []
       };
       
-      setMessages(prev => { const updated = [...prev, botMsg]; updateCurrentSession(updated); return updated; });
+      const updated = [...currentMessages, botMsg];
+      setMessages(updated);
+      await updateCurrentSession(updated);
     } catch (error) {
       setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the backend. Please check if your local FastAPI server is running on port 8000." }]);
     } finally {
@@ -346,14 +355,18 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
       const initialMsg: Message = { role: 'user', content: trimmed };
       setMessages([initialMsg]);
       if (typeof window !== 'undefined') {
-        const newId = createNewSession(initialMsg);
-        if (newId) sessionRef.current = newId;
+        (async () => {
+          const newId = await createNewSession(initialMsg);
+          if (newId) sessionRef.current = newId;
+          executeSearch(trimmed, [initialMsg]);
+        })();
+      } else {
+        executeSearch(trimmed, [initialMsg]);
       }
-      executeSearch(trimmed, [initialMsg]);
     }
   }, [query]);
 
-  const handleSendMessage = (e?: React.FormEvent) => {
+  const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (showConsent || !inputVal.trim()) return;
     const userMessage = inputVal.trim();
@@ -368,10 +381,10 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
     const updatedMessages = [...messages, newMsg];
     setMessages(updatedMessages);
     if (!currentSessionId) {
-      const newId = createNewSession(newMsg);
+      const newId = await createNewSession(newMsg);
       if (newId) sessionRef.current = newId;
     } else {
-      updateCurrentSession(updatedMessages);
+      await updateCurrentSession(updatedMessages);
     }
     executeSearch(userMessage, updatedMessages);
   };
@@ -434,10 +447,10 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                 {/* Scrollable list of recent sessions */}
                 <div className="flex-1 overflow-y-auto flex flex-col gap-1.5 pr-1">
                   <span className="text-[10px] uppercase font-bold tracking-wider text-gray-500 dark:text-zinc-500 px-2 block mb-1">Recent Chats</span>
-                  {sessions.length === 0 ? (
+                  {(sessions || []).length === 0 ? (
                     <p className="text-xs text-gray-400 italic px-2">No recent chats</p>
                   ) : (
-                    sessions.map(session => (
+                    (sessions || []).map((session: ChatSession) => (
                       <div
                         key={session.id}
                         className={`group flex items-center justify-between rounded-xl px-3 py-2.5 transition-all cursor-pointer ${
