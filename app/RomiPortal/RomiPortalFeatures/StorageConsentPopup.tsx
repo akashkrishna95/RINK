@@ -22,7 +22,7 @@ export default function StorageConsentPopup({ onClose, isHighlighted = false, is
       if (save) {
         localStorage.setItem('romi-consent', 'true');
       } else {
-        localStorage.removeItem('romi-consent');
+        localStorage.setItem('romi-consent', 'skipped');
       }
       onClose();
     }, 300);

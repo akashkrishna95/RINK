@@ -160,10 +160,10 @@ export default function RomiPortalPage() {
   }, [hasEntered]);
 
   const handleSearch = () => {
-    if (query.trim() || activeTab) {
-      if (!query.trim()) {
-        setQuery(activeTab + ' ');
-      }
+    if (query.trim()) {
+      setHasEntered(true);
+    } else {
+      setQuery('');
       setHasEntered(true);
     }
   };
@@ -188,7 +188,7 @@ export default function RomiPortalPage() {
       <Navbar />
 
       {/* Main Animated Container */}
-      <div className={`w-full flex-1 relative flex flex-col ${hasEntered ? 'p-4 md:p-6 overflow-hidden' : 'p-4 md:p-8'}`}>
+      <div className={`w-full flex-1 relative flex flex-col ${hasEntered ? 'p-2 md:p-3 overflow-hidden' : 'p-4 md:p-8'}`}>
         {!hasEntered ? (
           <>
             {/* Hero Section Card */}
@@ -934,7 +934,7 @@ export default function RomiPortalPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 w-full bg-white dark:bg-zinc-900 rounded-[40px] overflow-hidden shadow-[0_25px_80px_-15px_rgba(0,0,0,0.2)] dark:shadow-none border border-gray-100 dark:border-zinc-800 flex flex-col mx-auto"
+            className="flex-1 w-full bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-[0_25px_80px_-15px_rgba(0,0,0,0.2)] dark:shadow-none border border-gray-100 dark:border-zinc-800 flex flex-col mx-auto"
           >
             {/* CRITICAL FIX: Sending activeTab down as activeMode */}
             <RomiPortalLayout 

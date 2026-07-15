@@ -96,21 +96,21 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (localStorage.getItem('romi-consent') === 'true') return;
+      if (localStorage.getItem('romi-consent')) return;
       e.preventDefault();
       e.returnValue = '';
       return '';
     };
 
     const handleVisibilityChange = () => {
-      if (localStorage.getItem('romi-consent') === 'true') return;
+      if (localStorage.getItem('romi-consent')) return;
       if (document.visibilityState === 'hidden') {
         setShowConsent(true);
       }
     };
 
     const handleGlobalClick = (e: MouseEvent) => {
-      if (localStorage.getItem('romi-consent') === 'true') return;
+      if (localStorage.getItem('romi-consent')) return;
 
       const target = e.target as HTMLElement;
       const anchor = target.closest('a');
@@ -136,7 +136,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
         return;
       }
 
-      if (localStorage.getItem('romi-consent') === 'true') return;
+      if (localStorage.getItem('romi-consent')) return;
 
       // User pressed back button:
       // Show warning consent popup, mark back navigation as pending
@@ -147,7 +147,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
     };
 
     // If consent has not been granted, push dummy state to prevent back navigation
-    if (typeof window !== 'undefined' && localStorage.getItem('romi-consent') !== 'true') {
+    if (typeof window !== 'undefined' && !localStorage.getItem('romi-consent')) {
       window.history.pushState({ romiPreventBack: true }, '');
     }
 
@@ -166,7 +166,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
       if (
         typeof window !== 'undefined' &&
         window.history.state?.romiPreventBack &&
-        localStorage.getItem('romi-consent') !== 'true'
+        !localStorage.getItem('romi-consent')
       ) {
         ignorePopStateRef.current = true;
         window.history.back();
@@ -313,10 +313,13 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
 
       if (resData.status === "redirect") {
         const urlMatch = resData.ai_answer.match(/\[REDIRECT:(.*?)\]/);
+        const redirectUrl = urlMatch ? urlMatch[1] : 'http://localhost:3000/RomiPortal';
+        const isRomiPortal = redirectUrl.toLowerCase().includes('/romiportal');
+        
         const botMsg: Message = {
           role: 'assistant',
           content: resData.ai_answer.replace(/\[REDIRECT:.*?\]/, ''),
-          actionTrigger: { label: "Open in Romi Portal →", url: urlMatch ? urlMatch[1] : 'http://localhost:3000/RomiPortal' }
+          actionTrigger: isRomiPortal ? undefined : { label: "Open Link →", url: redirectUrl }
         };
         setMessages(prev => { const updated = [...prev, botMsg]; updateCurrentSession(updated); return updated; });
         return;
@@ -337,15 +340,16 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
   };
 
   useEffect(() => {
-    if (query && !hasFiredInitial.current) {
+    const trimmed = query.trim();
+    if (trimmed && !hasFiredInitial.current) {
       hasFiredInitial.current = true;
-      const initialMsg: Message = { role: 'user', content: query };
+      const initialMsg: Message = { role: 'user', content: trimmed };
       setMessages([initialMsg]);
       if (typeof window !== 'undefined') {
         const newId = createNewSession(initialMsg);
         if (newId) sessionRef.current = newId;
       }
-      executeSearch(query, [initialMsg]);
+      executeSearch(trimmed, [initialMsg]);
     }
   }, [query]);
 
@@ -535,26 +539,26 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth flex flex-col gap-8 pb-32 relative z-10">
+        <div className="flex-1 overflow-y-auto px-2 sm:px-4 md:p-8 py-4 scroll-smooth flex flex-col gap-6 sm:gap-8 pb-6 relative z-10">
           {assessmentState.progress > 0 && (
              <RomiProgressBar overallProgressPercent={assessmentState.progress} stages={assessmentState.stages} />
           )}
 
           {messages.map((msg, idx) => (
-            <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex gap-3 max-w-4xl w-full ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
+            <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex gap-2 sm:gap-3 max-w-4xl w-full ${msg.role === 'user' ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
               
               {/* Avatar Icon */}
               <div className="shrink-0 flex items-start justify-center">
                 {msg.role === 'user' ? (
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm border ${
+                  <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm border ${
                     msg.role === 'user' 
                       ? 'bg-gray-200 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-600 dark:text-gray-300' 
                       : 'bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 overflow-hidden'
                   }`}>
-                    <User size={16} />
+                    <User size={14} />
                   </div>
                 ) : (
-                  <img src="/romi-avatar.png" alt="Romi" className="w-12 h-12 object-contain" />
+                  <img src="/romi-avatar.png" alt="Romi" className="w-7 h-7 sm:w-12 sm:h-12 object-contain" />
                 )}
               </div>
 
@@ -564,7 +568,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                   {msg.content}
                 </div>
               ) : (
-                <div className="text-sm text-gray-800 dark:text-zinc-200 w-full py-1">
+                <div className="text-sm text-gray-800 dark:text-zinc-200 flex-1 min-w-0 py-1">
                   <div className="prose prose-sm max-w-none prose-slate dark:prose-invert">
                     {(() => {
                       const { cleanText, charts } = parseRomiVisuals(msg.content);
@@ -615,18 +619,18 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
           {isThinking && (
             <div className="flex gap-3 max-w-4xl w-full mr-auto items-center">
               <div className="shrink-0 flex items-center justify-center">
-                <img src="/romi-avatar.png" alt="Romi" className="w-12 h-12 object-contain" />
+                <img src="/romi-avatar.png" alt="Romi" className="w-8 h-8 sm:w-12 sm:h-12 object-contain" />
               </div>
               <div className="mr-auto pl-1">
-                <RomiThinkingIndicator />
+                <RomiThinkingIndicator query={messages[messages.length - 1]?.content || ''} />
               </div>
             </div>
           )}
           <div ref={chatEndRef} />
         </div>
 
-        <div className="absolute bottom-0 inset-x-0 p-5 z-20 bg-gradient-to-t from-[#FDFDF9] dark:from-zinc-950 to-transparent pointer-events-none">
-          <form onSubmit={handleSendMessage} className="max-w-4xl mx-auto relative flex items-end pointer-events-auto">
+        <div className="w-full px-4 md:px-8 pt-4 pb-3 z-20 bg-transparent shrink-0 flex flex-col gap-2">
+          <form onSubmit={handleSendMessage} className="max-w-4xl w-full mx-auto relative flex items-end">
             
             {/* Input Box Wrapper */}
             <div className="relative flex-1 flex items-end">
@@ -703,6 +707,11 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
               </button>
             </div>
           </form>
+
+          {/* Disclaimer Text */}
+          <p className="text-[10px] text-gray-400/90 dark:text-zinc-500/90 text-center font-sans font-medium select-none pointer-events-none">
+            ROMI AI can make mistakes. KSUM is not liable for financial decisions.
+          </p>
         </div>
       </div>
 
