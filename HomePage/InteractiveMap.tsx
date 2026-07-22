@@ -303,10 +303,7 @@ export default function InteractiveMap({
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-slate-500 leading-relaxed font-sans border-t border-[#daf1ff] pt-2 mt-1">
-                      A leading Innovation Hub helping transform research into scalable startup products and intellectual property.
-                    </p>
-                    
+                                        
                     {inst.location && (
                       <div className="text-[11px] text-slate-600 font-sans mt-0.5 leading-relaxed">
                         <span className="font-semibold text-[#1b4f8d]">Address: </span>

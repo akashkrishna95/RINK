@@ -898,19 +898,19 @@ export default function RomiPortalPage() {
                             </h4>
 
                             {/* Stacked Proportional Chart Blocks */}
-                            <div className="relative w-full max-w-[200px] flex flex-col items-center justify-end group cursor-pointer">
+                            <div className="relative w-full max-w-[160px] sm:max-w-[200px] flex flex-col items-center justify-end group cursor-pointer">
                               {/* SOM */}
-                              <div className="w-1/2 h-10 bg-[#1b60bb] rounded-t-xl border-b border-white/20 flex items-center justify-center text-white font-bold text-[11px] tracking-wide transition-all group-hover:bg-indigo-700 shadow-sm z-30 relative">
+                              <div className="w-1/2 h-8 sm:h-10 bg-[#1b60bb] rounded-t-lg sm:rounded-t-xl border-b border-white/20 flex items-center justify-center text-white font-bold text-[9px] sm:text-[11px] tracking-wide transition-all group-hover:bg-indigo-700 shadow-sm z-30 relative">
                                 SOM $2B
                               </div>
 
                               {/* SAM */}
-                              <div className="w-3/4 h-10 bg-blue-300 rounded-t-lg border-b border-white/40 flex items-center justify-center text-blue-900 font-bold text-[11px] tracking-wide transition-all group-hover:bg-blue-400 shadow-sm z-20 relative">
+                              <div className="w-3/4 h-8 sm:h-10 bg-blue-300 rounded-t-md sm:rounded-t-lg border-b border-white/40 flex items-center justify-center text-blue-900 font-bold text-[9px] sm:text-[11px] tracking-wide transition-all group-hover:bg-blue-400 shadow-sm z-20 relative">
                                 SAM $15B
                               </div>
 
                               {/* TAM */}
-                              <div className="w-full h-10 bg-blue-100 rounded-b-xl border border-blue-200/40 flex items-center justify-center text-blue-800 font-bold text-[11px] tracking-wide transition-all group-hover:bg-blue-200 shadow-sm z-10 relative">
+                              <div className="w-full h-8 sm:h-10 bg-blue-100 rounded-b-lg sm:rounded-b-xl border border-blue-200/40 flex items-center justify-center text-blue-800 font-bold text-[9px] sm:text-[11px] tracking-wide transition-all group-hover:bg-blue-200 shadow-sm z-10 relative">
                                 TAM $43B
                               </div>
                             </div>

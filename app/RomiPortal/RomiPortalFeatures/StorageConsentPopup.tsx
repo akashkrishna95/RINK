@@ -4,15 +4,16 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, X } from 'lucide-react';
 
 interface StorageConsentPopupProps {
   onClose: () => void;
   isHighlighted?: boolean;
   isCentered?: boolean;
+  onCancel?: () => void;
 }
 
-export default function StorageConsentPopup({ onClose, isHighlighted = false, isCentered = false }: StorageConsentPopupProps) {
+export default function StorageConsentPopup({ onClose, isHighlighted = false, isCentered = false, onCancel }: StorageConsentPopupProps) {
   const [agreed, setAgreed] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -77,8 +78,27 @@ export default function StorageConsentPopup({ onClose, isHighlighted = false, is
               ? 'border-amber-500 scale-[1.03] ring-4 ring-amber-500/20 shake-pulse shadow-amber-100' 
               : 'border-gray-100'
           }`}>
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-4">
+            <div className="p-6 relative">
+              {/* Close/Cancel Cross Button */}
+              <button
+                onClick={() => {
+                  setIsVisible(false);
+                  setTimeout(() => {
+                    if (onCancel) {
+                      onCancel();
+                    } else {
+                      onClose();
+                    }
+                  }, 300);
+                }}
+                className="absolute top-4 right-4 p-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors cursor-pointer flex items-center justify-center"
+                title="Cancel and stay on page"
+                type="button"
+              >
+                <X size={16} />
+              </button>
+
+              <div className="flex items-center gap-3 mb-4 pr-6">
                 <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 shrink-0 shadow-inner">
                   <ShieldCheck size={20} />
                 </div>

@@ -203,10 +203,8 @@
 
 /* THE FIX: Makes chatbot markdown tables horizontally scrollable with expanded columns */
 .prose table {
-  display: block;
+  display: table;
   width: 100%;
-  overflow-x: auto;
-  white-space: nowrap;
 }
 
 .prose th, .prose td {

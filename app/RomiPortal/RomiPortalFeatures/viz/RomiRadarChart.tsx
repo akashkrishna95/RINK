@@ -41,15 +41,15 @@ export default function RomiRadarChart({ title = 'Comparison Profile', axes, ser
   );
 
   return (
-    <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-5 w-full">
-      <h4 className="font-helios font-bold text-gray-800 text-sm mb-2">{title}</h4>
-      <svg viewBox="0 0 200 184" className="w-full max-w-xs mx-auto">
+    <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 shadow-sm rounded-2xl p-3.5 sm:p-5 w-full">
+      <h4 className="font-helios font-bold text-gray-800 dark:text-zinc-100 text-xs sm:text-sm mb-2">{title}</h4>
+      <svg viewBox="0 0 200 184" className="w-full max-w-[220px] sm:max-w-xs mx-auto">
         {rings.map((pts, i) => (
-          <polygon key={i} points={pts} fill="none" stroke="#e5e7eb" strokeWidth="0.8" />
+          <polygon key={i} points={pts} fill="none" stroke="#e5e7eb" strokeWidth="0.8" className="dark:stroke-zinc-800" />
         ))}
         {Array.from({ length: n }, (_, i) => {
           const [x, y] = point(i, max);
-          return <line key={i} x1={cx} y1={cy} x2={x} y2={y} stroke="#eef1f5" strokeWidth="0.8" />;
+          return <line key={i} x1={cx} y1={cy} x2={x} y2={y} stroke="#eef1f5" strokeWidth="0.8" className="dark:stroke-zinc-800" />;
         })}
         {polys.map((pts, si) => (
           <motion.polygon key={si} points={pts}
@@ -64,17 +64,17 @@ export default function RomiRadarChart({ title = 'Comparison Profile', axes, ser
           const [x, y] = point(i, max * 1.22);
           return (
             <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="middle"
-              className="fill-gray-500" style={{ fontSize: 7.5, fontWeight: 600 }}>
+              className="fill-gray-500 dark:fill-zinc-400" style={{ fontSize: 7, fontWeight: 600 }}>
               {label.length > 14 ? label.slice(0, 13) + '…' : label}
             </text>
           );
         })}
       </svg>
-      <div className="flex justify-center gap-4 mt-2 flex-wrap">
+      <div className="flex justify-center gap-3 sm:gap-4 mt-2 flex-wrap">
         {series.slice(0, 2).map((s, si) => (
           <button key={si}
             onMouseEnter={() => setActive(si)} onMouseLeave={() => setActive(null)}
-            className="flex items-center gap-1.5 text-[10px] font-montserrat font-semibold text-gray-600">
+            className="flex items-center gap-1.5 text-[9px] sm:text-[10px] font-montserrat font-semibold text-gray-600 dark:text-zinc-300">
             <span className="w-2.5 h-2.5 rounded-full" style={{ background: COLORS[si] }} />
             {s.name}
           </button>
