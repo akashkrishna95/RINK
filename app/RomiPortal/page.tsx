@@ -8,23 +8,11 @@ import Link from 'next/link';
 import { useState, useEffect, Fragment } from 'react';
 import RomiPortalLayout from './RomiPortalLayout';
 import Navbar from '@/HomePage/Navbar';
-import MiniCard from './RomiPortalFeatures/MiniCard';
 import Footer from '@/HomePage/Footer';
 
 const tabs = ['search', 'technologies', 'instrumentation', 'researchpreneurship'];
 
-const mockTech = {
-  technology_id: 'TECH-001',
-  technology_name: 'AI Crop Yield Predictor',
-  institution: 'Kerala Agricultural University',
-  primary_sector: 'Agriculture',
-  brief_description_abstract: 'Advanced ML model to predict crop yields based on weather patterns and soil health metrics.',
-  trl: 'TRL 6',
-  startup_potential: 'High',
-  patent_status: 'Filed'
-};
 
-const sectors = ['Agriculture', 'Biotechnology', 'Food Processing', 'Electronics', 'Water Technology', 'Healthcare', 'Environment', 'Energy'];
 
 // Dynamic Placeholders tied to tabs
 const tabPlaceholders: Record<string, string> = {
@@ -92,6 +80,19 @@ export default function RomiPortalPage() {
   const [hasEntered, setHasEntered] = useState(false);
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState('search');
+
+  // Listen to custom reset event from Navbar clicks
+  useEffect(() => {
+    const handleReset = () => {
+      setHasEntered(false);
+      setQuery('');
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 50);
+    };
+    window.addEventListener('reset-romi-chat', handleReset);
+    return () => window.removeEventListener('reset-romi-chat', handleReset);
+  }, []);
 
   // Prevent background/outside conversational area scrolling when chat is active
   useEffect(() => {
@@ -281,7 +282,7 @@ export default function RomiPortalPage() {
                         
                         {/* Current selected pill */}
                         <div className="bg-black text-white px-3.5 py-1.5 rounded-full text-xs font-semibold font-sans capitalize shadow-sm">
-                          {activeTab}
+                          {activeTab === 'search' ? 'explore' : activeTab}
                         </div>
 
                         {/* Mobile dropdown panel */}
@@ -295,7 +296,7 @@ export default function RomiPortalPage() {
                               className="absolute top-full mt-2.5 left-0 bg-white border border-gray-100 rounded-2xl shadow-xl p-2.5 z-30 w-48 flex flex-col gap-1"
                             >
                               {[
-                                { id: 'search', label: 'search', icon: <Search size={14} /> },
+                                { id: 'search', label: 'explore', icon: <Search size={14} /> },
                                 { id: 'technologies', label: 'technologies', icon: <Cpu size={14} /> },
                                 { id: 'instrumentation', label: 'instrumentation', icon: <Wrench size={14} /> },
                                 { id: 'researchpreneurship', label: 'researchpreneurship', icon: <Lightbulb size={14} /> }
@@ -338,7 +339,7 @@ export default function RomiPortalPage() {
                                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
                               />
                             )}
-                            <span className="relative z-10">{tab}</span>
+                            <span className="relative z-10">{tab === 'search' ? 'explore' : tab}</span>
                           </button>
                         ))}
                       </div>
@@ -881,8 +882,8 @@ export default function RomiPortalPage() {
 
                       {/* AI System Stream */}
                       <div className="flex gap-3 items-start relative z-10">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#1b60bb] to-indigo-700 shadow-md overflow-hidden shrink-0 p-1.5 flex items-center justify-center">
-                          <img src="/images/rink-logo.svg" alt="Romi" className="invert brightness-0 w-full h-full object-contain" />
+                        <div className="shrink-0 flex items-center justify-center">
+                          <img src="/romi-avatar.png" alt="Romi" className="w-10 h-10 object-contain" />
                         </div>
 
                         <div className="flex flex-col gap-4 w-full">

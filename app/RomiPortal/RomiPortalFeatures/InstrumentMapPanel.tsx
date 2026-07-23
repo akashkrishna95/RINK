@@ -13,6 +13,9 @@ export interface InstLocation {
   lat: number;
   lng: number;
   url: string;
+  email?: string;
+  phone?: string;
+  address?: string;
 }
 
 interface Props {
@@ -109,10 +112,10 @@ export default function InstrumentMapPanel({ locations, selectedId, onClose, onS
         iconAnchor: [size / 2, size],
       });
 
-      const cleanAddress = (loc as any).address || (loc as any).location || (loc.facility ? loc.facility + ', ' : '') + loc.district + ', Kerala, India';
+      const cleanAddress = loc.address || (loc as any).location || (loc.facility ? loc.facility + ', ' : '') + loc.district + ', Kerala, India';
       const websiteDomain = loc.url ? loc.url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0] : 'rink.kerala.gov.in';
-      const cleanEmail = (loc as any).email || `info@${websiteDomain.toLowerCase()}`;
-      const cleanPhone = (loc as any).phone || (loc as any).phoneNumber || '+91 471 270 0270';
+      const cleanEmail = loc.email || `info@${websiteDomain.toLowerCase()}`;
+      const cleanPhone = loc.phone || (loc as any).phoneNumber || '+91 471 270 0270';
 
       const popupHtml = `
         <div class="p-1 min-w-[230px] max-w-[280px] flex flex-col gap-2.5 text-gray-700 dark:text-zinc-300 font-sans leading-snug">
@@ -169,8 +172,8 @@ export default function InstrumentMapPanel({ locations, selectedId, onClose, onS
       });
 
       // Show popup on hover
-      m.on('mouseover', function () {
-        this.openPopup();
+      m.on('mouseover', () => {
+        m.openPopup();
       });
 
       m.on('click', () => onSelect && onSelect(loc.id));
@@ -194,21 +197,51 @@ export default function InstrumentMapPanel({ locations, selectedId, onClose, onS
   useEffect(() => {
     const L = (window as any).L;
     if (!L || !mapRef.current) return;
-    renderMarkers(L);
+    
     if (selectedId) {
       const loc = locations.find((l) => l.id === selectedId);
       if (loc) {
         mapRef.current.setView([loc.lat, loc.lng], 12, { animate: true });
         const mk = markersRef.current[selectedId];
-        if (mk) mk.openPopup();
+        if (mk) {
+          setTimeout(() => {
+            if (mk && mapRef.current) mk.openPopup();
+          }, 350);
+        }
       }
     }
+
+    locations.forEach((loc) => {
+      const mk = markersRef.current[loc.id];
+      if (!mk) return;
+
+      const isSel = loc.id === selectedId;
+      const size = isSel ? 36 : 26;
+      const color = isSel ? '#dc2626' : loc.kind === 'service' ? '#7c3aed' : '#1b60bb';
+
+      const icon = L.divIcon({
+        className: '',
+        html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" style="filter: drop-shadow(0 3px 5px rgba(0,0,0,0.35)); display: block;">
+                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="${color}" stroke="white" stroke-width="1.5" stroke-linejoin="round" />
+                 <circle cx="12" cy="9" r="3" fill="white" />
+               </svg>`,
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size],
+      });
+
+      mk.setIcon(icon);
+      if (isSel) {
+        mk.setZIndexOffset(1000);
+      } else {
+        mk.setZIndexOffset(0);
+      }
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
 
   const containerClasses = isInline
-    ? "w-full my-3 rounded-3xl border border-gray-200/80 dark:border-white/[0.1] bg-white/90 dark:bg-[#1a1a1a]/90 backdrop-blur-2xl overflow-hidden shrink-0 flex flex-col shadow-xl p-3 sm:p-4"
-    : "w-full sm:w-[360px] lg:w-[420px] xl:w-96 border border-gray-200/80 dark:border-white/[0.1] bg-white/90 dark:bg-[#1a1a1a]/90 backdrop-blur-2xl overflow-hidden shrink-0 flex flex-col h-full shadow-2xl rounded-3xl p-3 sm:p-4";
+    ? "w-full my-3 rounded-3xl border border-gray-200/80 dark:border-white/[0.1] bg-white/95 dark:bg-[#1a1a1a]/95 overflow-hidden shrink-0 flex flex-col shadow-xl p-3 sm:p-4"
+    : "w-full sm:w-[360px] lg:w-[420px] xl:w-96 border border-gray-200/80 dark:border-white/[0.1] bg-white/95 dark:bg-[#1a1a1a]/95 overflow-hidden shrink-0 flex flex-col h-full shadow-2xl rounded-3xl p-3 sm:p-4";
 
   return (
     <div className={containerClasses}>

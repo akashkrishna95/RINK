@@ -57,6 +57,7 @@ export default function Navbar() {
     } else if (href === '/RomiPortal') {
       if (pathname === '/RomiPortal') {
         e.preventDefault();
+        window.dispatchEvent(new Event('reset-romi-chat'));
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         e.preventDefault();

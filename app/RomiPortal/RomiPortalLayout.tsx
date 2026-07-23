@@ -22,7 +22,6 @@ import InstrumentMapPanel, { InstLocation } from './RomiPortalFeatures/Instrumen
 import IPProtectionNotice from './RomiPortalFeatures/IPProtectionNotice';
 import StorageConsentPopup from './RomiPortalFeatures/StorageConsentPopup';
 import RomiProgressBar from './RomiPortalFeatures/RomiProgressBar';
-import RomiFeatures from './RomiPortalFeatures/RomiFeatures';
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -51,11 +50,137 @@ instrumentation?: any; // guided instrumentation payload (map_locations, stage..
 queries_used?: string[]; // Captures the query planner strings
 }
 
+function parseCSV(text: string) {
+  const lines = text.split(/\r?\n/);
+  if (lines.length < 2) return [];
+  
+  const headers = parseCSVLine(lines[0]);
+  const rows: Record<string, string>[] = [];
+  
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const values = parseCSVLine(lines[i]);
+    const row: Record<string, string> = {};
+    headers.forEach((header, index) => {
+      row[header] = values[index] || '';
+    });
+    rows.push(row);
+  }
+  return rows;
+}
+
+function parseCSVLine(line: string) {
+  const result: string[] = [];
+  let current = '';
+  let inQuotes = false;
+  
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  result.push(current.trim());
+  
+  return result.map(val => val.replace(/^"|"$/g, '').replace(/""/g, '"'));
+}
+
+function getDirectDriveUrl(url: string): string {
+  if (!url) return '';
+  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+  }
+  const queryMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (queryMatch && queryMatch[1]) {
+    return `https://drive.google.com/uc?export=view&id=${queryMatch[1]}`;
+  }
+  return url;
+}
+
+function cleanMarkdownForParsing(text: string): string {
+  if (!text) return '';
+  return text.replace(/[\*\_~#`]/g, '');
+}
+
+function parseMarketDataFromText(text: string) {
+  if (!text) return null;
+  const clean = cleanMarkdownForParsing(text);
+  const tamMatch = clean.match(/(?:Total\s+Addressable\s+Market\s+)?(?:\bTAM\b|\(TAM\))\s*(?:[:\-–—]|is|of|valued\s+at)?\s*(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)?\b)/i);
+  const samMatch = clean.match(/(?:Serviceable\s+Available\s+Market|Serviceable\s+Addressable\s+Market)?\s*(?:\bSAM\b|\(SAM\))\s*(?:[:\-–—]|is|of|valued\s+at)?\s*(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)?\b)/i);
+  const somMatch = clean.match(/(?:Serviceable\s+Obtainable\s+Market)?\s*(?:\bSOM\b|\(SOM\))\s*(?:[:\-–—]|is|of|valued\s+at)?\s*(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)?\b)/i);
+
+  if (tamMatch && samMatch && somMatch) {
+    return {
+      tam: tamMatch[1].trim(),
+      sam: samMatch[1].trim(),
+      som: somMatch[1].trim()
+    };
+  }
+  return null;
+}
+
+function parseYearSeriesFromText(text: string) {
+  if (!text) return null;
+  const clean = cleanMarkdownForParsing(text);
+  const seriesMap = new Map<number, { label: string; value: number; displayValue: string }>();
+
+  // Pattern 1: Year followed by Value (e.g., "2024: $10M" or "2024 is $10M")
+  const regex1 = /\b(20\d{2})\b\s*(?:[:\-–—]|is|of|valued\s+at|to\s+reach)?\s*(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)?\b)/gi;
+  let match;
+  while ((match = regex1.exec(clean)) !== null) {
+    const year = parseInt(match[1], 10);
+    const displayVal = match[2].trim();
+    const numericVal = parseNumericValue(displayVal);
+    if (numericVal > 0) {
+      seriesMap.set(year, { label: String(year), value: numericVal, displayValue: displayVal });
+    }
+  }
+
+  // Pattern 2: Value followed by Year (e.g., "$10M by 2024" or "$10M in 2024")
+  const regex2 = /(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)?\b)\s*(?:by|in|for|expected\s+by)\s*\b(20\d{2})\b/gi;
+  while ((match = regex2.exec(clean)) !== null) {
+    const displayVal = match[1].trim();
+    const year = parseInt(match[2], 10);
+    const numericVal = parseNumericValue(displayVal);
+    if (numericVal > 0 && !seriesMap.has(year)) {
+      seriesMap.set(year, { label: String(year), value: numericVal, displayValue: displayVal });
+    }
+  }
+
+  if (seriesMap.size >= 2) {
+    return Array.from(seriesMap.entries())
+      .sort((a, b) => a[0] - b[0])
+      .map(entry => entry[1]);
+  }
+  return null;
+}
+
+function parseNumericValue(valStr: string): number {
+  const clean = valStr.replace(/[\$,]/g, '').trim();
+  const numMatch = clean.match(/^(\d+(?:\.\d+)?)/);
+  if (!numMatch) return 0;
+  const num = parseFloat(numMatch[1]);
+  
+  const lower = clean.toLowerCase();
+  if (lower.includes('b') || lower.includes('billion')) {
+    return num * 1000;
+  }
+  if (lower.includes('t') || lower.includes('trillion')) {
+    return num * 1000000;
+  }
+  return num;
+}
+
 export default function RomiPortalLayout({ query, onReset, activeMode = "whole website" }: RomiPortalLayoutProps) {
 const [sidebarOpen, setSidebarOpen] = useState(true);
 const [rightSidebarOpen, setRightSidebarOpen] = useState(false);
 const [activeSources, setActiveSources] = useState<any[]>([]);
-const [activeMarketQuery, setActiveMarketQuery] = useState<string>('');
 const [showIPNotice, setShowIPNotice] = useState(false);
 const [showConsent, setShowConsent] = useState(false);
 const [isConsentHighlighted, setIsConsentHighlighted] = useState(false);
@@ -80,6 +205,60 @@ const [instSelectedId, setInstSelectedId] = useState<string | null>(null);
 const sessionSummaryRef = useRef<string>('');
 
 const [assessmentState, setAssessmentState] = useState<{progress: number, stages: any[]}>({ progress: 0, stages: [] });
+const [instrumentSheetData, setInstrumentSheetData] = useState<Record<string, any>>({});
+
+useEffect(() => {
+  const fetchInstruments = async () => {
+    try {
+      const url = process.env.NEXT_PUBLIC_INSTRUMENTS_SPREADSHEET_URL;
+      if (!url) return;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Failed to fetch spreadsheet");
+      const csvText = await res.text();
+      const rows = parseCSV(csvText);
+      const map: Record<string, any> = {};
+      rows.forEach(row => {
+        const id = row.id?.trim();
+        if (id) {
+          map[id] = {
+            id: id,
+            name: row.instruments1 || row.instruments || '',
+            acronym: row.acronym || '',
+            image_url: getDirectDriveUrl(row.image_link || ''),
+            district: row.district || '',
+            facility: row.name_of_facility || '',
+            institution: row.institution_name || '',
+            address: row.address || '',
+            contact: row.enquiry_contact_number || '',
+            email: row.enquiry_mail || '',
+            url: row.website_booking_link || row.website_booking_link_fallback || ''
+          };
+        }
+      });
+      setInstrumentSheetData(map);
+    } catch (err) {
+      console.error("Error loading instrumentation spreadsheet:", err);
+    }
+  };
+  fetchInstruments();
+}, []);
+
+const enrichLocations = (locs: InstLocation[]) => {
+  if (!locs) return [];
+  return locs.map(loc => {
+    const sheetItem = instrumentSheetData[loc.id];
+    if (!sheetItem) return loc;
+    return {
+      ...loc,
+      name: sheetItem.name || loc.name,
+      facility: sheetItem.facility || loc.facility,
+      url: sheetItem.url || loc.url,
+      email: sheetItem.email || loc.email,
+      phone: sheetItem.contact || loc.phone,
+      address: sheetItem.address || loc.address,
+    };
+  });
+};
 
 const chatEndRef = useRef<HTMLDivElement>(null);
 const hasFiredInitial = useRef<boolean>(false);
@@ -584,11 +763,7 @@ const executeSearch = async (
         setAssessmentState({ progress: resData.assessment.progress, stages: resData.assessment.stages });
       }
     }
-    if (resData.show_visuals) {
-      if (isCurrent) {
-        setActiveMarketQuery(queryText);
-      }
-    }
+
     if (resData.sources && resData.sources.length > 0) {
       if (isCurrent) {
         setActiveSources(resData.sources);
@@ -1109,7 +1284,7 @@ title={sidebarOpen ? "Hide chat history" : "Show chat history"}
 {mode === 'technologies' && <Cpu size={12} className="text-[#219653] dark:text-green-400" />}
 {mode === 'instrumentation' && <Wrench size={12} className="text-amber-500 dark:text-amber-400" />}
 {mode === 'researchpreneurship' && <Lightbulb size={12} className="text-indigo-500 dark:text-indigo-400" />}
-<span className="translate-y-[0.5px]">{mode}</span>
+<span className="translate-y-[0.5px]">{mode === 'search' ? 'explore' : mode}</span>
 </div>
 </div>
 
@@ -1149,8 +1324,15 @@ stages={assessmentState.stages && assessmentState.stages.length > 0 ? assessment
 </div>
 )}
 
-{/* Scrollable messages container */}
-<div className="flex-1 overflow-y-auto px-2 sm:px-4 md:p-8 py-4 scroll-smooth flex flex-col gap-6 sm:gap-8 pb-6">
+      {/* Scrollable messages container */}
+      <div
+        className="flex-1 overflow-y-auto px-2 sm:px-4 md:p-8 py-4 scroll-smooth flex flex-col gap-6 sm:gap-8 pb-6"
+        style={{
+          overscrollBehaviorY: 'contain',
+          WebkitOverflowScrolling: 'touch',
+          transform: 'translateZ(0)',
+        }}
+      >
 
 {messages.length === 0 && (
 <div className="flex-1 flex flex-col items-center justify-center min-h-[380px] my-auto py-8 px-4 text-center">
@@ -1249,7 +1431,7 @@ msg.role === 'user'
 
 {/* Message Bubble */}
 {msg.role === 'user' ? (
-<div className="p-3.5 sm:p-4 rounded-2xl rounded-tr-xs bg-[#1b60bb] text-white dark:bg-[#272727] dark:border dark:border-white/[0.12] dark:text-gray-100 shadow-md text-xs sm:text-[13px] max-w-[85%] sm:max-w-[80%] whitespace-pre-line relative z-10 leading-relaxed font-sans backdrop-blur-xl group">
+<div className="p-3.5 sm:p-4 rounded-2xl rounded-tr-xs bg-[#1b60bb] text-white dark:bg-[#272727] dark:border dark:border-white/[0.12] dark:text-gray-100 shadow-md text-xs sm:text-[13px] max-w-[85%] sm:max-w-[80%] whitespace-pre-line relative z-10 leading-relaxed font-sans group">
   {/* Top glass shine */}
   <div className="absolute inset-0 rounded-2xl rounded-tr-xs overflow-hidden pointer-events-none">
     <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/[0.12] via-transparent to-transparent" />
@@ -1307,7 +1489,7 @@ className="inline-flex items-center gap-2 px-4 py-2 bg-[#1b60bb] hover:bg-[#1449
 {instMapOpen && instMapLocations === msg.instrumentation.map_locations && (
 <div className="lg:hidden mt-3 w-full not-prose">
 <InstrumentMapPanel
-locations={msg.instrumentation.map_locations}
+locations={enrichLocations(msg.instrumentation.map_locations)}
 selectedId={instSelectedId}
 onClose={() => setInstMapOpen(false)}
 onSelect={(id) => setInstSelectedId(id)}
@@ -1408,62 +1590,80 @@ className="text-left flex items-start gap-1 px-2.5 sm:px-3 py-1 bg-white/80 dark
 )}
 
 {/* --- 2c. DYNAMIC MARKET VISUALS (Pyramid + Chart + Badge) --- */}
-{msg.market && msg.market.tam_musd && msg.market.sam_musd <= msg.market.tam_musd && (
-<div className="mt-5 mb-3 flex flex-col gap-4 bg-white/80 dark:bg-[#1a1a1a]/80 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-gray-200/80 dark:border-white/[0.1] shadow-xs">
+{(() => {
+  const showMarketVisuals = msg.market && msg.market.tam_display;
+  const parsedMarket = !showMarketVisuals ? parseMarketDataFromText(msg.content) : null;
+  const parsedYearSeries = !showMarketVisuals ? parseYearSeriesFromText(msg.content) : null;
+  
+  if (!showMarketVisuals && !parsedMarket && !parsedYearSeries) return null;
+  
+  const tamVal = showMarketVisuals ? (msg.market.tam_display || "$0M") : (parsedMarket?.tam || "$0M");
+  const samVal = showMarketVisuals ? (msg.market.sam_display || "$0M") : (parsedMarket?.sam || "$0M");
+  const somVal = showMarketVisuals ? (msg.market.som_display || "$0M") : (parsedMarket?.som || "$0M");
+  const isLLM = showMarketVisuals ? (msg.market.extraction_method === 'llm') : true;
+  const pagesRead = showMarketVisuals ? (msg.market.pages_read || 0) : 0;
 
-{/* Transparency Badge & Mini KSUM Disclaimer */}
-<div className="flex flex-wrap items-center justify-between gap-2 text-[10px] tracking-wider font-bold text-gray-500 dark:text-gray-400">
-<div className="flex items-center gap-1.5">
-<span className="flex items-center gap-1 bg-blue-50/80 dark:bg-blue-900/40 border border-blue-100/50 dark:border-blue-700/40 px-2 py-1 rounded-md text-[#1b60bb] dark:text-[#7dd3fc]">
-{msg.market.extraction_method === 'llm' ? '✨ AI-Read' : "ROMI's Analysis"}
-</span>
-{msg.market.pages_read > 0 && (
-<span className="text-gray-600 dark:text-gray-300">Analyzed {msg.market.pages_read} Full Pages</span>
-)}
-</div>
-<span className="text-[10px] text-gray-400 dark:text-gray-400 font-montserrat tracking-normal">
-KSUM is not liable for your decisions based on AI responses.
-</span>
-</div>
+  const showPyramid = showMarketVisuals || parsedMarket;
+  const series = showMarketVisuals ? (msg.market.year_series || []) : (parsedYearSeries || []);
+  const filteredSeries = series.filter((r: any) => Number(r.value) > 0);
+  const showChart = filteredSeries.length >= 2;
+  
+  return (
+    <div className="mt-5 mb-3 flex flex-col gap-4 bg-white/80 dark:bg-[#1a1a1a]/80 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-gray-200/80 dark:border-white/[0.1] shadow-xs">
+      {/* Transparency Badge & Mini KSUM Disclaimer */}
+      <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] tracking-wider font-bold text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-1.5">
+          <span className="flex items-center gap-1 bg-blue-50/80 dark:bg-blue-900/40 border border-blue-100/50 dark:border-blue-700/40 px-2 py-1 rounded-md text-[#1b60bb] dark:text-[#7dd3fc]">
+            {isLLM ? 'ROMI AI Analysis' : "ROMI's Analysis"}
+          </span>
+          {pagesRead > 0 && (
+            <span className="text-gray-600 dark:text-gray-300">Analyzed {pagesRead} Full Pages</span>
+          )}
+        </div>
+        <span className="text-[10px] text-gray-400 dark:text-gray-400 font-montserrat tracking-normal">
+          KSUM is not liable for your decisions based on AI responses.
+        </span>
+      </div>
 
-{/* The Market Funnel Pyramid */}
-<MarketPyramid
-tam={msg.market.tam_display || "$0M"}
-sam={msg.market.sam_display || "$0M"}
-som={msg.market.som_display || "$0M"}
-/>
+      {/* The Market Funnel Pyramid */}
+      {showPyramid && (
+        <MarketPyramid
+          tam={tamVal}
+          sam={samVal}
+          som={somVal}
+        />
+      )}
 
-{/* Growth chart — self-contained SVG so it ALWAYS renders */}
-{msg.market.year_series && msg.market.year_series.length >= 2 && (() => {
-const series = msg.market.year_series.filter((r: any) => Number(r.value) > 0);
-if (series.length < 2) return null;
-const maxV = Math.max(...series.map((r: any) => Number(r.value)));
-const W = 520, H = 190, PAD = 34;
-const bw = Math.min(64, (W - PAD * 2) / series.length - 18);
-return (
-<div className="mt-4 pt-5 border-t border-gray-100 dark:border-white/[0.08]">
-<h4 className="text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-3 uppercase text-center tracking-widest">Market Growth Projection</h4>
-<svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto">
-{series.map((r: any, i: number) => {
-const v = Number(r.value);
-const h = Math.max(6, (v / maxV) * (H - PAD * 2));
-const x = PAD + i * ((W - PAD * 2) / series.length) + ((W - PAD * 2) / series.length - bw) / 2;
-const y = H - PAD - h;
-return (
-<g key={i}>
-<rect x={x} y={y} width={bw} height={h} rx={7} fill="#1b60bb" className="dark:fill-blue-500" opacity={0.6 + 0.4 * (i / Math.max(1, series.length - 1))} />
-<text x={x + bw / 2} y={y - 7} textAnchor="middle" fontSize="11" fontWeight="700" className="fill-[#1b60bb] dark:fill-[#7dd3fc]">{r.displayValue}</text>
-<text x={x + bw / 2} y={H - PAD + 16} textAnchor="middle" fontSize="11" className="fill-gray-500 dark:fill-gray-400">{r.label}</text>
-</g>
-);
-})}
-<line x1={PAD - 6} y1={H - PAD} x2={W - PAD + 6} y2={H - PAD} className="stroke-gray-300 dark:stroke-white/[0.12]" strokeWidth="1.5" />
-</svg>
-</div>
-);
+      {/* Growth chart — self-contained SVG so it ALWAYS renders */}
+      {showChart && (() => {
+        const maxV = Math.max(...filteredSeries.map((r: any) => Number(r.value)));
+        const W = 520, H = 190, PAD = 34;
+        const bw = Math.min(64, (W - PAD * 2) / filteredSeries.length - 18);
+        return (
+          <div className="mt-4 pt-5 border-t border-gray-100 dark:border-white/[0.08]">
+            <h4 className="text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-3 uppercase text-center tracking-widest">Market Growth Projection</h4>
+            <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto">
+              {filteredSeries.map((r: any, i: number) => {
+                const v = Number(r.value);
+                const h = Math.max(6, (v / maxV) * (H - PAD * 2));
+                const x = PAD + i * ((W - PAD * 2) / filteredSeries.length) + ((W - PAD * 2) / filteredSeries.length - bw) / 2;
+                const y = H - PAD - h;
+                return (
+                  <g key={i}>
+                    <rect x={x} y={y} width={bw} height={h} rx={7} fill="#1b60bb" className="dark:fill-blue-500" opacity={0.6 + 0.4 * (i / Math.max(1, filteredSeries.length - 1))} />
+                    <text x={x + bw / 2} y={y - 7} textAnchor="middle" fontSize="11" fontWeight="700" className="fill-[#1b60bb] dark:fill-[#7dd3fc]">{r.displayValue}</text>
+                    <text x={x + bw / 2} y={H - PAD + 16} textAnchor="middle" fontSize="11" className="fill-gray-500 dark:fill-gray-400">{r.label}</text>
+                  </g>
+                );
+              })}
+              <line x1={PAD - 6} y1={H - PAD} x2={W - PAD + 6} y2={H - PAD} className="stroke-gray-300 dark:stroke-white/[0.12]" strokeWidth="1.5" />
+            </svg>
+          </div>
+        );
+      })()}
+    </div>
+  );
 })()}
-</div>
-)}
 
 <VizGrid charts={charts} />
 
@@ -1473,16 +1673,38 @@ return (
 {((expandedTechs[idx] || msg.instrumentation) ? msg.technologies : msg.technologies.slice(0, 5)).map((tech, tIdx) => {
 const isHighRelevance = (tech.relevance_score || 0) >= 85;
 const instLoc = msg.instrumentation?.map_locations?.find((l: any) => l.id === tech.technology_id);
+const sheetItem = instLoc ? instrumentSheetData[tech.technology_id] : null;
+
+const updatedTech = sheetItem
+  ? {
+      ...tech,
+      technology_name: sheetItem.name || tech.technology_name,
+      institution: sheetItem.facility && sheetItem.institution
+        ? `${sheetItem.facility}, ${sheetItem.institution}`
+        : sheetItem.institution || sheetItem.facility || tech.institution,
+      image_url: sheetItem.image_url || tech.image_url,
+    }
+  : tech;
+
+const websiteUrl = sheetItem?.url || instLoc?.url;
+const customHref = websiteUrl
+  ? (websiteUrl.startsWith('http') ? websiteUrl : `https://${websiteUrl}`)
+  : undefined;
+
 const card = (
 <MiniCard
 key={tIdx}
-technology={tech}
+technology={updatedTech}
+customHref={customHref}
+isInstrumentation={!!instLoc}
+contactNumber={sheetItem?.contact}
+email={sheetItem?.email}
 className={
 (instLoc && instSelectedId === tech.technology_id)
 ? 'border border-[#1b60bb] dark:border-sky-400 bg-blue-50/20 dark:bg-blue-950/20 shadow-sm'
 : isHighRelevance
 ? 'border border-emerald-500/70 dark:border-emerald-400/60 bg-emerald-50/10 dark:bg-emerald-950/20 shadow-xs'
-: 'border border-gray-200/80 dark:border-white/[0.08] bg-white/80 dark:bg-[#1a1a1a]/80 backdrop-blur-2xl'
+: 'border border-gray-200/80 dark:border-white/[0.08] bg-white/95 dark:bg-[#1a1a1a]/95'
 }
 />
 );
@@ -1491,13 +1713,12 @@ return (
 <div
 key={tIdx}
 className="cursor-pointer select-none"
-title="Click: show on map • Double-click: open full info page"
+title="Click: visit website & show on map"
 onClick={() => {
 setInstMapLocations(msg.instrumentation.map_locations);
 setInstMapOpen(true);
 setInstSelectedId(tech.technology_id);
 }}
-onDoubleClick={() => window.open(instLoc.url, '_blank')}
 >
 {card}
 </div>
@@ -1617,7 +1838,7 @@ transition={{ duration: 0.15 }}
 className="absolute bottom-11 left-0 mb-2 bg-white dark:bg-zinc-900 border border-gray-150 dark:border-zinc-800 rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.12)] p-2 z-30 w-48 flex flex-col gap-1"
 >
 {[
-{ id: 'search', label: 'Search', icon: <Search size={14} /> },
+{ id: 'search', label: 'Explore', icon: <Search size={14} /> },
 { id: 'technologies', label: 'Technologies', icon: <Cpu size={14} /> },
 { id: 'instrumentation', label: 'Instrumentation', icon: <Wrench size={14} /> },
 { id: 'researchpreneurship', label: 'Researchpreneurship', icon: <Lightbulb size={14} /> }
@@ -1653,7 +1874,7 @@ value={inputVal}
 onChange={handleInput}
 onKeyDown={handleKeyDown}
 disabled={showConsent || isThinking}
-placeholder={isThinking ? "Romi is thinking... Please wait" : `Ask Romi (${mode})...`}
+placeholder={isThinking ? "Romi is thinking... Please wait" : `Ask Romi (${mode === 'search' ? 'explore' : mode})...`}
 className={`w-full bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 placeholder:text-gray-400 dark:placeholder:text-zinc-500 border border-gray-250 dark:border-zinc-800 rounded-2xl py-3.5 pl-14 pr-14 shadow-[0_15px_40px_rgba(0,0,0,0.14)] dark:shadow-none focus:outline-none focus:ring-2 focus:ring-[#1b60bb]/20 resize-none font-sans font-medium disabled:opacity-60 disabled:cursor-not-allowed ${
 inputVal.length > 200 ? 'overflow-y-auto textarea-micro-scrollbar' : 'overflow-hidden scrollbar-hide'
 }`}
@@ -1744,7 +1965,7 @@ ROMI AI can make mistakes. KSUM is not liable for your financial decisions.
 {instMapOpen && instMapLocations.length > 0 && (
 <div className="hidden lg:flex h-full py-2 pl-2 shrink-0">
 <InstrumentMapPanel
-locations={instMapLocations}
+locations={enrichLocations(instMapLocations)}
 selectedId={instSelectedId}
 onClose={() => setInstMapOpen(false)}
 onSelect={(id) => setInstSelectedId(id)}

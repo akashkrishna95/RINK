@@ -193,7 +193,7 @@ async function reverseGeocodeNominatim(lat: number, lng: number): Promise<string
 export async function getInstitutions(): Promise<Institution[]> {
   try {
     // Removed dynamic timestamp to allow Next.js ISR caching
-    const sheetUrl = `https://docs.google.com/spreadsheets/d/1HXlzT504-AhqzfU6Nm3bktAspIjaQm2l1z45qROZrFc/export?format=csv&gid=1582106736`;
+    const sheetUrl = process.env.INSTITUTIONS_SPREADSHEET_URL || 'https://docs.google.com/spreadsheets/d/1HXlzT504-AhqzfU6Nm3bktAspIjaQm2l1z45qROZrFc/export?format=csv&gid=1582106736';
     
     // Fetch from sheet with ISR caching (1 hour)
     const response = await fetch(sheetUrl, { 

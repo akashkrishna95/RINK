@@ -338,6 +338,27 @@ export function SourceAnchor({ href, children, sources }: any) {
   }
 
   const cleanChildren = typeof children === 'string' ? children.replace(/^SRC_CHIP:/, '').trim() : children;
+  const isUrl = href && (href.startsWith('http://') || href.startsWith('https://'));
+
+  if (isUrl) {
+    const domain = getHostName(href);
+    return (
+      <a 
+        href={href} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 bg-[#eff9ff] hover:bg-[#dbeffd] dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-[#1b60bb] dark:text-[#7dd3fc] text-[11px] font-bold px-3 py-1 rounded-full mx-0.5 cursor-pointer select-none transition-colors border border-blue-200/50 dark:border-blue-800/30 align-middle active:scale-95 no-underline shadow-xs"
+      >
+        <img 
+          src={`https://www.google.com/s2/favicons?domain=${domain}&sz=32`}
+          alt=""
+          className="w-3.5 h-3.5 rounded-xs pointer-events-none shrink-0"
+          onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+        />
+        <span className="truncate max-w-[150px] sm:max-w-[200px]">{domain}</span>
+      </a>
+    );
+  }
   
   return (
     <a href={href} target="_blank" rel="noopener noreferrer"

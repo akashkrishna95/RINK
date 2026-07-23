@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, School } from 'lucide-react';
+import { ArrowUpRight, School, Phone, Mail } from 'lucide-react';
 import { formatTechnologyName } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -28,18 +28,23 @@ interface MiniCardProps {
     is_top_tech?: boolean;
   };
   className?: string;
+  customHref?: string;
+  isInstrumentation?: boolean;
+  contactNumber?: string;
+  email?: string;
 }
 
-export default function MiniCard({ technology, className }: MiniCardProps) {
+export default function MiniCard({ technology, className, customHref, isInstrumentation, contactNumber, email }: MiniCardProps) {
   const expanded = false;
   const [imgError, setImgError] = useState(false);
   console.log("MiniCard received technology object:", technology);
 
+  const href = customHref || `/technologies/${technology.technology_id}`;
+
   return (
-    <Link href={`/technologies/${technology.technology_id}`} target="_blank" rel="noopener noreferrer" className="block w-full">
-      <motion.div
-        layout
-        className={`${className || "bg-white/80 dark:bg-[#1a1a1a]/80 backdrop-blur-2xl border border-gray-200/80 dark:border-white/[0.1]"} rounded-2xl p-2.5 sm:p-3.5 shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2.5 sm:gap-3.5 relative overflow-hidden group`}
+    <Link href={href} target="_blank" rel="noopener noreferrer" className="block w-full">
+      <div
+        className={`${className || "bg-white/95 dark:bg-[#1a1a1a]/95 border border-gray-200/80 dark:border-white/[0.1]"} rounded-2xl p-2.5 sm:p-3.5 shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2.5 sm:gap-3.5 relative overflow-hidden group`}
         style={{
           background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.03) 100%)',
         }}
@@ -90,6 +95,22 @@ export default function MiniCard({ technology, className }: MiniCardProps) {
             <School size={10} className="text-gray-400 dark:text-gray-400 shrink-0" />
             <span className="truncate flex-1">{technology.institution}</span>
           </p>
+          {isInstrumentation && (
+            <div className="flex flex-col gap-0.5 mt-0.5">
+              {email && (
+                <p className="font-poppins text-[9px] sm:text-xs text-gray-500 dark:text-gray-400 font-semibold leading-tight flex items-center gap-1 sm:gap-1.5 min-w-0 w-full">
+                  <Mail size={10} className="text-gray-400 dark:text-gray-400 shrink-0" />
+                  <span className="truncate flex-1">{email}</span>
+                </p>
+              )}
+              {contactNumber && (
+                <p className="font-poppins text-[9px] sm:text-xs text-gray-500 dark:text-gray-400 font-semibold leading-tight flex items-center gap-1 sm:gap-1.5 min-w-0 w-full">
+                  <Phone size={10} className="text-gray-400 dark:text-gray-400 shrink-0" />
+                  <span className="truncate flex-1">{contactNumber}</span>
+                </p>
+              )}
+            </div>
+          )}
           <p className="font-poppins text-[10px] sm:text-xs text-gray-600 dark:text-gray-300 leading-relaxed mt-0.5 sm:mt-1 line-clamp-2">
             {(() => {
               const rawDesc = technology.description || technology.brief_description_abstract || "No description provided.";
@@ -130,19 +151,29 @@ export default function MiniCard({ technology, className }: MiniCardProps) {
                 ID: {technology.technology_id}
               </span>
             )}
-            {technology.trl && (
-              <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[8px] sm:text-[9px] font-bold font-sans tracking-wide bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-100/50 dark:border-amber-700/40">
-                TRL: {technology.trl}
-              </span>
-            )}
-            {technology.patent_status && (
-              <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[8px] sm:text-[9px] font-bold font-sans tracking-wide bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-100/50 dark:border-emerald-700/40">
-                Patent: {technology.patent_status}
-              </span>
+            {isInstrumentation ? (
+              contactNumber && (
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[8px] sm:text-[9px] font-bold font-sans tracking-wide bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-100/50 dark:border-amber-700/40">
+                  Contact: {contactNumber}
+                </span>
+              )
+            ) : (
+              <>
+                {technology.trl && (
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[8px] sm:text-[9px] font-bold font-sans tracking-wide bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-100/50 dark:border-amber-700/40">
+                    TRL: {technology.trl}
+                  </span>
+                )}
+                {technology.patent_status && (
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[8px] sm:text-[9px] font-bold font-sans tracking-wide bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-100/50 dark:border-emerald-700/40">
+                    Patent: {technology.patent_status}
+                  </span>
+                )}
+              </>
             )}
           </div>
         </div>
-      </motion.div>
+      </div>
     </Link>
   );
 }
