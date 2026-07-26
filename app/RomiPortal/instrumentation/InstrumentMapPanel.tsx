@@ -149,7 +149,7 @@ export default function InstrumentMapPanel({ locations, selectedId, onClose, onS
           </div>
 
           <a 
-            href="${loc.url.startsWith('http') ? loc.url : `https://${loc.url}`}" 
+            href="${loc.url ? (loc.url.startsWith('http') ? loc.url : `https://${loc.url}`) : `https://rink-ui.vercel.app/instrument/${loc.id}`}" 
             target="_blank" 
             rel="noopener noreferrer" 
             class="mt-2 text-center text-xs font-bold bg-[#1b60bb] hover:bg-[#1872dd] text-white py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm font-sans"

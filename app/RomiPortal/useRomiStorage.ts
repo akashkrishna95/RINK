@@ -43,6 +43,10 @@ export interface ChatSession {
   updatedAt: number;
   summary?: string;           // rolling conversation-state JSON (stringified)
   mode?: string;              // mode of this chat session
+  assessment?: {
+    progress: number;
+    stages: any[];
+  };
 }
 
 class RomiDatabase extends Dexie {
@@ -137,7 +141,7 @@ export function useRomiStorage(consentGranted: boolean) {
       db.messages.where('sessionId').equals(id).sortBy('timestamp'),
       db.sessions.get(id),
     ]);
-    return { messages, summary: session?.summary, mode: session?.mode };
+    return { messages, summary: session?.summary, mode: session?.mode, assessment: session?.assessment };
   }, [consentGranted]);
 
   const deleteSession = useCallback(async (id: string) => {

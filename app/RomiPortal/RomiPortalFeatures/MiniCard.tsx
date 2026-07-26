@@ -1,10 +1,14 @@
 // app\RomiPortal\RomiPortalFeatures\MiniCard.tsx
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, School, Phone, Mail } from 'lucide-react';
 import { formatTechnologyName } from '@/lib/utils';
 import Link from 'next/link';
+
+let cachedInstrumentData: any = null;
+let fetchPromise: Promise<any> | null = null;
+
 
 interface MiniCardProps {
   technology: {
@@ -37,9 +41,49 @@ interface MiniCardProps {
 export default function MiniCard({ technology, className, customHref, isInstrumentation, contactNumber, email }: MiniCardProps) {
   const expanded = false;
   const [imgError, setImgError] = useState(false);
+  const [dynamicImageUrl, setDynamicImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isInstrumentation && technology.technology_id) {
+      if (cachedInstrumentData) {
+        findAndSetImage(cachedInstrumentData);
+      } else {
+        if (!fetchPromise) {
+          fetchPromise = fetch('https://rink-git-cron.vercel.app/instrument.json')
+            .then(res => res.json())
+            .catch(err => {
+              console.error("Error fetching instrument data", err);
+              return null;
+            });
+        }
+        fetchPromise.then(data => {
+          if (data) {
+            cachedInstrumentData = data;
+            findAndSetImage(data);
+          }
+        });
+      }
+    }
+
+    function findAndSetImage(data: any) {
+      const inst = data.main_data?.find((item: any) => item.id === technology.technology_id);
+      if (inst && inst.image_link) {
+        const imgUrl = inst.image_link.startsWith('http') 
+          ? inst.image_link 
+          : `https://rink-git-cron.vercel.app${inst.image_link}`;
+        setDynamicImageUrl(imgUrl);
+      }
+    }
+  }, [isInstrumentation, technology.technology_id]);
+
   console.log("MiniCard received technology object:", technology);
 
-  const href = customHref || `/technologies/${technology.technology_id}`;
+  const defaultHref = isInstrumentation
+    ? `https://rink-ui.vercel.app/instrument/${technology.technology_id}`
+    : `/technologies/${technology.technology_id}`;
+
+
+  const href = customHref || defaultHref;
 
   return (
     <Link href={href} target="_blank" rel="noopener noreferrer" className="block w-full">
@@ -64,23 +108,31 @@ export default function MiniCard({ technology, className, customHref, isInstrume
 
         {/* Square Image with Cornered Edges */}
         <div className="flex-shrink-0 w-12 h-12 sm:w-20 sm:h-20 bg-gray-50 dark:bg-[#272727] rounded-lg overflow-hidden border border-gray-100 dark:border-white/[0.08] relative shadow-inner z-10">
-          {technology.image_url && 
-           technology.image_url !== "Not Specified" && 
-           technology.image_url !== "null" && 
-           technology.image_url !== "undefined" && 
-           (technology.image_url.startsWith("http://") || technology.image_url.startsWith("https://") || technology.image_url.startsWith("/")) && 
-           !imgError ? (
-            <img
-              src={technology.image_url}
-              alt={formatTechnologyName(technology.technology_name)}
-              className="w-full h-full object-cover"
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-[#1b60bb]/5 dark:bg-white/[0.05] text-[#1b60bb] dark:text-[#7dd3fc]">
-              <span className="font-helios font-bold text-lg sm:text-xl">{formatTechnologyName(technology.technology_name).charAt(0)}</span>
-            </div>
-          )}
+          {(() => {
+            const finalImageUrl = dynamicImageUrl || technology.image_url;
+            if (
+              finalImageUrl && 
+              finalImageUrl !== "Not Specified" && 
+              finalImageUrl !== "null" && 
+              finalImageUrl !== "undefined" && 
+              (finalImageUrl.startsWith("http://") || finalImageUrl.startsWith("https://") || finalImageUrl.startsWith("/")) && 
+              !imgError
+            ) {
+              return (
+                <img
+                  src={finalImageUrl}
+                  alt={formatTechnologyName(technology.technology_name)}
+                  className="w-full h-full object-cover"
+                  onError={() => setImgError(true)}
+                />
+              );
+            }
+            return (
+              <div className="w-full h-full flex items-center justify-center bg-[#1b60bb]/5 dark:bg-white/[0.05] text-[#1b60bb] dark:text-[#7dd3fc]">
+                <span className="font-helios font-bold text-lg sm:text-xl">{formatTechnologyName(technology.technology_name).charAt(0)}</span>
+              </div>
+            );
+          })()}
         </div>
 
         {/* Content */}

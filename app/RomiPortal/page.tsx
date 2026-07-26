@@ -9,6 +9,8 @@ import { useState, useEffect, Fragment } from 'react';
 import RomiPortalLayout from './RomiPortalLayout';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
+import TechnologiesFeatureShowcase from './technologies/TechnologiesFeatureShowcase';
+import InstrumentationStoryShowcase from './instrumentation/InstrumentationStoryShowcase';
 
 const tabs = ['search', 'technologies', 'instrumentation', 'researchpreneurship'];
 
@@ -16,7 +18,7 @@ const tabs = ['search', 'technologies', 'instrumentation', 'researchpreneurship'
 
 // Dynamic Placeholders tied to tabs
 const tabPlaceholders: Record<string, string> = {
-  search: "Find ready-to-license Agritech AI models...",
+  search: "Say Hi to explore more...",
   technologies: "Find ready-to-license drone mapping and IoT technologies...",
   instrumentation: "Find ready-to-use high-precision scientific instrumentation...",
   researchpreneurship: "Assess my robotics research idea for commercialization..."
@@ -178,7 +180,7 @@ export default function RomiPortalPage() {
     <main 
       className={`bg-[#FDFDF9] dark:bg-zinc-950 relative font-sans flex flex-col ${hasEntered ? 'h-screen h-[100dvh] max-h-[100dvh] overflow-hidden' : 'min-h-screen'} transition-colors duration-300`}
       style={hasEntered ? {
-        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('/images/ROMI-PORTAL-BG.webp')",
+        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('/images/ROMI-PORTAL-BG.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         height: '100dvh',
@@ -202,10 +204,11 @@ export default function RomiPortalPage() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="w-full min-h-[70vh] md:min-h-[85vh] rounded-[40px] relative shadow-2xl border border-gray-100 flex flex-col items-center justify-center pt-24 pb-16 md:pt-32 md:pb-24 bg-cover bg-center shrink-0 mb-8 scroll-mt-20 gap-8 md:gap-12"
               style={{
-                backgroundImage: "url('/images/ROMI-PORTAL-BG.webp')",
+                backgroundImage: "url('/images/ROMI-PORTAL-BG.png')",
               }}
             >
               <div className="absolute inset-0 bg-white/20 pointer-events-none rounded-[40px]"></div>
+              <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-[#fefcf5] to-transparent pointer-events-none rounded-t-[40px]"></div>
 
               <div className="z-20 flex flex-col items-center text-center max-w-4xl px-4 mt-0">
                 <motion.h1
@@ -356,7 +359,7 @@ export default function RomiPortalPage() {
             </motion.div>
 
             {/* Second Section: White Card Container (wrapping Stats Bar and onwards) */}
-            <div className="w-full bg-white rounded-[40px] shadow-2xl border border-gray-100 p-6 md:p-12 flex flex-col gap-16 overflow-hidden">
+            <div className="w-full bg-white rounded-[40px] shadow-2xl border border-gray-100 p-3 sm:p-6 md:p-12 flex flex-col gap-16 overflow-hidden">
 
               {/* 2. How Romi works - Animated 3-step visual */}
               <div className="py-20 px-6 max-w-7xl mx-auto">
@@ -438,317 +441,9 @@ export default function RomiPortalPage() {
                 </motion.div>
               </div>
 
-              {/* 3. Capabilities / Ecosystem Context (Animated Bento Grid) */}
-              <div className="py-24 px-4 md:px-8 max-w-7xl mx-auto bg-white w-full flex flex-col items-center">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                  className="text-center mb-16 w-full flex flex-col items-center justify-center"
-                >
-                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
-                    Engineered for Research & Scale
-                  </h2>
-                  <p className="text-gray-500 font-montserrat max-w-2xl mx-auto text-center">
-                    Discover how ROMI AI converts raw scientific data and patent filings into structured, market-ready intelligence.
-                  </p>
-                </motion.div>
-
-                <motion.div
-                  variants={containerVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-50px" }}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full"
-                >
-                  {/* Card 1: Synthesized IP Extraction (2/3 width) */}
-                  <motion.div
-                    variants={itemVariants}
-                    className="md:col-span-2 bg-[#FAF9F5] border border-gray-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden relative group hover:shadow-lg transition-shadow duration-300 w-full mx-auto"
-                  >
-                    <div className="max-w-md z-10">
-                      <div className="w-12 h-12 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-[#1b60bb] mb-6">
-                        <Database size={24} />
-                      </div>
-                      <h3 className="font-bold font-helios text-2xl mb-2 text-gray-900">Synthesized IP Summarization</h3>
-                      <p className="text-gray-500 text-sm font-montserrat leading-relaxed">
-                        ROMI parses complex academic articles and 100+ page patent documents, instantly extracting key claims, Technology Readiness Levels (TRL), and concrete application fields.
-                      </p>
-                    </div>
-
-                    <div className="mt-8 flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                      <div className="flex-1 opacity-55 border-b sm:border-b-0 sm:border-r border-gray-100 pb-4 sm:pb-0 pr-0 sm:pr-4">
-                        <span className="text-[10px] uppercase font-bold text-gray-400 block mb-2">Raw Patent PDF</span>
-                        <div className="h-2 bg-gray-200 rounded w-3/4 mb-1"></div>
-                        <div className="h-2 bg-gray-100 rounded w-full mb-1"></div>
-                        <div className="h-2 bg-gray-200 rounded w-5/6 mb-1"></div>
-                        <div className="h-2 bg-gray-100 rounded w-2/3"></div>
-                      </div>
-                      <div className="flex-1 pl-0 sm:pl-4 pt-4 sm:pt-0">
-                        <span className="text-[10px] uppercase font-bold text-green-600 block mb-2">ROMI Commercial Summary</span>
-                        <div className="flex items-center gap-1.5 mb-1.5">
-                          <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                          <span className="text-xs font-bold text-gray-800">TRL 6 Predictor</span>
-                        </div>
-                        <span className="text-xs text-gray-600 font-montserrat block">Agritech Drone Crop Analysis</span>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Card 2: Localized Context Matching (1/3 width) */}
-                  <motion.div
-                    variants={itemVariants}
-                    className="bg-[#FAF9F5] border border-gray-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden relative group hover:shadow-lg transition-shadow duration-300 w-full mx-auto"
-                  >
-                    <div>
-                      <div className="w-12 h-12 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-green-600 mb-6">
-                        <Filter size={24} />
-                      </div>
-                      <h3 className="font-bold font-helios text-2xl mb-2 text-gray-900">Ecosystem Context</h3>
-                      <p className="text-gray-500 text-sm font-montserrat leading-relaxed">
-                        Pre-aligned with the Kerala Startup Mission (KSUM) ecosystem, native institutions, and local sector growth patterns.
-                      </p>
-                    </div>
-
-                    <div className="mt-8 flex flex-wrap gap-2">
-                      {['Agriculture', 'Biotechnology', 'KAU', 'CUSAT', 'KSUM'].map((label, idx) => (
-                        <span key={idx} className="px-3.5 py-1.5 bg-white border border-gray-100 rounded-full text-xs font-semibold text-gray-700 shadow-sm">{label}</span>
-                      ))}
-                    </div>
-                  </motion.div>
-
-                  {/* Card 3: Real-Time TAM/SAM/SOM Calculation (1/3 width) */}
-                  <motion.div
-                    variants={itemVariants}
-                    className="bg-[#FAF9F5] border border-gray-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden relative group hover:shadow-lg transition-shadow duration-300 w-full mx-auto"
-                  >
-                    <div>
-                      <div className="w-12 h-12 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-amber-500 mb-6">
-                        <TrendingUp size={24} />
-                      </div>
-                      <h3 className="font-bold font-helios text-2xl mb-2 text-gray-900">Market Potential Mapping</h3>
-                      <p className="text-gray-500 text-sm font-montserrat leading-relaxed">
-                        Automatically queries industry sector forecasts to model addressable and target market volumes instantly.
-                      </p>
-                    </div>
-
-                    <div className="mt-8 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-2">
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="font-bold text-gray-700">Agritech Market (2026)</span>
-                        <span className="text-green-600 font-bold">$43.37B</span>
-                      </div>
-                      <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          whileInView={{ width: "70%" }}
-                          transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
-                          viewport={{ once: true }}
-                          className="bg-[#1b60bb] h-full"
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Card 4: Developer & Partner API (2/3 width) */}
-                  <motion.div
-                    variants={itemVariants}
-                    className="md:col-span-2 bg-[#FAF9F5] border border-gray-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden relative group hover:shadow-lg transition-shadow duration-300 w-full mx-auto"
-                  >
-                    <div className="max-w-md">
-                      <div className="w-12 h-12 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-indigo-600 mb-6">
-                        <Zap size={24} />
-                      </div>
-                      <h3 className="font-bold font-helios text-2xl mb-2 text-gray-900">Developer & Institution API</h3>
-                      <p className="text-gray-500 text-sm font-montserrat leading-relaxed">
-                        Integrate ROMI's backend directly into institution libraries, databases, and investor search workflows with standardized JSON payloads.
-                      </p>
-                    </div>
-
-                    <div className="mt-8 bg-gray-900 rounded-2xl p-4 font-mono text-[11px] text-gray-300 border border-gray-800 shadow-inner overflow-x-auto whitespace-pre">
-                      <div className="flex items-center gap-1.5 mb-2.5 pb-2 border-b border-gray-800">
-                        <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-                        <span className="text-[10px] text-gray-500 ml-1">rink-romi-query.js</span>
-                      </div>
-                      <span className="text-indigo-400">const</span> romi = <span className="text-indigo-400">new</span> <span className="text-green-400">RomiAI</span>(&#123; apiKey: <span className="text-amber-300">'rink_key...'</span> &#125;);<br />
-                      <span className="text-indigo-400">const</span> result = <span className="text-indigo-400">await</span> romi.analyze(<span className="text-amber-300">'Agritech'</span>);<br />
-                      console.log(result.market.tam); <span className="text-gray-500">// "$43.37B"</span>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              </div>
-              {/*ROMI Synthesized IP Query Pipeline (Animated Grid) */}
-              <div className="w-full bg-[#FCFAF8] py-20 rounded-[40px] shadow-sm my-4 flex items-center justify-center relative overflow-hidden">
-                <style>{`
-                  @keyframes flowParticles {
-                    from { stroke-dashoffset: 40; }
-                    to { stroke-dashoffset: 0; }
-                  }
-                  .animate-particle-flow {
-                    stroke-dasharray: 8, 12;
-                    animation: flowParticles 2s linear infinite;
-                  }
-                  .active-node-glow {
-                    box-shadow: 0 0 25px rgba(27, 96, 187, 0.35);
-                    border-color: rgba(27, 96, 187, 0.4);
-                  }
-                `}</style>
-
-                <div className="max-w-6xl mx-auto w-full px-4 md:px-8 flex flex-col items-center justify-center">
-
-                  {/* Header Section */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-12 relative z-10 w-full flex flex-col items-center"
-                  >
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
-                      Romi AI Architecture: Deep-Tech Data Flow
-                    </h2>
-                    <p className="text-gray-500 font-montserrat max-w-2xl mx-auto text-center">
-                      A privacy-first, agentic AI ecosystem powered by a decentralized network, a localized LLM reasoning engine, and a 1024-dimensional semantic search pipeline.
-                    </p>
-                  </motion.div>
-
-                  {/* Animated Responsive 3x2 Grid layout showing the 6 Phases */}
-                  <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="w-full grid grid-cols-1 md:grid-cols-3 gap-y-16 gap-x-6 md:gap-x-12 md:gap-y-16 relative z-10 font-sans"
-                  >
-                    {[
-                      {
-                        phase: 'Phase 1',
-                        title: 'Decentralized Interception',
-                        desc: 'Injected via @ksum/romi-chat npm widget. Zero-Trust LocalStorage memory safeguards IP ideas in browser, using Agentic Routing to intercept target triggers.',
-                        sub: 'Data Sovereignty & Client Intercept'
-                      },
-                      {
-                        phase: 'Phase 2',
-                        title: 'Gateway & Sanitization',
-                        desc: 'FastAPI Railway backend. Python heuristics scrub prompts to prevent loop hallucinations while extracting exact parameters (TRL levels, Institutions, sectors) in ms.',
-                        sub: 'Structured JSON Context Assembly'
-                      },
-                      {
-                        phase: 'Phase 3',
-                        title: 'Semantic Brain (RAG)',
-                        desc: 'Translates query into 1024-D mixedbread-ai vectors. Blasts ChromaDB similarity query (threshold >= 0.45), syncing live sheets in shadow databases for 100% uptime.',
-                        sub: '1024-D mixedbread-ai & ChromaDB'
-                      },
-                      {
-                        phase: 'Phase 4',
-                        title: 'Live OSINT Validation',
-                        desc: 'Connected to live web. Automated scrapers gather real-time Indian market competitors, and calculate TAM/SAM/SOM statistics stamped with verification references.',
-                        sub: 'Live Web Scraping & Citations'
-                      },
-                      {
-                        phase: 'Phase 5',
-                        title: 'Local Inference (Llama 3.1)',
-                        desc: 'Feeds structured context to localized Llama 3.1 70B (startup ideas are kept 100% locally secure, never sent to OpenAI/Google). Synthesizes mentor-like responses.',
-                        sub: 'On-Premise Privacy Inference'
-                      },
-                      {
-                        phase: 'Phase 6',
-                        title: 'KSUM Deliverables Export',
-                        desc: 'Server compiles the 8-stage Diagnostic Report into a highly formatted, KSUM-branded Word .docx file streamed directly to browser for one-click incubation applications.',
-                        sub: 'Python-Docx Document Stream'
-                      }
-                    ].map((item, idx) => {
-                      const desktopOrders = [
-                        'md:order-1', // Phase 1
-                        'md:order-2', // Phase 2
-                        'md:order-3', // Phase 3
-                        'md:order-6', // Phase 4
-                        'md:order-5', // Phase 5
-                        'md:order-4', // Phase 6
-                      ];
-
-                      return (
-                        <motion.div
-                          key={idx}
-                          variants={itemVariants}
-                          onClick={() => setActivePipelineStep(idx)}
-                          // Changed: Base z-10, hover z-30, and dynamic active z-20 so cards ALWAYS overlay the lines
-                          className={`bg-white border border-gray-150 rounded-2xl p-6 shadow-md shadow-gray-200/50 hover:shadow-xl hover:-translate-y-1 hover:z-30 transition-all duration-300 cursor-pointer relative flex flex-col justify-between w-full mx-auto min-h-[220px] ${desktopOrders[idx]} ${activePipelineStep === idx ? 'ring-2 ring-[#1b60bb]/40 bg-blue-50/10 z-20' : 'z-10'}`}
-                        >
-                          <div>
-                            <div className="flex items-center justify-between mb-4">
-                              <span className={`text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-full ${activePipelineStep === idx ? 'bg-blue-50 text-[#1b60bb]' : 'bg-gray-50 text-gray-400'}`}>
-                                {item.phase}
-                              </span>
-                              <span className="text-[10px] font-semibold text-gray-400 font-montserrat">{item.sub}</span>
-                            </div>
-                            <h3 className="font-bold font-helios text-lg text-gray-900 mb-2 leading-snug">{item.title}</h3>
-                            <p className="text-gray-500 text-xs font-montserrat leading-relaxed mb-4">{item.desc}</p>
-                          </div>
-
-                          <div className="flex items-center gap-2 mt-auto pt-2">
-                            <span className={`w-2 h-2 rounded-full ${activePipelineStep === idx ? 'bg-green-500 animate-ping' : 'bg-gray-200'}`} />
-                            <span className={`text-[10px] font-bold ${activePipelineStep === idx ? 'text-green-600' : 'text-gray-400'}`}>
-                              {activePipelineStep === idx ? 'Pulsing Data Package' : 'Standby Node'}
-                            </span>
-                          </div>
-
-                          {/* Changed: Applied -z-10 to all connector wrappers so they tuck beneath the card backgrounds */}
-                          {idx < 5 && (
-                            <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 md:hidden w-6 h-16 overflow-visible -z-10">
-                              <svg className="w-6 h-16 overflow-visible" viewBox="0 0 24 64">
-                                <path d="M 12 0 L 12 64" stroke="#cbd5e1" strokeWidth="2.5" strokeDasharray="4 4" />
-                                <path d="M 8 28 L 12 32 L 16 28" stroke="#cbd5e1" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                                <circle r="3.5" fill="#ff7a00">
-                                  <animateMotion dur="1.5s" repeatCount="indefinite" path="M 12 0 L 12 64" />
-                                </circle>
-                              </svg>
-                            </div>
-                          )}
-
-                          {(idx === 0 || idx === 1) && (
-                            <div className="hidden md:block absolute top-1/2 -right-10 lg:-right-14 transform -translate-y-1/2 w-10 lg:w-14 h-4 overflow-visible -z-10">
-                              <svg className="w-full h-4 overflow-visible" viewBox="0 0 64 16" preserveAspectRatio="none">
-                                <path d="M 0 8 L 64 8" stroke="#cbd5e1" strokeWidth="2.5" strokeDasharray="4 4" />
-                                <path d="M 28 4 L 34 8 L 28 12" stroke="#cbd5e1" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                                <circle r="3.5" fill="#ff7a00">
-                                  <animateMotion dur="1.5s" repeatCount="indefinite" path="M 0 8 L 64 8" />
-                                </circle>
-                              </svg>
-                            </div>
-                          )}
-
-                          {idx === 2 && (
-                            <div className="hidden md:block absolute -bottom-16 left-1/2 transform -translate-x-1/2 w-4 h-16 overflow-visible -z-10">
-                              <svg className="w-4 h-16 overflow-visible" viewBox="0 0 16 64">
-                                <path d="M 8 0 L 8 64" stroke="#cbd5e1" strokeWidth="2.5" strokeDasharray="4 4" />
-                                <path d="M 4 28 L 8 32 L 12 28" stroke="#cbd5e1" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                                <circle r="3.5" fill="#ff7a00">
-                                  <animateMotion dur="1.5s" repeatCount="indefinite" path="M 8 0 L 8 64" />
-                                </circle>
-                              </svg>
-                            </div>
-                          )}
-
-                          {(idx === 3 || idx === 4) && (
-                            <div className="hidden md:block absolute top-1/2 -left-10 lg:-left-14 transform -translate-y-1/2 w-10 lg:w-14 h-4 overflow-visible -z-10">
-                              <svg className="w-full h-4 overflow-visible" viewBox="0 0 64 16" preserveAspectRatio="none">
-                                <path d="M 64 8 L 0 8" stroke="#cbd5e1" strokeWidth="2.5" strokeDasharray="4 4" />
-                                <path d="M 36 4 L 30 8 L 36 12" stroke="#cbd5e1" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                                <circle r="3.5" fill="#ff7a00">
-                                  <animateMotion dur="1.5s" repeatCount="indefinite" path="M 64 8 L 0 8" />
-                                </circle>
-                              </svg>
-                            </div>
-                          )}
-                        </motion.div>
-                      );
-                    })}
-                  </motion.div>
-                </div>
-              </div>
+              {/* 3. Technologies Feature Showcase (Interactive Romi AI Story & Capabilities) */}
+              <TechnologiesFeatureShowcase />
+              <InstrumentationStoryShowcase />
 
               {/* 4. Comparative Advantage Section */}
               <div className="py-20 px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center">

@@ -1,4 +1,3 @@
-'use client';
 // C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\RomiPortal\RomiPortalFeatures\VizRenderer.tsx
 // PURPOSE: Structured-tag visualisation renderer for Romi messages — v2.
 // The backend prompts instruct Llama to emit tags with REAL data only:
@@ -16,6 +15,7 @@
 //   [SRC:url|title] → clickable link icon inline in text
 // This module strips the tags from display text, renders each chart with the
 // real numbers, and never crashes on malformed JSON (tag silently dropped).
+'use client';
 
 import React, { useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
@@ -23,7 +23,7 @@ import { ExternalLink } from 'lucide-react';
 import RomiBarChart from './RomiBarChart';
 export { RomiBarChart };
 import RomiLineChart from './RomiLineChart';
-import RomiProgressBar from './RomiProgressBar';
+import RomiProgressBar from '../researchpreneurship/RomiProgressBar';
 import RomiGauge from './viz/RomiGauge';
 import RomiRadarChart from './viz/RomiRadarChart';
 import { RomiTimeline, RomiKpiCards } from './viz/RomiTimelineAndKpi';
@@ -91,10 +91,7 @@ export function parseRomiVisuals(text: string): { cleanText: string; charts: Rea
       const key = `viz-${idx++}`;
       switch (kind) {
         case 'PROGRESS':
-          charts.push(
-            <RomiProgressBar key={key}
-              overallProgressPercent={Number(cfg.percent) || 0}
-              stages={(cfg.stages || []).slice(0, 10)} />);
+          // Dropped silently: the top bar handles assessment progress.
           break;
         case 'FUNNEL':
           if (cfg.tam && cfg.sam && cfg.som) charts.push(<RomiMarketFunnel key={key} {...cfg} />);
