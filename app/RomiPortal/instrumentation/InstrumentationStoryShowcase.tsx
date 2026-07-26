@@ -78,7 +78,7 @@ const storySteps = [
   {
     id: 0,
     num: "01",
-    title: "1. FTIR Query & Disambiguation",
+    title: "1. Search & Clarify",
     desc: "Tell Romi what you need. Romi clarifies acronyms and displays regional availability with 8 matching pins."
   },
   {
@@ -308,6 +308,14 @@ export default function InstrumentationStoryShowcase() {
           mapInitRefDesktop.current = false;
         }
 
+        // Destroy existing mobile map instance first before recreating it on the new DOM container
+        if (mapRefMobile.current) {
+          try { mapRefMobile.current.remove(); } catch(e){}
+          mapRefMobile.current = null;
+          layerRefMobile.current = null;
+          mapInitRefMobile.current = false;
+        }
+
         // Initialize mobile map if needed
         if (mapDivRefMobile.current && !mapInitRefMobile.current) {
           mapInitRefMobile.current = true;
@@ -500,15 +508,6 @@ export default function InstrumentationStoryShowcase() {
   useEffect(() => {
     if (!chatScrollRef.current) return;
     if (animationPhase !== 'showing-content') return; // Wait until content finishes typing
-    
-    // On mobile, if we are in Phase 4 (Spotlight), scroll to the map card so it doesn't get hidden!
-    if (isMobile && activeStep === 3) {
-      const mapCard = document.getElementById('mobile-map-card');
-      if (mapCard) {
-        mapCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-    }
 
     if (activeStep === 2 || activeStep === 3) {
       chatScrollRef.current.scrollTo({
@@ -532,8 +531,77 @@ export default function InstrumentationStoryShowcase() {
     return () => clearInterval(interval);
   }, [isPlaying]);
 
+  const renderMobileMapCard = () => {
+    if (!isMobile) return null;
+    return (
+      <div
+        id="mobile-map-card" 
+        className={`block lg:hidden w-[calc(100%+44px)] -ml-[44px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-2 flex flex-col justify-between shadow-sm relative overflow-hidden my-3 transition-all duration-400 ${
+          animationPhase === 'showing-content' ? 'opacity-100 max-h-[600px]' : 'opacity-0 max-h-0 overflow-hidden pointer-events-none !my-0 !p-0 !border-0'
+        }`}
+      >
+        <div className="flex items-center justify-between pb-2 border-b border-gray-150 dark:border-zinc-800 mb-2 px-1">
+          <div className="flex items-center gap-2">
+            <span className="font-helios font-bold text-xs text-gray-900 dark:text-zinc-100 uppercase tracking-wider flex items-center gap-1">
+              <MapPin size={12} className="text-[#1b60bb]" /> FACILITY MAP
+            </span>
+            <span className="bg-blue-50 dark:bg-blue-950/60 text-[#1b60bb] dark:text-blue-400 border border-blue-200/50 text-[9px] font-bold px-2 py-0.5 rounded-full font-mono">
+              {activeStep === 0 ? '8 pins' : '6 pins'}
+            </span>
+          </div>
+        </div>
+        <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-zinc-800 relative h-[320px] shadow-inner bg-slate-100 pointer-events-none">
+          <div ref={mapDivRefMobile} className="w-full h-full z-0" />
+        </div>
+
+        {/* Floating Overlay Popup in Mobile Inline Map */}
+        <AnimatePresence>
+          {activeStep === 3 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 5, scale: 0.95 }}
+              className="absolute top-10 left-2 right-2 max-w-[260px] mx-auto bg-white dark:bg-zinc-950 border border-gray-150 dark:border-zinc-800 rounded-2xl p-3 shadow-2xl z-30 font-sans pointer-events-auto"
+            >
+              <div className="flex justify-between items-start mb-1">
+                <div>
+                  <h4 className="text-[#0052cc] dark:text-blue-400 font-bold font-helios text-xs leading-snug">
+                    FTIR spectrometer
+                  </h4>
+                  <div className="flex gap-1 mt-1">
+                    <span className="px-1.5 py-0.5 text-[8px] font-bold border border-blue-300 bg-blue-50 text-blue-600 rounded">
+                      Ernakulam
+                    </span>
+                    <span className="px-1.5 py-0.5 text-[8px] font-bold bg-gray-100 text-gray-600 rounded font-mono uppercase">
+                      INSTRUMENT
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-1 text-[9px] text-gray-600 dark:text-zinc-300 border-t border-gray-100 dark:border-zinc-900 pt-1.5 font-medium">
+                <p>CUSAT, Cochin - 682 022, Kerala, India</p>
+                <p><span className="text-[#0052cc] underline">saif@sticindia.com</span></p>
+                <p>91 484 2575908</p>
+              </div>
+              <button
+                type="button"
+                className="w-full mt-2 bg-[#0052cc] text-white py-1.5 rounded-lg text-[10px] font-bold shadow-xs flex items-center justify-center gap-1"
+              >
+                Visit Website <ExternalLink size={10} />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <p className="text-[9.5px] font-mono text-gray-400 text-center mt-2 px-1">
+          Click a pin or card to spotlight &bull; double-click to open full details.
+        </p>
+      </div>
+    );
+  };
+
   return (
-    <section className="py-16 px-2 sm:px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center overflow-hidden font-sans">
+    <section className="py-16 px-2 sm:px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center font-sans">
       
       {/* SECTION HEADER & HOOK */}
       <motion.div
@@ -543,7 +611,7 @@ export default function InstrumentationStoryShowcase() {
         transition={{ duration: 0.6 }}
         className="text-center mb-10 max-w-4xl mx-auto"
       >
-        <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-helios text-gray-900 dark:text-zinc-100 mb-4 tracking-tight leading-tight">
+        <h2 className="text-center text-[24px] xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-helios text-gray-900 dark:text-zinc-100 mb-4 tracking-tight leading-tight">
           &quot;Find the machine, <span className="text-[#1b60bb] dark:text-[#7dd3fc]">not the manual.&quot;</span>
         </h2>
         
@@ -581,16 +649,16 @@ export default function InstrumentationStoryShowcase() {
                 }}
                 className={`p-3 rounded-xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden ${
                   isActive
-                    ? 'bg-white dark:bg-zinc-800 border-[#1b60bb] dark:border-blue-400 shadow-md ring-2 ring-[#1b60bb]/20'
-                    : 'bg-white/60 dark:bg-zinc-950/40 border-gray-200/60 dark:border-zinc-800 hover:bg-white dark:hover:bg-zinc-800/60'
+                    ? 'bg-[#F1EFEB] dark:bg-[#1a1a1c] border-[#c8c2b0] dark:border-zinc-700 shadow-[inset_3px_3px_6px_rgba(135,130,110,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.95)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.75),inset_-3px_-3px_6px_rgba(255,255,255,0.04)]'
+                    : 'bg-[#F1EFEB] dark:bg-zinc-950/40 border-gray-200/60 dark:border-zinc-800/80 shadow-[inset_1.5px_1.5px_3px_rgba(165,160,135,0.25),inset_-1.5px_-1.5px_3px_rgba(255,255,255,0.85)] dark:shadow-[inset_1.5px_1.5px_3px_rgba(0,0,0,0.55),inset_-1px_-1px_2px_rgba(255,255,255,0.02)] hover:bg-[#ebe9e1] dark:hover:bg-zinc-800/40 hover:shadow-[inset_1px_1px_3.5px_rgba(135,130,110,0.35)]'
                 }`}
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${isActive ? 'bg-[#1b60bb] text-white' : 'bg-gray-100 dark:bg-zinc-800 text-gray-500'}`}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className={`text-[9px] lg:text-[11px] font-mono font-bold px-1.5 lg:px-2 py-0.5 lg:py-1 rounded ${isActive ? 'bg-[#1b60bb] text-white' : 'bg-gray-100 dark:bg-zinc-800 text-gray-500'}`}>
                     {step.num}
                   </span>
                 </div>
-                <h4 className={`font-helios text-[11px] font-bold leading-tight ${isActive ? 'text-[#1b60bb] dark:text-blue-400' : 'text-gray-800 dark:text-zinc-200'}`}>
+                <h4 className={`font-helios text-[11px] lg:text-sm font-bold leading-tight ${isActive ? 'text-[#1b60bb] dark:text-blue-400' : 'text-gray-800 dark:text-zinc-200'}`}>
                   {step.title}
                 </h4>
               </button>
@@ -618,72 +686,7 @@ export default function InstrumentationStoryShowcase() {
               </div>
             </div>
 
-            {/* SINGLE PERSISTENT MOBILE MAP CARD — always mounted on mobile so Leaflet container is never destroyed */}
-            {isMobile && (
-              <div
-                id="mobile-map-card" 
-                className={`block lg:hidden w-full bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-2 flex flex-col justify-between shadow-sm relative overflow-hidden my-3 transition-all duration-400 ${
-                  animationPhase === 'showing-content' ? 'opacity-100 max-h-[600px]' : 'opacity-0 max-h-0 overflow-hidden pointer-events-none !my-0 !p-0 !border-0'
-                }`}
-              >
-                <div className="flex items-center justify-between pb-2 border-b border-gray-150 dark:border-zinc-800 mb-2 px-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-helios font-bold text-xs text-gray-900 dark:text-zinc-100 uppercase tracking-wider flex items-center gap-1">
-                      <MapPin size={12} className="text-[#1b60bb]" /> FACILITY MAP
-                    </span>
-                    <span className="bg-blue-50 dark:bg-blue-950/60 text-[#1b60bb] dark:text-blue-400 border border-blue-200/50 text-[9px] font-bold px-2 py-0.5 rounded-full font-mono">
-                      {activeStep === 0 ? '8 pins' : '6 pins'}
-                    </span>
-                  </div>
-                </div>
-                <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-zinc-800 relative h-[320px] shadow-inner bg-slate-100 pointer-events-none">
-                  <div ref={mapDivRefMobile} className="w-full h-full z-0" />
-                </div>
 
-                {/* Floating Overlay Popup in Mobile Inline Map */}
-                <AnimatePresence>
-                  {activeStep === 3 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                      className="absolute top-10 left-2 right-2 max-w-[260px] mx-auto bg-white dark:bg-zinc-950 border border-gray-150 dark:border-zinc-800 rounded-2xl p-3 shadow-2xl z-30 font-sans pointer-events-auto"
-                    >
-                      <div className="flex justify-between items-start mb-1">
-                        <div>
-                          <h4 className="text-[#0052cc] dark:text-blue-400 font-bold font-helios text-xs leading-snug">
-                            FTIR spectrometer
-                          </h4>
-                          <div className="flex gap-1 mt-1">
-                            <span className="px-1.5 py-0.5 text-[8px] font-bold border border-blue-300 bg-blue-50 text-blue-600 rounded">
-                              Ernakulam
-                            </span>
-                            <span className="px-1.5 py-0.5 text-[8px] font-bold bg-gray-100 text-gray-600 rounded font-mono uppercase">
-                              INSTRUMENT
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="space-y-1 text-[9px] text-gray-600 dark:text-zinc-300 border-t border-gray-100 dark:border-zinc-900 pt-1.5 font-medium">
-                        <p>CUSAT, Cochin - 682 022, Kerala, India</p>
-                        <p><span className="text-[#0052cc] underline">saif@sticindia.com</span></p>
-                        <p>91 484 2575908</p>
-                      </div>
-                      <button
-                        type="button"
-                        className="w-full mt-2 bg-[#0052cc] text-white py-1.5 rounded-lg text-[10px] font-bold shadow-xs flex items-center justify-center gap-1"
-                      >
-                        Visit Website <ExternalLink size={10} />
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <p className="text-[9.5px] font-mono text-gray-400 text-center mt-2 px-1">
-                  Click a pin or card to spotlight &bull; double-click to open full details.
-                </p>
-              </div>
-            )}
 
             {/* MESSAGES STREAM AREA */}
             <div id="chat-scroll-container" ref={chatScrollRef} className="flex-1 overflow-y-auto space-y-4 pr-1 max-h-[460px] scrollbar-thin font-sans">
@@ -730,6 +733,8 @@ export default function InstrumentationStoryShowcase() {
                           >
                             <MapPin size={12} /> View Facility Map (8 pins) <ArrowUpRight size={12} />
                           </motion.div>
+
+                          {renderMobileMapCard()}
 
                           <motion.p 
                             initial={{ opacity: 0 }}
@@ -793,6 +798,8 @@ export default function InstrumentationStoryShowcase() {
                           >
                             <MapPin size={12} /> View Facility Map (6 pins) <ArrowUpRight size={12} />
                           </motion.div>
+
+                          {renderMobileMapCard()}
 
                           <motion.p 
                             initial={{ opacity: 0 }}

@@ -177,9 +177,9 @@ export default function TechnologiesFeatureShowcase() {
 
   // STRICTLY 3 SUBCARDS TOTAL
   const steps = [
-    { id: 0, title: "1. Plain English Input", shortDesc: "Auto-typing query & natural search" },
-    { id: 1, title: "2. One-Tap Comparisons", shortDesc: "Apples-to-apples 10-criteria comparison table" },
-    { id: 2, title: "3. Live Market Intelligence", shortDesc: "TAM/SAM/SOM breakdown & 5-year graph" },
+    { id: 0, num: "01", title: "1. Plain English Input", shortDesc: "Auto-typing query & natural search" },
+    { id: 1, num: "02", title: "2. One-Tap Comparisons", shortDesc: "Apples-to-apples 10-criteria comparison table" },
+    { id: 2, num: "03", title: "3. Live Market Intelligence", shortDesc: "TAM/SAM/SOM breakdown & 5-year graph" },
   ];
 
   // Comparison Data (Top 4 Jaggery Technologies)
@@ -322,7 +322,7 @@ export default function TechnologiesFeatureShowcase() {
   ];
 
   return (
-    <section className="py-16 px-1 sm:px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center overflow-hidden">
+    <section className="py-16 px-1 sm:px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center">
       {/* PURE CSS GPU-ACCELERATED MARQUEE STYLES (0-JIGGLE SMOOTH FOR 4GB/6GB MOBILE PHONES) */}
       <style>{`
         @keyframes smoothMarqueeLeft {
@@ -367,8 +367,9 @@ export default function TechnologiesFeatureShowcase() {
         transition={{ duration: 0.6 }}
         className="text-center mb-10 max-w-3xl mx-auto"
       >
-        <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-helios text-gray-900 dark:text-zinc-100 mb-3 tracking-tight leading-tight">
-          Describe your idea. <span className="text-[#1b60bb] dark:text-[#7dd3fc]">ROMI does the digging.</span>
+        <h2 className="text-center text-[24px] xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-helios text-gray-900 dark:text-zinc-100 mb-4 tracking-tight leading-tight">
+          <span className="block">Describe your idea.</span>
+          <span className="block text-[#1b60bb] dark:text-[#7dd3fc] whitespace-nowrap">ROMI does the digging.</span>
         </h2>
         <p className="text-gray-600 dark:text-zinc-400 font-montserrat text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
           Just type what's on your mind. ROMI AI instantly matches your query against university catalogues, market size data, and patent filings.
@@ -390,22 +391,22 @@ export default function TechnologiesFeatureShowcase() {
                   setAutoplayState('done');
                   setActiveStep(step.id);
                 }}
-                className={`p-3.5 rounded-2xl border text-left transition-all duration-300 cursor-pointer ${
+                className={`p-3 rounded-xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden ${
                   index === 2 ? 'col-span-2 md:col-span-1' : 'col-span-1'
                 } ${
                   isActive
-                    ? 'bg-white dark:bg-zinc-800 border-[#1b60bb] dark:border-blue-400 shadow-md ring-2 ring-[#1b60bb]/10'
-                    : 'bg-white/60 dark:bg-zinc-950/40 border-gray-200/60 dark:border-zinc-800/80 hover:bg-white dark:hover:bg-zinc-800/60'
+                    ? 'bg-[#F1EFEB] dark:bg-[#1a1a1c] border-[#c8c2b0] dark:border-zinc-700 shadow-[inset_3px_3px_6px_rgba(135,130,110,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.95)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.75),inset_-3px_-3px_6px_rgba(255,255,255,0.04)]'
+                    : 'bg-[#F1EFEB] dark:bg-zinc-950/40 border-gray-200/60 dark:border-zinc-800/80 shadow-[inset_1.5px_1.5px_3px_rgba(165,160,135,0.25),inset_-1.5px_-1.5px_3px_rgba(255,255,255,0.85)] dark:shadow-[inset_1.5px_1.5px_3px_rgba(0,0,0,0.55),inset_-1px_-1px_2px_rgba(255,255,255,0.02)] hover:bg-[#ebe9e1] dark:hover:bg-zinc-800/40 hover:shadow-[inset_1px_1px_3.5px_rgba(135,130,110,0.35)]'
                 }`}
               >
-                <div className="mb-1">
-                  <span className={`font-helios text-xs font-bold ${isActive ? 'text-[#1b60bb] dark:text-blue-400' : 'text-gray-700 dark:text-zinc-300'}`}>
-                    {step.title}
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className={`text-[9px] lg:text-[11px] font-mono font-bold px-1.5 lg:px-2 py-0.5 lg:py-1 rounded ${isActive ? 'bg-[#1b60bb] text-white' : 'bg-gray-100 dark:bg-zinc-800 text-gray-500'}`}>
+                    {step.num}
                   </span>
                 </div>
-                <p className="text-[10px] text-gray-500 dark:text-zinc-400 font-montserrat truncate">
-                  {step.shortDesc}
-                </p>
+                <h4 className={`font-helios text-[11px] lg:text-sm font-bold leading-tight ${isActive ? 'text-[#1b60bb] dark:text-blue-400' : 'text-gray-800 dark:text-zinc-200'}`}>
+                  {step.title}
+                </h4>
               </button>
             );
           })}

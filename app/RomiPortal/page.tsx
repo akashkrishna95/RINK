@@ -83,7 +83,7 @@ export default function RomiPortalPage() {
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState('search');
 
-  // Listen to custom reset event from Navbar clicks
+  // Listen to custom reset event from Navbar clicks and preload hero images
   useEffect(() => {
     const handleReset = () => {
       setHasEntered(false);
@@ -93,6 +93,16 @@ export default function RomiPortalPage() {
       }, 50);
     };
     window.addEventListener('reset-romi-chat', handleReset);
+
+    // Preload hero images while user is in the portal to speed up navigation
+    if (typeof window !== 'undefined') {
+      const homeHero = new Image();
+      homeHero.src = '/images/home-hero-bg.png';
+      
+      const techHero = new Image();
+      techHero.src = '/images/tech-hero-bg.png';
+    }
+
     return () => window.removeEventListener('reset-romi-chat', handleReset);
   }, []);
 
