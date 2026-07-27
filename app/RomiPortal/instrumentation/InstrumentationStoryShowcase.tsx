@@ -611,9 +611,9 @@ export default function InstrumentationStoryShowcase() {
         transition={{ duration: 0.6 }}
         className="text-center mb-10 max-w-4xl mx-auto"
       >
-        <h2 className="text-center text-[24px] xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-helios text-gray-900 dark:text-zinc-100 mb-4 tracking-tight leading-tight">
+        <h1 className="text-center text-[24px] xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-helios text-gray-900 dark:text-zinc-100 mb-4 tracking-tight leading-tight">
           &quot;Find the machine, <span className="text-[#1b60bb] dark:text-[#7dd3fc]">not the manual.&quot;</span>
-        </h2>
+        </h1>
         
         <p className="text-gray-600 dark:text-zinc-300 font-montserrat text-xs sm:text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
           Kerala&apos;s research institutions are full of equipment most people never hear about until they need it — and by then it&apos;s too late to go hunting. Romi turns that hunt into a two-minute conversation.
@@ -668,7 +668,7 @@ export default function InstrumentationStoryShowcase() {
       </div>
 
       {/* SKEUOMORPHIC SIDE-BY-SIDE CONVERSATIONAL WORKSPACE */}
-      <div ref={containerRef} className="w-full bg-[#F7F5F1] dark:bg-zinc-900/60 border border-[#e5e1d5] dark:border-zinc-800/85 rounded-[32px] p-2.5 sm:p-4 md:p-6 shadow-[0_24px_60px_-15px_rgba(180,170,150,0.35),0_12px_28px_-6px_rgba(0,0,0,0.07),inset_0_1px_1px_rgba(255,255,255,1)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.37)] relative overflow-hidden backdrop-blur-xl">
+      <div ref={containerRef} className="w-full bg-[#F7F5F1] dark:bg-zinc-900/60 border border-[#e5e1d5] dark:border-zinc-800/85 rounded-[32px] p-2.5 sm:p-4 md:p-6 shadow-xl relative overflow-hidden backdrop-blur-xl">
         
         {/* WORKSPACE GRID: CONVERSATION AREA (LEFT) + LIVE FACILITY MAP (RIGHT) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch min-h-[580px]">

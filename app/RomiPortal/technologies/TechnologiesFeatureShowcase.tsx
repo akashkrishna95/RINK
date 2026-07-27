@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, Search, MessageSquare, BarChart3, ArrowRight, CheckCircle2, 
   ShieldCheck, Database, Layers, ExternalLink, Zap, RefreshCw, Cpu, 
-  Check, ArrowUpRight, Scale, TrendingUp, BookOpen, Lightbulb, Users, Globe, Lock, Plus, ArrowUp, User, RotateCw
+  Check, ArrowUpRight, Scale, TrendingUp, BookOpen, Lightbulb, Users, Globe, Lock, Plus, ArrowUp, User, RotateCw,
+  Play, Pause
 } from 'lucide-react';
 
 export default function TechnologiesFeatureShowcase() {
@@ -24,7 +25,7 @@ export default function TechnologiesFeatureShowcase() {
   const [showBarGraph, setShowBarGraph] = useState<boolean>(false);
 
   // Autoplay States
-  const [autoplayState, setAutoplayState] = useState<'playing' | 'done'>('playing');
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isStepComplete, setIsStepComplete] = useState<boolean>(false);
   // Helper to render text with highlighter formatting on **text**
   const highlightStyles = [
@@ -157,23 +158,16 @@ export default function TechnologiesFeatureShowcase() {
 
   // Autoplay transition logic
   useEffect(() => {
-    if (autoplayState !== 'playing' || !isStepComplete) return;
+    if (!isPlaying || !isStepComplete) return;
 
     const transitionTimeout = setTimeout(() => {
-      if (activeStep < 2) {
-        setActiveStep((prev) => prev + 1);
-      } else {
-        // Go back to the beginning position
-        setActiveStep(0);
-        // Stop autoplay
-        setAutoplayState('done');
-      }
+      setActiveStep((prev) => (prev + 1) % 3);
     }, 1500); // 1.5 seconds extra delay
 
     return () => {
       clearTimeout(transitionTimeout);
     };
-  }, [isStepComplete, activeStep, autoplayState]);
+  }, [isStepComplete, activeStep, isPlaying]);
 
   // STRICTLY 3 SUBCARDS TOTAL
   const steps = [
@@ -367,14 +361,31 @@ export default function TechnologiesFeatureShowcase() {
         transition={{ duration: 0.6 }}
         className="text-center mb-10 max-w-3xl mx-auto"
       >
-        <h2 className="text-center text-[24px] xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-helios text-gray-900 dark:text-zinc-100 mb-4 tracking-tight leading-tight">
-          <span className="block">Describe your idea.</span>
-          <span className="block text-[#1b60bb] dark:text-[#7dd3fc] whitespace-nowrap">ROMI does the digging.</span>
-        </h2>
+        <h1 className="text-center text-[24px] xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-helios text-gray-900 dark:text-zinc-100 mb-4 tracking-tight leading-tight">
+          <span className="block text-center">Describe your idea.</span>
+          <span className="block text-[#1b60bb] dark:text-[#7dd3fc] text-center whitespace-nowrap">ROMI does the digging.</span>
+        </h1>
         <p className="text-gray-600 dark:text-zinc-400 font-montserrat text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
           Just type what's on your mind. ROMI AI instantly matches your query against university catalogues, market size data, and patent filings.
         </p>
       </motion.div>
+
+      {/* INTERACTIVE STORY PROGRESS BAR */}
+      <div className="w-full mb-6">
+        <div className="flex items-center justify-between mb-3 px-1">
+          <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400 font-mono">
+            Interactive Story Walkthrough
+          </span>
+          <button
+            type="button"
+            onClick={() => setIsPlaying(!isPlaying)}
+            className="w-7 h-7 rounded-full flex items-center justify-center border border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800 text-gray-500 dark:text-zinc-400 transition-all cursor-pointer shadow-xs"
+            title={isPlaying ? 'Pause walkthrough autoplay' : 'Resume walkthrough autoplay'}
+          >
+            {isPlaying ? <Pause size={11} /> : <Play size={11} className="ml-0.5" />}
+          </button>
+        </div>
+      </div>
 
       {/* INTERACTIVE CHAT SHOWCASE WORKSPACE */}
       <div className="w-full bg-[#eae7dc]/40 dark:bg-zinc-900/60 border border-gray-200/80 dark:border-zinc-800 rounded-3xl p-2 sm:p-4 md:p-6 shadow-xl mb-14 overflow-hidden relative">
@@ -388,7 +399,7 @@ export default function TechnologiesFeatureShowcase() {
                 key={step.id}
                 type="button"
                 onClick={() => {
-                  setAutoplayState('done');
+                  setIsPlaying(false);
                   setActiveStep(step.id);
                 }}
                 className={`p-3 rounded-xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden ${
