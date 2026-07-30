@@ -160,7 +160,9 @@ export default function DemoDayExposureVisits() {
                         <img 
                           src={`https://img.youtube.com/vi/${activeVideo.id}/mqdefault.jpg`} 
                           alt={activeVideo.title}
-                          className="absolute inset-0 w-full h-full object-cover opacity-50"
+                          loading="lazy"
+                          decoding="async"
+                          className="absolute inset-0 w-full h-full object-cover opacity-50 gpu"
                         />
                         <div className="z-10 w-16 h-16 rounded-full bg-[#1b60bb] hover:bg-[#154a93] text-white flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 active:scale-95 duration-300">
                           <Play fill="white" size={24} className="ml-1" />
@@ -196,7 +198,9 @@ export default function DemoDayExposureVisits() {
                     <img 
                       src={`https://img.youtube.com/vi/${video.id}/mqdefault.jpg`} 
                       alt={video.title}
-                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover gpu"
                     />
                     {activeVideo?.id === video.id && (
                       <div className="absolute inset-0 bg-[#1b60bb]/50 flex items-center justify-center">
@@ -223,10 +227,13 @@ export default function DemoDayExposureVisits() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-lg"
+              className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-lg gpu"
             >
               <img 
                 src="/images/Exposure Visit.svg"
+                alt="Exposure Visit"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
             </motion.div>

@@ -24,6 +24,7 @@ const gotham = localFont({
     },
   ],
   variable: '--font-gotham',
+  display: 'swap',
 })
 
 const helios = localFont({

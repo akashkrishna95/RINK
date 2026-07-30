@@ -195,6 +195,12 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+  .gpu {
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform, opacity;
+  }
 }
 
 /* THE FIX: Makes chatbot markdown tables horizontally scrollable with expanded columns */

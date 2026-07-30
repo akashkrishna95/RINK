@@ -49,7 +49,7 @@ function formatDriveImageUrl(url: string): string {
 }
 
 export async function GET() {
-  const url = process.env.RESEARCHPRENEURSHIP_STARTUPS_SPREADSHEET_URL || 'https://docs.google.com/spreadsheets/d/1HXlzT504-AhqzfU6Nm3bktAspIjaQm2l1z45qROZrFc/export?format=csv&gid=201404811';
+  const url = process.env.RESEARCHPRENEURSHIP_STARTUPS_SPREADSHEET_URL || 'https://docs.google.com/spreadsheets/d/1CnnHkdQYdvPb02ihjQzfeYh5W01SPEQ-g8RSQqm30JM/export?format=csv&gid=1234517435';
   try {
     const res = await fetch(url, {
       cache: 'no-store',

@@ -1,5 +1,5 @@
 // lib/getInstrumentsJson.ts
-// PURPOSE: Fetch and parse dynamic instruments data from process.env.NEXT_PUBLIC_INSTRUMENTS_JSON_URL
+// PURPOSE: Fetch and parse dynamic instruments data from process.env.PUBLIC_INSTRUMENTS_JSON_URL
 // Maps each instrument card to latitude & longitude coordinates, contact information, district, and Google Maps links.
 
 import baselineInstitutions from '@/data/institutions_mapped.json';
@@ -69,7 +69,7 @@ export async function fetchInstrumentsJson(): Promise<InstrumentItem[]> {
   if (cachedInstrumentsData) return cachedInstrumentsData;
   if (cachedInstrumentsPromise) return cachedInstrumentsPromise;
 
-  const instrumentsUrl = process.env.NEXT_PUBLIC_INSTRUMENTS_JSON_URL || 'https://rink-git-cron.vercel.app/instrument.json';
+  const instrumentsUrl = process.env.PUBLIC_INSTRUMENTS_JSON_URL || 'https://rink-git-cron.vercel.app/instrument.json';
 
   cachedInstrumentsPromise = (async () => {
     try {

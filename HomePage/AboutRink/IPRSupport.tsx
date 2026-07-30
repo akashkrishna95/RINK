@@ -107,10 +107,12 @@ export default function IPRSupport() {
               transition={{ duration: 0.6 }}
               className="relative"
             >
-              <div className="relative aspect-[4/3] md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+              <div className="relative aspect-[4/3] md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white gpu">
                 <img 
                   src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=75"
                   alt="IPR Support"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#011a38]/90 via-[#011a38]/20 to-transparent flex flex-col justify-end p-8">
@@ -121,7 +123,7 @@ export default function IPRSupport() {
               </div>
               
               {/* Floating Badge */}
-              <div className="absolute -top-6 right-2 sm:-right-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-4 animate-bounce" style={{ animationDuration: '3s' }}>
+              <div className="absolute -top-6 right-2 sm:-right-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-4 animate-bounce gpu" style={{ animationDuration: '3s' }}>
                 <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                   <CheckCircle2 className="text-green-600" size={20} />
                 </div>

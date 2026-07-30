@@ -46,7 +46,7 @@ export default function TechnologyCard({
 
   return (
     <div
-      className="w-full h-full relative transition-transform duration-300 ease-out hover:-translate-y-4 hover:z-50 will-change-transform group"
+      className="w-full h-full relative transition-transform duration-300 ease-out hover:-translate-y-4 hover:z-50 will-change-transform group gpu"
     >
       <Link href={`https://rink-ksum.vercel.app/technologies/${id}`} target="_blank" rel="noopener noreferrer" className="block h-full outline-none">
         <div

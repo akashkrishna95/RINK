@@ -16,7 +16,8 @@ function AnimatedCounter({ end, suffix = "+" }: { end: number, suffix?: string }
     if (isInView) {
       let start = 0;
       const duration = 2000;
-      const increment = end / (duration / 16);
+      const stepTime = 33; // ~30fps for CPU efficiency on mobile
+      const increment = end / (duration / stepTime);
       
       const timer = setInterval(() => {
         start += increment;
@@ -26,7 +27,7 @@ function AnimatedCounter({ end, suffix = "+" }: { end: number, suffix?: string }
         } else {
           setCount(Math.ceil(start));
         }
-      }, 16);
+      }, stepTime);
       return () => clearInterval(timer);
     }
   }, [isInView, end]);
@@ -48,23 +49,25 @@ function StartupCard({ startup, idx }: { startup: Startup; idx: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: idx * 0.05 }}
-      className="flex flex-col items-center group cursor-pointer"
+      className="flex flex-col items-center group cursor-pointer gpu"
     >
-      <div className="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 w-full aspect-square flex items-center justify-center mb-3 sm:mb-4 group-hover:shadow-md group-hover:-translate-y-1 transition-all overflow-hidden select-none">
+      <div className="bg-white p-2 sm:p-4 rounded-2xl shadow-sm border border-slate-200 w-full aspect-square flex items-center justify-center mb-2 sm:mb-4 group-hover:shadow-md group-hover:-translate-y-1 transition-all overflow-hidden select-none">
         {startup.logoUrl && !imgError ? (
           <img
             src={getProxiedImageUrl(startup.logoUrl)}
             alt={startup.name}
+            loading="lazy"
+            decoding="async"
             className="max-w-full max-h-full object-contain"
             onError={() => setImgError(true)}
           />
         ) : (
-          <span className="font-poppins font-bold text-[#1b60bb] text-center text-xs sm:text-sm px-1 leading-snug break-words">
+          <span className="font-poppins font-bold text-[#1b60bb] text-center text-[10px] sm:text-sm px-1 leading-snug break-words">
             {startup.name}
           </span>
         )}
       </div>
-      <div className="font-poppins font-medium text-slate-700 text-xs sm:text-sm md:text-base leading-tight">
+      <div className="font-poppins font-medium text-slate-700 text-[10px] sm:text-sm md:text-base leading-tight text-center">
         {startup.name}
       </div>
     </motion.div>
@@ -317,6 +320,8 @@ export default function ResearchIncubationPrograms() {
               <img 
                 src="https://rink.startupmission.in/img/0.jpg" 
                 alt="Research Incubation Programme"
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
               />
             </div>
@@ -353,6 +358,8 @@ export default function ResearchIncubationPrograms() {
               <img 
                 src="https://rink.startupmission.in/img/IMG-20241202-WA0011.jpg" 
                 alt="Women Startups Programme"
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
               />
             </div>
@@ -367,7 +374,7 @@ export default function ResearchIncubationPrograms() {
             <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-3 sm:mb-4">
               Startups created from<br/>Research Innovation and Incubation Program
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 mt-8 sm:mt-12">
+            <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-6 mt-6 sm:mt-12">
               {startups.map((startup, idx) => (
                 <StartupCard key={idx} startup={startup} idx={idx} />
               ))}

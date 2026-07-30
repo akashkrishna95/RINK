@@ -45,7 +45,6 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
   const [expandedDistricts, setExpandedDistricts] = useState<Record<string, boolean>>({});
 
   const gridRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [tooltipPosition, setTooltipPosition] = useState<{ top: number; left: number } | null>(null);
 
   const updateTooltipPosition = () => {
@@ -71,19 +70,11 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
     updateTooltipPosition();
   }, [activeInstitution]);
 
-  const handleGridScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.currentTarget;
-    const totalScroll = target.scrollHeight - target.clientHeight;
-    if (totalScroll > 0) {
-      setScrollProgress(target.scrollTop / totalScroll);
+  const handleGridScroll = () => {
+    if (activeInstitution !== null) {
+      setActiveInstitution(null);
     }
-    updateTooltipPosition();
   };
-
-  // Reset scroll progress when showMore changes
-  useEffect(() => {
-    setScrollProgress(0);
-  }, [showMore]);
 
   // Auto-scroll left panel to selected institution
   useEffect(() => {
@@ -561,18 +552,6 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                 </motion.div>
               </motion.div>
 
-              {/* Mini Side Slider (visible when expanded) */}
-              {showMore && (
-                <div className="w-1.5 flex flex-col items-center justify-start bg-[#1b60bb]/10 rounded-full shrink-0 relative overflow-hidden py-1 my-2">
-                  <div 
-                    className="absolute left-0 right-0 bg-[#1b60bb] rounded-full w-full transition-all duration-75"
-                    style={{
-                      top: `${scrollProgress * 80}%`,
-                      height: '20%',
-                    }}
-                  />
-                </div>
-              )}
             </div>
 
               {/* Show More Gradient Overlay */}

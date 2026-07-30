@@ -173,17 +173,17 @@ export default function Footer() {
       </div>
 
       {/* Massive Brand Anchor - Fixed to prevent 'K' from clipping */}
-      <div className="relative w-full overflow-hidden flex items-end justify-center pointer-events-none select-none">
+      <div className="relative w-full flex items-end justify-center pointer-events-none select-none z-50 -mt-[3vw]">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, ease: easePremium, delay: 0.5 }}
-          className="w-full flex items-end justify-center px-2" // Added px-2 to give the 'K' and 'K' room to breathe
+          className="w-full flex items-end justify-center px-0"
         >
           <span 
             className="font-helios font-black text-[#eff9ff] text-center w-full block whitespace-nowrap tracking-tighter"
             style={{
-              fontSize: '11.8vw', 
+              fontSize: '13.2vw', 
               lineHeight: '0.75', 
               marginBottom: '-0.5vw' // Sits perfectly on the floor
             }}

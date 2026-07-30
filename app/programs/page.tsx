@@ -88,7 +88,7 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
       viewport={{ once: true, amount: 0.05 }}
       transition={{ duration: 0.5, delay: Math.min(idx * 0.08, 0.4) }}
       onClick={() => onClick(program)}
-      className="group bg-white rounded-3xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_24px_-4px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-200 flex flex-col cursor-pointer w-[240px] xs:w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start h-auto border border-slate-100/80"
+      className="group bg-white rounded-3xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_24px_-4px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-200 flex flex-col cursor-pointer w-[240px] xs:w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start h-auto border border-slate-100/80 gpu"
       style={{
         contentVisibility: 'auto',
         containIntrinsicSize: '300px 500px',
@@ -197,15 +197,32 @@ function ProgramCarouselSection({
 }) {
   const [currentIndex, setCurrentIndex] = useState(1);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const cardWidthRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    cardWidthRef.current = null;
+    const handleResize = () => {
+      cardWidthRef.current = null;
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [programs]);
 
   const handleScroll = () => {
     if (!scrollRef.current) return;
     const el = scrollRef.current;
     const scrollLeft = el.scrollLeft;
-    const firstCard = el.firstElementChild as HTMLElement;
-    const cardWidth = firstCard ? firstCard.offsetWidth + 20 : 300;
+
+    let cardWidth = cardWidthRef.current;
+    if (cardWidth === null) {
+      const firstCard = el.firstElementChild as HTMLElement;
+      cardWidth = firstCard ? firstCard.offsetWidth + 20 : 320;
+      cardWidthRef.current = cardWidth;
+    }
+
     const idx = Math.round(scrollLeft / cardWidth) + 1;
-    setCurrentIndex(Math.min(Math.max(idx, 1), programs.length));
+    const targetIdx = Math.min(Math.max(idx, 1), programs.length);
+    setCurrentIndex(prev => prev !== targetIdx ? targetIdx : prev);
   };
 
   return (

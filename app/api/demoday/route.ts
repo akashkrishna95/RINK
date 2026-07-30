@@ -53,7 +53,7 @@ function parseCSV(csvText: string): Record<string, string>[] {
 }
 
 export async function GET() {
-  const url = process.env.DEMODAY_SPREADSHEET_URL || 'https://docs.google.com/spreadsheets/d/1HXlzT504-AhqzfU6Nm3bktAspIjaQm2l1z45qROZrFc/export?format=csv&gid=1506498637';
+  const url = process.env.DEMODAY_SPREADSHEET_URL || 'https://docs.google.com/spreadsheets/d/1CnnHkdQYdvPb02ihjQzfeYh5W01SPEQ-g8RSQqm30JM/export?format=csv&gid=711117033';
 
   try {
     const res = await fetch(url, {

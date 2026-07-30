@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
@@ -23,6 +23,11 @@ const mockInstitutes: Institute[] = institutionLogos
 
 export default function PartnerInstitutes({ initialInstitutes }: { initialInstitutes?: Institute[] }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
   
   const activeInstitutes = initialInstitutes && initialInstitutes.length > 0 
     ? initialInstitutes 
@@ -36,6 +41,8 @@ export default function PartnerInstitutes({ initialInstitutes }: { initialInstit
     : activeInstitutes.slice(0, INITIAL_VISIBLE_COUNT);
 
   const hasMore = activeInstitutes.length > INITIAL_VISIBLE_COUNT;
+
+  const animationLayout = isMobile ? false : "position";
 
   return (
     <section className="w-full py-16 px-4 md:px-12 bg-white">
@@ -55,14 +62,14 @@ export default function PartnerInstitutes({ initialInstitutes }: { initialInstit
 
         {/* Logo Grid - 3 columns on mobile, up to 6 on desktop */}
         <motion.div 
-          layout 
+          layout={animationLayout} 
           className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6"
         >
           <AnimatePresence mode="popLayout">
             {visibleInstitutes.map((institute, index) => (
               <motion.div
                 key={institute.id}
-                layout
+                layout={animationLayout}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
@@ -71,7 +78,7 @@ export default function PartnerInstitutes({ initialInstitutes }: { initialInstit
                   delay: (index % INITIAL_VISIBLE_COUNT) * 0.02 
                 }}
                 /* Premium styling: No borders, no hover, clean drop shadow tinted with brand color */
-                className="flex items-center justify-center bg-white rounded-xl p-3 md:p-6 aspect-[4/3] shadow-[0_4px_20px_-4px_rgba(27,96,187,0.08)]"
+                className="flex items-center justify-center bg-white rounded-xl p-3 md:p-6 aspect-[4/3] shadow-[0_4px_20px_-4px_rgba(27,96,187,0.08)] gpu"
                 title={institute.name}
               >
                 <div className="relative w-full h-full flex items-center justify-center">
@@ -91,7 +98,7 @@ export default function PartnerInstitutes({ initialInstitutes }: { initialInstit
         {/* See More / See Less */}
         {hasMore && (
           <motion.div 
-            layout 
+            layout={animationLayout} 
             className="mt-10 flex justify-start"
           >
             <button
