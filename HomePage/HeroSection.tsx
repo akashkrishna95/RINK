@@ -46,7 +46,7 @@ export default function HeroSection() {
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
             whileHover={{ y: -5, scale: 1.01 }}
-            className="bg-[#cee3ef] rounded-2xl p-4 md:p-6 relative group cursor-pointer shadow-sm hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center h-full overflow-hidden gpu"
+            className="bg-[#cee3ef] rounded-2xl p-4 md:p-6 relative group cursor-pointer shadow-sm hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center h-full overflow-hidden"
           >
             <ArrowUpRight className="absolute top-3 right-3 md:top-4 md:right-4 text-[#1b60bb] w-4 h-4 md:w-6 md:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             <h3 className="font-helios text-[15px] sm:text-lg md:text-xl lg:text-[26px] font-bold text-[#1b60bb] mb-1 md:mb-2 w-full truncate mt-2 md:mt-0 text-center">
@@ -66,7 +66,7 @@ export default function HeroSection() {
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             whileHover={{ y: -5, scale: 1.01 }}
-            className="bg-[#cee3ef] rounded-2xl p-4 md:p-6 relative group cursor-pointer shadow-sm hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center h-full overflow-hidden gpu"
+            className="bg-[#cee3ef] rounded-2xl p-4 md:p-6 relative group cursor-pointer shadow-sm hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center h-full overflow-hidden"
           >
             <ArrowUpRight className="absolute top-3 right-3 md:top-4 md:right-4 text-[#1b60bb] w-4 h-4 md:w-6 md:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             <h3 className="font-helios text-[15px] sm:text-lg md:text-xl lg:text-[26px] font-bold text-[#1b60bb] mb-1 md:mb-2 w-full truncate mt-2 md:mt-0 text-center">
@@ -86,7 +86,7 @@ export default function HeroSection() {
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
             whileHover={{ y: -5, scale: 1.01 }}
-            className="bg-[#1b60bb] rounded-2xl p-4 md:p-6 relative group cursor-pointer shadow-sm hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center h-full overflow-hidden gpu"
+            className="bg-[#1b60bb] rounded-2xl p-4 md:p-6 relative group cursor-pointer shadow-sm hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center h-full overflow-hidden"
           >
             <ArrowUpRight className="absolute top-3 right-3 md:top-4 md:right-4 text-white w-4 h-4 md:w-6 md:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             <h3 className="font-helios text-[15px] sm:text-lg md:text-xl lg:text-[26px] font-bold text-white mb-1 md:mb-2 w-full truncate mt-1 md:mt-0 text-center">

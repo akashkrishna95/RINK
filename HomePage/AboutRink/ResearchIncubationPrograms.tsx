@@ -49,7 +49,7 @@ function StartupCard({ startup, idx }: { startup: Startup; idx: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: idx * 0.05 }}
-      className="flex flex-col items-center group cursor-pointer gpu"
+      className="flex flex-col items-center group cursor-pointer"
     >
       <div className="bg-white p-2 sm:p-4 rounded-2xl shadow-sm border border-slate-200 w-full aspect-square flex items-center justify-center mb-2 sm:mb-4 group-hover:shadow-md group-hover:-translate-y-1 transition-all overflow-hidden select-none">
         {startup.logoUrl && !imgError ? (
