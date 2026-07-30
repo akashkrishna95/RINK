@@ -83,6 +83,7 @@ export default function RomiPortalPage() {
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState('search');
 
+
   // Listen to custom reset event from Navbar clicks and preload hero images
   useEffect(() => {
     const handleReset = () => {
@@ -367,9 +368,9 @@ export default function RomiPortalPage() {
                 </div>
               </motion.div>
 
-              {/* Bottom glassmorphic overlay with STAY TUNED! text */}
-              <div className="absolute inset-x-0 bottom-0 h-20 sm:h-24 md:h-28 backdrop-blur-xl bg-white/20 dark:bg-black/35 border-t border-white/30 dark:border-white/15 rounded-b-[40px] flex items-center justify-center z-20 pointer-events-none">
-                <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-widest text-[#153156] dark:text-[#f3f4f6] text-center select-none uppercase">
+              {/* Bottom gradient overlay with STAY TUNED! text */}
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#FDFDF9] via-[#FDFDF9]/95 to-transparent dark:from-zinc-950 dark:via-zinc-950/95 rounded-b-[40px] flex flex-col items-center justify-end pb-8 z-20 pointer-events-none">
+                <h2 className="font-helios text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-widest text-center select-none text-[#219653] filter drop-shadow-[0_2px_8px_rgba(33,150,83,0.25)]">
                   STAY TUNED!
                 </h2>
               </div>
