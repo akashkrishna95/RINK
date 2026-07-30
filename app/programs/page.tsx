@@ -40,6 +40,7 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
   const isPast = program.status === 'past';
   const badgeColor = 'text-[#1b60bb] font-bold';
   const [imgError, setImgError] = useState(false);
+  const [useDirectUrl, setUseDirectUrl] = useState(false);
 
   const hasDate = !!program.date;
   const hasTime = !isPast && !!program.time;
@@ -55,6 +56,17 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
     clampClass = 'line-clamp-8 sm:line-clamp-9';
   }
 
+  const proxiedUrl = getProxiedImageUrl(program.poster_link);
+  const directUrl = program.poster_link;
+
+  const handleImageError = () => {
+    if (!useDirectUrl) {
+      setUseDirectUrl(true);
+    } else {
+      setImgError(true);
+    }
+  };
+
   return (
     <motion.div
       key={program.id}
@@ -68,12 +80,12 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
       <div className="relative w-full aspect-[4/5] overflow-hidden bg-slate-100 flex-shrink-0">
         {program.poster_link && !imgError ? (
           <img
-            src={getProxiedImageUrl(program.poster_link)}
+            src={useDirectUrl ? directUrl : proxiedUrl}
             alt={program.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             loading="lazy"
             referrerPolicy="no-referrer"
-            onError={() => setImgError(true)}
+            onError={handleImageError}
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#011a38] via-[#00050e] to-[#1b60bb] p-6 text-center">
@@ -218,6 +230,7 @@ export default function ProgramsPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedProgram, setSelectedProgram] = useState<SheetProgram | null>(null);
   const [selectedProgramImgError, setSelectedProgramImgError] = useState(false);
+  const [selectedProgramUseDirect, setSelectedProgramUseDirect] = useState(false);
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [galleryLoading, setGalleryLoading] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
@@ -248,6 +261,7 @@ export default function ProgramsPage() {
   useEffect(() => {
     if (selectedProgram) {
       setSelectedProgramImgError(false);
+      setSelectedProgramUseDirect(false);
     }
   }, [selectedProgram?.id]);
 
@@ -416,11 +430,17 @@ export default function ProgramsPage() {
               <div className="relative w-full aspect-[4/5] md:aspect-auto md:h-full bg-slate-100 overflow-hidden shrink-0">
                 {selectedProgram.poster_link && !selectedProgramImgError ? (
                   <img
-                    src={getProxiedImageUrl(selectedProgram.poster_link)}
+                    src={selectedProgramUseDirect ? selectedProgram.poster_link : getProxiedImageUrl(selectedProgram.poster_link)}
                     alt={selectedProgram.title}
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
-                    onError={() => setSelectedProgramImgError(true)}
+                    onError={() => {
+                      if (!selectedProgramUseDirect) {
+                        setSelectedProgramUseDirect(true);
+                      } else {
+                        setSelectedProgramImgError(true);
+                      }
+                    }}
                   />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#011a38] via-[#00050e] to-[#1b60bb] p-6 text-center">
