@@ -75,7 +75,7 @@ export default function DemoDayExposureVisits() {
               Demo Day & <br className="hidden md:block" />
               <span className="text-[#5cc4fe]">Exposure Visits</span>
             </h1>
-            <p className="text-sm xs:text-base md:text-lg lg:text-lg text-white/85 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed text-center px-2">
+            <p className="text-xs xs:text-sm md:text-base text-white/85 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed text-center px-4">
               Bridging the gap between groundbreaking research and commercial success by connecting innovators directly with industry and investors.
             </p>
           </motion.div>

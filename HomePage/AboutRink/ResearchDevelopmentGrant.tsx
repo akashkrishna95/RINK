@@ -28,7 +28,7 @@ export default function ResearchDevelopmentGrant() {
             <h1 className="font-helios text-[38px] xs:text-[44px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Research & Development <span className="text-[#5cc4fe]">Grant</span>
             </h1>
-            <p className="text-sm xs:text-base md:text-lg lg:text-lg text-white/85 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed text-center px-2">
+            <p className="text-xs xs:text-sm md:text-base text-white/85 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed text-center px-4">
               Catalyzing hardware innovation by supporting startups to develop breakthrough products and technologies.
             </p>
           </motion.div>

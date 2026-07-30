@@ -17,14 +17,13 @@ export async function GET(request: Request) {
                        targetUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
                        targetUrl.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
     if (driveMatch && driveMatch[1]) {
-      // Append =s800-rj to resize and force JPEG output (broad compatibility with older devices)
-      targetUrl = `https://lh3.googleusercontent.com/d/${driveMatch[1]}=s800-rj`;
+      // Use Google Drive thumbnail endpoint (returns compressed static image previews for any format, e.g. images/videos/PDFs)
+      targetUrl = `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`;
     }
 
     const parsedUrl = new URL(targetUrl);
     const allowedHostnames = [
       'drive.google.com',
-      'docs.google.com',
       'googleusercontent.com',
       'lh3.googleusercontent.com',
       'usercontent.google.com',
@@ -60,7 +59,7 @@ export async function GET(request: Request) {
     return new NextResponse(outputBuffer, {
       headers: {
         'Content-Type': outputContentType,
-        'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
+        'Cache-Control': 'public, max-age=86400',
       },
     });
   } catch (error) {

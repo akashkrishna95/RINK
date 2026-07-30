@@ -46,7 +46,7 @@ export function getProxiedImageUrl(url: string | undefined | null): string {
                      targetUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
                      targetUrl.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
   if (driveMatch && driveMatch[1]) {
-    targetUrl = `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
+    targetUrl = `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`;
   }
 
   // If it's a Google Drive/UserContent link, route it through our API proxy to prevent 403 blocks

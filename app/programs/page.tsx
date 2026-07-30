@@ -57,9 +57,17 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
   }
 
   const proxiedUrl = getProxiedImageUrl(program.poster_link);
-  const directUrl = program.poster_link && program.poster_link.includes('googleusercontent.com') && !program.poster_link.includes('=s')
-    ? `${program.poster_link}=s600-rj`
-    : program.poster_link;
+  const driveMatch = program.poster_link ? (
+    program.poster_link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
+    program.poster_link.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+    program.poster_link.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
+    program.poster_link.match(/[?&]docid=([a-zA-Z0-9_-]+)/)
+  ) : null;
+  const directUrl = driveMatch && driveMatch[1]
+    ? `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`
+    : (program.poster_link && program.poster_link.includes('googleusercontent.com') && !program.poster_link.includes('=s')
+        ? `${program.poster_link}=s600`
+        : program.poster_link);
 
   const handleImageError = () => {
     if (!useDirectUrl) {
@@ -338,7 +346,7 @@ export default function ProgramsPage() {
             <h1 className="font-helios text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
               RINK <span className="text-[#5cc4fe]">Programs</span>
             </h1>
-            <p className="text-lg md:text-xl text-white/80 font-poppins max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-white/80 font-poppins max-w-2xl mx-auto leading-relaxed text-center px-4">
               Discover programs, workshops, demo days, and masterclasses designed to empower Kerala's research and startup ecosystem.
             </p>
           </motion.div>
@@ -437,9 +445,18 @@ export default function ProgramsPage() {
                 {selectedProgram.poster_link && !selectedProgramImgError ? (
                   <img
                     src={selectedProgramUseDirect 
-                      ? (selectedProgram.poster_link.includes('googleusercontent.com') && !selectedProgram.poster_link.includes('=s')
-                          ? `${selectedProgram.poster_link}=s1000-rj`
-                          : selectedProgram.poster_link)
+                      ? (() => {
+                          const driveMatch = selectedProgram.poster_link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
+                                             selectedProgram.poster_link.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+                                             selectedProgram.poster_link.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
+                                             selectedProgram.poster_link.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
+                          if (driveMatch && driveMatch[1]) {
+                            return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`;
+                          }
+                          return selectedProgram.poster_link.includes('googleusercontent.com') && !selectedProgram.poster_link.includes('=s')
+                            ? `${selectedProgram.poster_link}=s1000`
+                            : selectedProgram.poster_link;
+                        })()
                       : getProxiedImageUrl(selectedProgram.poster_link)
                     }
                     alt={selectedProgram.title}

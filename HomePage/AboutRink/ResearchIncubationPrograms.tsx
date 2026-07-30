@@ -61,7 +61,7 @@ export default function ResearchIncubationPrograms() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-sm xs:text-base md:text-lg text-white/90 font-poppins leading-relaxed max-w-3xl mx-auto text-center px-2"
+            className="text-xs xs:text-sm md:text-base text-white/90 font-poppins leading-relaxed max-w-3xl mx-auto text-center px-4"
           >
             Structured incubation and funding programs to guide researchers from breakthrough ideas to scalable commercial ventures.
           </motion.p>
