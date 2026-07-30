@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import sharp from 'sharp';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -17,7 +16,8 @@ export async function GET(request: Request) {
                        targetUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
                        targetUrl.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
     if (driveMatch && driveMatch[1]) {
-      targetUrl = `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
+      // Append =s800 to resize using Google's high performance CDN directly (zero CPU usage on serverless!)
+      targetUrl = `https://lh3.googleusercontent.com/d/${driveMatch[1]}=s800`;
     }
 
     const parsedUrl = new URL(targetUrl);
@@ -52,21 +52,8 @@ export async function GET(request: Request) {
     }
 
     const buffer = await response.arrayBuffer();
-    let outputBuffer = Buffer.from(buffer);
-    let outputContentType = contentType || 'image/jpeg';
-
-    // Optimize images on the fly if they are raster images (exclude SVG and GIF)
-    if (outputContentType.startsWith('image/') && !outputContentType.includes('svg') && !outputContentType.includes('gif')) {
-      try {
-        outputBuffer = await sharp(outputBuffer)
-          .resize({ width: 500, withoutEnlargement: true })
-          .webp({ quality: 75 })
-          .toBuffer();
-        outputContentType = 'image/webp';
-      } catch (sharpError) {
-        console.warn('Sharp compression failed, returning original image:', sharpError);
-      }
-    }
+    const outputBuffer = Buffer.from(buffer);
+    const outputContentType = contentType || 'image/jpeg';
 
     return new NextResponse(outputBuffer, {
       headers: {
@@ -79,3 +66,4 @@ export async function GET(request: Request) {
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
+
