@@ -446,12 +446,12 @@ export default function ProgramsPage() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[320px] sm:max-w-[340px] max-h-[85vh] bg-white rounded-3xl shadow-2xl z-[101] overflow-hidden flex flex-col"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[280px] sm:max-w-[300px] md:max-w-4xl h-auto max-h-[85vh] md:h-[504px] md:max-h-none bg-white rounded-3xl shadow-2xl z-[101] overflow-hidden flex flex-col md:flex-row md:items-stretch"
             >
               <button onClick={() => setSelectedProgram(null)} className="absolute top-3 right-3 p-2 bg-white/80 hover:bg-white backdrop-blur-md rounded-full shadow-md transition-colors z-20">
                 <X size={18} className="text-slate-700" />
               </button>
-              <div className="relative w-full aspect-[4/5] bg-slate-100 overflow-hidden shrink-0">
+              <div className="relative w-full md:w-[45%] aspect-[4/5] md:aspect-auto md:h-full bg-slate-100 overflow-hidden shrink-0">
                 {selectedProgram.poster_link && !selectedProgramImgError ? (
                   <Image
                     src={selectedProgramUseDirect 
@@ -473,7 +473,7 @@ export default function ProgramsPage() {
                     fill
                     unoptimized={true}
                     className="object-cover"
-                    sizes="300px"
+                    sizes="(max-w-768px) 300px, 45vw"
                     onError={() => {
                       if (!selectedProgramUseDirect) {
                         setSelectedProgramUseDirect(true);
@@ -492,64 +492,64 @@ export default function ProgramsPage() {
                   <span className="font-helios font-bold text-xs tracking-wide uppercase text-[#1b60bb]">{selectedProgram.status}</span>
                 </div>
               </div>
-              <div className="relative w-full aspect-[4/5] p-4 sm:p-5 flex flex-col overflow-hidden bg-white shrink-0">
+              <div className="relative w-full md:w-[55%] aspect-[4/5] md:aspect-auto md:h-full p-4 sm:p-5 flex flex-col overflow-hidden bg-white min-h-0 shrink md:shrink">
                 <div className="flex-shrink-0">
                   <h2 className="font-helios text-lg sm:text-xl font-bold text-slate-800 mb-2 leading-tight">{selectedProgram.title}</h2>
                 </div>
 
                 <div className="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar pr-2 mb-3 min-h-0 space-y-3">
-                  <div className="space-y-2 p-3 bg-gradient-to-b from-[#f0f4f9]/90 to-[#e8eef6]/80 rounded-2xl border border-slate-200/60">
+                  <div className="space-y-2.5 p-3 md:p-4 bg-gradient-to-b from-[#f0f4f9]/90 to-[#e8eef6]/80 rounded-2xl border border-slate-200/60">
                     {selectedProgram.date && (
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
-                          <Calendar size={13} className="text-[#1b60bb]" />
+                      <div className="flex items-center gap-3">
+                        <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
+                          <Calendar className="w-3.5 h-3.5 md:w-[17px] md:h-[17px] text-[#1b60bb]" />
                         </div>
                         <div>
-                          <p className="font-helios font-semibold text-slate-800 text-[10px]">Date</p>
-                          <p className="text-slate-600 font-poppins text-[10px]">{formatDateLong(selectedProgram.date)}</p>
+                          <p className="font-helios font-semibold text-slate-800 text-[10px] md:text-xs">Date</p>
+                          <p className="text-slate-600 font-poppins text-[10px] md:text-[13px]">{formatDateLong(selectedProgram.date)}</p>
                         </div>
                       </div>
                     )}
                     {selectedProgram.time && (
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
-                          <Clock size={13} className="text-[#1b60bb]" />
+                      <div className="flex items-center gap-3">
+                        <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
+                          <Clock className="w-3.5 h-3.5 md:w-[17px] md:h-[17px] text-[#1b60bb]" />
                         </div>
                         <div>
-                          <p className="font-helios font-semibold text-slate-800 text-[10px]">Time</p>
-                          <p className="text-slate-600 font-poppins text-[10px]">{selectedProgram.time}</p>
+                          <p className="font-helios font-semibold text-slate-800 text-[10px] md:text-xs">Time</p>
+                          <p className="text-slate-600 font-poppins text-[10px] md:text-[13px]">{selectedProgram.time}</p>
                         </div>
                       </div>
                     )}
                     {selectedProgram.location && (
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
-                          <MapPin size={13} className="text-[#1b60bb]" />
+                      <div className="flex items-center gap-3">
+                        <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
+                          <MapPin className="w-3.5 h-3.5 md:w-[17px] md:h-[17px] text-[#1b60bb]" />
                         </div>
                         <div>
-                          <p className="font-helios font-semibold text-slate-800 text-[10px]">Location</p>
-                          <p className="text-slate-600 font-poppins text-[10px]">{selectedProgram.location}</p>
+                          <p className="font-helios font-semibold text-slate-800 text-[10px] md:text-xs">Location</p>
+                          <p className="text-slate-600 font-poppins text-[10px] md:text-[13px]">{selectedProgram.location}</p>
                         </div>
                       </div>
                     )}
                   </div>
 
                   {selectedProgram.description && (
-                    <p className="text-slate-600 font-poppins text-[11px] sm:text-xs leading-relaxed whitespace-pre-line break-words">{selectedProgram.description}</p>
+                    <p className="text-slate-600 font-poppins text-[11px] sm:text-xs md:text-[13px] leading-relaxed whitespace-pre-line break-words">{selectedProgram.description}</p>
                   )}
                 </div>
 
-                <div className="flex-shrink-0 pt-2 border-t border-slate-100 flex flex-col gap-2">
+                <div className="flex-shrink-0 pt-2 md:pt-3 border-t border-slate-100 flex flex-col gap-2">
                   {selectedProgram.registration_link && selectedProgram.status !== 'past' && (
-                    <a href={selectedProgram.registration_link} target="_blank" rel="noreferrer" className="w-full py-2 bg-[#1b60bb] hover:bg-[#154a93] text-white rounded-xl font-helios font-bold text-xs text-center transition-colors flex items-center justify-center gap-2 group/btn">
+                    <a href={selectedProgram.registration_link} target="_blank" rel="noreferrer" className="w-full py-2 md:py-3.5 bg-[#1b60bb] hover:bg-[#154a93] text-white rounded-xl font-helios font-bold text-xs md:text-sm text-center transition-colors flex items-center justify-center gap-2 group/btn">
                       Register for Program
-                      <ExternalLink size={13} className="group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5 transition-transform" />
+                      <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5 transition-transform" />
                     </a>
                   )}
                   {selectedProgram.status === 'past' && selectedProgram.event_gallery && (
-                    <button onClick={() => openGallery(selectedProgram)} className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-helios font-bold text-xs text-center transition-colors flex items-center justify-center gap-2 group/btn">
+                    <button onClick={() => openGallery(selectedProgram)} className="w-full py-2 md:py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-helios font-bold text-xs md:text-sm text-center transition-colors flex items-center justify-center gap-2 group/btn">
                       View Program Gallery
-                      <ImageIcon size={13} className="group-hover/btn:scale-110 transition-transform" />
+                      <ImageIcon className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover/btn:scale-110 transition-transform" />
                     </button>
                   )}
                 </div>

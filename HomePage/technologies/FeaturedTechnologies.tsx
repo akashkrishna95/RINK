@@ -241,7 +241,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
           <h3 className="text-[#1b60bb] text-[18px] md:text-[24px] font-medium text-center mb-4 leading-snug">
             Wanna Know What&apos;s New Technology<br className="hidden md:block" /> for your Startup?
           </h3>
-          <Link href="/technologies/browse_technologies">
+          <Link href="https://rink-ksum.vercel.app/technologies">
             <button className="group/btn bg-[#0057b7] hover:bg-[#004494] text-white px-5 py-2 md:px-6 md:py-2.5 rounded-lg font-semibold text-sm md:text-base flex items-center gap-1.5 shadow-sm transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-md">
               Explore More
               <ArrowUpRight

@@ -93,10 +93,6 @@ export default function ResearchDevelopmentGrant() {
                 </li>
               </ul>
             </div>
-            
-            <a href="https://startupmission.kerala.gov.in/schemes/rd-grant" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#1b60bb] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#154a93] transition-colors shadow-md hover:shadow-lg group text-xs sm:text-sm md:text-base">
-              Know More <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-            </a>
           </motion.div>
 
         </div>

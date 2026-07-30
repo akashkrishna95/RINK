@@ -72,9 +72,7 @@ export default function Footer() {
             <ul className="space-y-3">
               {[
                 { label: 'LinkedIn', href: 'https://in.linkedin.com/company/research-innovation-network-kerala/' },
-                { label: 'Instagram', href: '#' },
-                { label: 'YouTube', href: '#' }
-              ].map((link) => (
+                ].map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
@@ -185,7 +183,7 @@ export default function Footer() {
           <span 
             className="font-helios font-black text-[#eff9ff] text-center w-full block whitespace-nowrap"
             style={{
-              fontSize: '13vw', // Adjusted strictly to safe bounds
+              fontSize: 'min(9.5vw, 160px)', 
               lineHeight: '0.75', 
               marginBottom: '-0vw' // Sits perfectly on the floor
             }}

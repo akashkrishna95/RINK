@@ -121,7 +121,7 @@ export default function BrowseSectors() {
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }}
               >
-                <Link href={`/technologies/browse_technologies?sector=${encodeURIComponent(sector.id)}`}>
+                <Link href={`https://rink-ksum.vercel.app/technologies?sector=${encodeURIComponent(sector.id)}`}>
                   <div className="group relative w-full h-[260px] lg:h-[280px] rounded-[16px] md:rounded-[20px] overflow-hidden cursor-pointer shadow-sm hover:shadow-[0_12px_40px_rgb(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-1">
 
                     {/* Background Image */}

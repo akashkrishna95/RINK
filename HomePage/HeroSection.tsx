@@ -59,7 +59,7 @@ export default function HeroSection() {
         </Link>
 
         {/* Card 2: Instrumentation */}
-        <Link href="https://instruments.startupmission.in/" target="_blank" rel="noopener noreferrer" className="col-span-1">
+        <Link href="https://rink-ui.vercel.app/" target="_blank" rel="noopener noreferrer" className="col-span-1">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

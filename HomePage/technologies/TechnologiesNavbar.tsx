@@ -40,11 +40,12 @@ export default function TechnologiesNavbar() {
     { href: '/technologies/institutions', label: 'Institutions', isScroll: false },
     { href: '/technologies/sectors', label: 'Sector', isScroll: false },
     { href: '/events', label: 'Events', isScroll: false },
-    { href: '/about#contact', label: 'Contact' },
+    { href: '/contact', label: 'Contact' },
   ];
 
   return (
-    <nav className="w-full bg-[#F4F7FB] sticky top-0 z-50">
+    <>
+      <nav className="w-full bg-[#F4F7FB] fixed top-0 left-0 right-0 z-50 border-b border-gray-200">
       <div className="w-full max-w-[1400px] mx-auto px-5 md:px-8 py-4 flex items-center justify-between relative z-50">
         
         {/* Brand Logos */}
@@ -197,6 +198,9 @@ export default function TechnologiesNavbar() {
           </div>
         </div>
       </div>
-    </nav>
+      </nav>
+      {/* Spacer to push content down below fixed header */}
+      <div className="h-[72px] sm:h-[76px] w-full block shrink-0 pointer-events-none" />
+    </>
   );
 }

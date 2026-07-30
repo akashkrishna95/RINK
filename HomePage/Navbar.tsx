@@ -70,9 +70,9 @@ export default function Navbar() {
     { href: '/', label: 'Home' },
     { href: '/RomiPortal', label: 'ROMI AI' },
     { href: 'https://rink-ksum.vercel.app/', label: 'Technologies' },
-    { href: 'https://instruments.startupmission.in/', label: 'Instrumentation' },
+    { href: 'https://rink-ui.vercel.app/', label: 'Instrumentation' },
     { href: '/programs', label: 'Programs' },
-    { href: '/about#contact', label: 'Contact Us' },
+    { href: '/contact', label: 'Contact Us' },
   ];
 
   return (
@@ -81,7 +81,7 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 h-[3px] bg-[#1b60bb] origin-left z-[100]"
         style={{ scaleX }}
       />
-      <header className="w-full sticky top-0 z-50 bg-[#F4F7FB] border-b border-gray-200 transition-colors duration-300">
+      <header className="w-full fixed top-0 left-0 right-0 z-50 bg-[#F4F7FB] border-b border-gray-200 transition-colors duration-300">
         <nav className="w-full max-w-7xl mx-auto px-5 md:px-8 py-4 flex items-center justify-between relative z-50">
 
           {/* Brand Logos - Equal sizing, scaled down */}
@@ -225,6 +225,8 @@ export default function Navbar() {
           </div>
         </div>
       </header>
+      {/* Spacer to push content down below fixed header */}
+      <div className="h-[72px] sm:h-[76px] w-full block shrink-0 pointer-events-none" />
     </>
   );
 }

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Play, CheckCircle2, Users, Lightbulb, TrendingUp } from 'lucide-react';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
+import PastVisitedInstitutions from '../PastVisitedInstitutions';
 
 export default function DemoDayExposureVisits() {
   const [videos, setVideos] = useState<{ id: string; title: string }[]>([]);
@@ -35,22 +36,7 @@ export default function DemoDayExposureVisits() {
     loadVideos();
   }, []);
 
-  useEffect(() => {
-    if (loading) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasScrolledIntoView(true);
-          observer.disconnect(); // Trigger only once
-        }
-      },
-      { threshold: 0.15 }
-    );
-    if (playerRef.current) {
-      observer.observe(playerRef.current);
-    }
-    return () => observer.disconnect();
-  }, [loading]);
+
 
   return (
     <main className="min-h-screen bg-[#F4F7FB] overflow-x-hidden">
@@ -93,12 +79,9 @@ export default function DemoDayExposureVisits() {
           >
             <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-[#1b60bb] mb-6">Connecting Research & Industry</h2>
             <p className="text-slate-600 font-poppins text-xs sm:text-sm md:text-base leading-relaxed mb-6">
-              RINK Demo Day acts as a vital bridge between leading research institutions and the startup ecosystem. We provide a platform for researchers and innovators to showcase their groundbreaking technologies, patents, and products.
+              Events to connect startups to R&D institutions. Research institutions showcase commercial ready technologies, while startups and entrepreneurs get the chance to interact with scientists, explore advanced labs, and identify opportunities for collaboration, co development, or technology transfer
             </p>
-            <p className="text-slate-600 font-poppins text-xs sm:text-sm md:text-base leading-relaxed mb-8">
-              Entrepreneurs, investors, and industry leaders get exclusive access to explore the commercial potential of these innovations, fostering collaborations that translate lab research into market-ready solutions.
-            </p>
-            
+                        
             <a href="/programs" className="inline-flex items-center gap-2 bg-[#1b60bb] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#154a93] transition-colors shadow-md hover:shadow-lg group text-xs sm:text-sm md:text-base">
               Join the Next Demo Day <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
             </a>
@@ -134,7 +117,7 @@ export default function DemoDayExposureVisits() {
       <section className="py-20 bg-[#011a38] text-white">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="text-center mb-12">
-            <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-[#5cc4fe] mb-4">Past Demo Day Pitches</h2>
+            <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-[#5cc4fe] mb-4">Past Demo Days</h2>
             <p className="text-white/80 font-poppins max-w-2xl mx-auto text-xs sm:text-sm md:text-base">Watch highlights and pitches from our previous Demo Days.</p>
           </div>
           
@@ -243,8 +226,7 @@ export default function DemoDayExposureVisits() {
               className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-lg"
             >
               <img 
-                src="https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=75" 
-                alt="Exposure Visit"
+                src="/images/Exposure Visit.svg"
                 className="w-full h-full object-cover"
               />
             </motion.div>
@@ -277,6 +259,8 @@ export default function DemoDayExposureVisits() {
           </div>
         </div>
       </section>
+
+      <PastVisitedInstitutions />
 
       <Footer />
       

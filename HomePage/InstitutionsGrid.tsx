@@ -158,27 +158,12 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.15 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="flex lg:hidden order-4 bg-white rounded-[20px] p-5 md:p-7 shadow-[0_4px_20px_rgb(0,0,0,0.04)] flex-col md:flex-row justify-between items-start md:items-end gap-5 border border-white/60"
+            className="flex lg:hidden order-4 bg-white rounded-[20px] p-5 md:p-7 shadow-[0_4px_20px_rgb(0,0,0,0.04)] border border-white/60"
           >
-            <p className="text-[#1A365D] text-[13px] md:text-[14px] leading-relaxed max-w-lg font-medium">
+            <p className="text-[#1A365D] text-[13px] md:text-[14px] leading-relaxed font-medium">
               Partner with Kerala&apos;s leading research hubs. Access the labs, experts, and tech
               you need to bring your startup&apos;s vision to life.
             </p>
-            <div className="w-full md:w-auto flex justify-end">
-              <a 
-                href="https://rink-ksum.vercel.app/#institutions"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="group bg-[#1b60bb] hover:bg-[#154b94] text-white px-5 py-2.5 md:py-2 rounded-lg font-medium text-sm md:text-base flex items-center gap-1.5 transition-colors shadow-sm whitespace-nowrap cursor-pointer"
-                >
-                  View More <ArrowUpRight size={18} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                </motion.button>
-              </a>
-            </div>
           </motion.div>
 
           {/* --- MAP SECTION --- */}
@@ -470,33 +455,17 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                 <ArrowDownRight className="w-[52px] h-[52px] xl:w-[60px] xl:h-[60px] text-[#1b60bb]" strokeWidth={2.5} />
                               </div>
 
-                              {/* Description Card */}
                               <motion.div
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, amount: 0.15 }}
                                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                                className="hidden lg:flex bg-white rounded-[20px] p-5 md:p-7 shadow-[0_4px_20px_rgb(0,0,0,0.04)] flex-col md:flex-row justify-between items-start md:items-end gap-5 border border-white/60"
+                                className="hidden lg:flex bg-white rounded-[20px] p-5 md:p-7 shadow-[0_4px_20px_rgb(0,0,0,0.04)] border border-white/60"
                               >
-                                <p className="text-[#1A365D] text-[13px] md:text-[14px] leading-relaxed max-w-lg font-medium">
+                                <p className="text-[#1A365D] text-[13px] md:text-[14px] leading-relaxed font-medium">
                                   Partner with Kerala&apos;s leading research hubs. Access the labs, experts, and tech
                                   you need to bring your startup&apos;s vision to life.
                                 </p>
-                                <div className="w-full md:w-auto flex justify-end">
-                                  <a 
-                                    href="https://rink-ksum.vercel.app/#institutions"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    <motion.button
-                                      whileHover={{ scale: 1.02 }}
-                                      whileTap={{ scale: 0.98 }}
-                                      className="group bg-[#1b60bb] hover:bg-[#154b94] text-white px-5 py-2.5 md:py-2 rounded-lg font-medium text-sm md:text-base flex items-center gap-1.5 transition-colors shadow-sm whitespace-nowrap cursor-pointer"
-                                    >
-                                      View More <ArrowUpRight size={18} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                                    </motion.button>
-                                  </a>
-                                </div>
                               </motion.div>
 
                               {/* Logos Grid Card */}

@@ -186,7 +186,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
     <div className="w-full relative">
 
       {/* Main Container Gradient */}
-      <div className="bg-gradient-to-b from-[#36a8fb] via-[#1b60bb] to-[#153156] relative pt-[140px] md:pt-[180px] pb-[200px] md:pb-[240px] overflow-hidden flex flex-col justify-center min-h-[650px] md:min-h-[750px]">
+      <div className="bg-gradient-to-b from-[#36a8fb] via-[#1b60bb] to-[#153156] relative pt-[140px] md:pt-[180px] pb-[100px] md:pb-[140px] overflow-hidden flex flex-col justify-center">
 
         {/* Top Inverted Curve Mask with Title */}
         <div
@@ -234,24 +234,10 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
           </div>
         </div>
 
-        {/* Bottom Inverted Curve Mask with Content */}
+        {/* Bottom Inverted Curve Mask */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-[160px] md:h-[200px] bg-[#eff9ff] rounded-t-[3rem] md:rounded-t-[4rem] z-10 w-full flex flex-col items-center justify-center px-4"
-        >
-          <h3 className="text-[#1b60bb] text-[18px] md:text-[24px] font-medium text-center mb-4 leading-snug">
-            Wanna Know What&apos;s New Technology<br className="hidden md:block" /> for your Startup?
-          </h3>
-          <Link href="/technologies/browse_technologies">
-            <button className="group/btn bg-[#0057b7] hover:bg-[#004494] text-white px-5 py-2 md:px-6 md:py-2.5 rounded-lg font-semibold text-sm md:text-base flex items-center gap-1.5 shadow-sm transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-md">
-              Explore More
-              <ArrowUpRight
-                size={18}
-                strokeWidth={2.5}
-                className="transition-transform duration-700 ease-out group-hover/btn:translate-x-[2px] group-hover/btn:-translate-y-[2px]"
-              />
-            </button>
-          </Link>
-        </div>
+          className="absolute bottom-0 left-0 right-0 h-[80px] md:h-[120px] bg-[#eff9ff] rounded-t-[3rem] md:rounded-t-[4rem] z-10 w-full"
+        />
 
       </div>
     </div>

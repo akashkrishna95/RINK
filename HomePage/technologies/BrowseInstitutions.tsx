@@ -69,7 +69,7 @@ export default function BrowseInstitutions({ institutions: propInstitutions = []
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }}
               >
-                <Link href={`/technologies/browse_technologies?institution=${encodeURIComponent(inst.name)}`} className="block h-full">
+                <Link href={`https://rink-ksum.vercel.app/technologies?institution=${encodeURIComponent(inst.name)}`} className="block h-full">
                   <div className="group bg-white rounded-[20px] p-4 md:p-6 border border-gray-100 shadow-sm hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] hover:-translate-y-1.5 transition-all duration-500 flex flex-col h-full relative overflow-hidden z-10">
                     
                     {/* Subtle Background Accent */}

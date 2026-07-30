@@ -5,6 +5,7 @@ import { motion, useInView } from 'framer-motion';
 import { ArrowRight, CheckCircle2, UserCheck, Search, Lightbulb, FileText, TrendingUp, MapPin, Award, BookOpen, Rocket, Users } from 'lucide-react';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
+import { getProxiedImageUrl } from '@/lib/utils';
 
 function AnimatedCounter({ end, suffix = "+" }: { end: number, suffix?: string }) {
   const [count, setCount] = useState(0);
@@ -33,7 +34,64 @@ function AnimatedCounter({ end, suffix = "+" }: { end: number, suffix?: string }
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
+interface Startup {
+  name: string;
+  logoUrl: string;
+}
+
+function StartupCard({ startup, idx }: { startup: Startup; idx: number }) {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: idx * 0.05 }}
+      className="flex flex-col items-center group cursor-pointer"
+    >
+      <div className="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 w-full aspect-square flex items-center justify-center mb-3 sm:mb-4 group-hover:shadow-md group-hover:-translate-y-1 transition-all overflow-hidden select-none">
+        {startup.logoUrl && !imgError ? (
+          <img
+            src={getProxiedImageUrl(startup.logoUrl)}
+            alt={startup.name}
+            className="max-w-full max-h-full object-contain"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <span className="font-poppins font-bold text-[#1b60bb] text-center text-xs sm:text-sm px-1 leading-snug break-words">
+            {startup.name}
+          </span>
+        )}
+      </div>
+      <div className="font-poppins font-medium text-slate-700 text-xs sm:text-sm md:text-base leading-tight">
+        {startup.name}
+      </div>
+    </motion.div>
+  );
+}
+
 export default function ResearchIncubationPrograms() {
+  const [startups, setStartups] = useState<Startup[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadStartups() {
+      try {
+        const res = await fetch('/api/researchpreneurship-startups');
+        const data = await res.json();
+        if (data.success && data.startups) {
+          setStartups(data.startups);
+        }
+      } catch (err) {
+        console.error('Failed to load startups:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadStartups();
+  }, []);
+
   return (
     <main className="min-h-screen bg-[#F4F7FB] overflow-x-hidden">
       <Navbar />
@@ -303,39 +361,20 @@ export default function ResearchIncubationPrograms() {
       </section>
 
       {/* Startups Created */}
-      <section className="py-12 sm:py-20 bg-slate-50 border-y border-slate-200">
-        <div className="max-w-[1200px] mx-auto px-4 md:px-8 text-center">
-          <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-3 sm:mb-4">
-            Startups created from<br/>Research Innovation and Incubation Program
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 mt-8 sm:mt-12">
-            {[
-              { name: "BMS Cloud Campus LLP", img: "https://rink.startupmission.in/img/2025-07-21%2015_46_46" },
-              { name: "Levare Biosolutions", img: "https://rink.startupmission.in/img/2025-07-21%2015_52_15" },
-              { name: "Statoberry LLP", img: "https://rink.startupmission.in/img/2025-07-21%2015_53_17" },
-              { name: "Uniwo Naturals Pvt. Ltd.", img: "https://rink.startupmission.in/img/UniwoNaturals" },
-              { name: "YGENR Tech Solutions Pvt. Ltd", img: "https://rink.startupmission.in/img/YGENR" },
-              { name: "Shelt Innovation Pvt. Ltd.", img: "https://rink.startupmission.in/img/Group%20189.png" }
-            ].map((startup, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.1 }}
-                className="flex flex-col items-center group cursor-pointer"
-              >
-                <div className="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 w-full aspect-square flex items-center justify-center mb-3 sm:mb-4 group-hover:shadow-md group-hover:-translate-y-1 transition-all overflow-hidden">
-                  <img src={startup.img} alt={startup.name} className="max-w-full max-h-full object-contain" />
-                </div>
-                <div className="font-poppins font-medium text-slate-700 text-xs sm:text-sm md:text-base leading-tight">
-                  {startup.name}
-                </div>
-              </motion.div>
-            ))}
+      {!loading && startups.length > 0 && (
+        <section className="py-12 sm:py-20 bg-slate-50 border-y border-slate-200">
+          <div className="max-w-[1200px] mx-auto px-4 md:px-8 text-center">
+            <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-3 sm:mb-4">
+              Startups created from<br/>Research Innovation and Incubation Program
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 mt-8 sm:mt-12">
+              {startups.map((startup, idx) => (
+                <StartupCard key={idx} startup={startup} idx={idx} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <Footer />
     </main>

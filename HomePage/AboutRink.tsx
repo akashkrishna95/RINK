@@ -84,20 +84,6 @@ export default function AboutRink() {
                 <span className="text-[#1b60bb] font-medium">build and scale deep-tech ventures.</span>
               </p>
 
-              <div className="flex justify-end mt-3">
-                <Link href="/about">
-                  <button
-                    className="group/btn bg-[#1b60bb] hover:bg-[#154d96] text-white px-4 py-2 rounded-md font-helios text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-md"
-                  >
-                    View More
-                    <ArrowUpRight
-                      size={16}
-                      strokeWidth={2.5}
-                      className="transition-transform duration-700 ease-out group-hover/btn:translate-x-[2px] group-hover/btn:-translate-y-[2px]"
-                    />
-                  </button>
-                </Link>
-              </div>
             </motion.div>
 
             {/* "What we do" Divider */}

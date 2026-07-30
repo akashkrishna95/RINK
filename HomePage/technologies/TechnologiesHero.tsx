@@ -236,7 +236,7 @@ export default function TechnologiesHero() {
                   {/* Sticky View All Button */}
                   <div className="bg-[#f8fbff] p-3 md:p-4 border-t border-blue-100 text-center flex-shrink-0 z-10 shadow-[0_-4px_10px_rgb(0,0,0,0.02)]">
                      <Link
-                        href={`/technologies/browse_technologies?search=${encodeURIComponent(searchQuery)}`}
+                        href={`https://rink-ksum.vercel.app?search=${encodeURIComponent(searchQuery)}`}
                         className="text-[#1b60bb] font-poppins font-semibold text-sm hover:underline"
                         onMouseDown={(e) => e.preventDefault()}
                      >

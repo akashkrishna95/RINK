@@ -96,10 +96,6 @@ export default function IPRSupport() {
                     </span>
                   ))}
                 </div>
-                
-                <a href="https://forms.gle/LkgvgzVRTj6WhQPu9" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#1b60bb] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#154a93] transition-all shadow-md hover:shadow-lg group text-xs sm:text-sm md:text-base">
-                  Book Your Slot <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-                </a>
               </div>
             </motion.div>
 
