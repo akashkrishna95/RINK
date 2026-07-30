@@ -57,7 +57,9 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
   }
 
   const proxiedUrl = getProxiedImageUrl(program.poster_link);
-  const directUrl = program.poster_link;
+  const directUrl = program.poster_link && program.poster_link.includes('googleusercontent.com') && !program.poster_link.includes('=s')
+    ? `${program.poster_link}=s600`
+    : program.poster_link;
 
   const handleImageError = () => {
     if (!useDirectUrl) {
@@ -72,10 +74,14 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
       key={program.id}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, amount: 0.05 }}
       transition={{ duration: 0.5, delay: Math.min(idx * 0.08, 0.4) }}
       onClick={() => onClick(program)}
       className="group bg-white rounded-3xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_24px_-4px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-200 flex flex-col cursor-pointer w-[240px] xs:w-[260px] sm:w-[280px] md:w-[300px] shrink-0 snap-start h-auto border border-slate-100/80"
+      style={{
+        contentVisibility: 'auto',
+        containIntrinsicSize: '300px 500px',
+      }}
     >
       <div className="relative w-full aspect-[4/5] overflow-hidden bg-slate-100 flex-shrink-0">
         {program.poster_link && !imgError ? (
@@ -430,7 +436,12 @@ export default function ProgramsPage() {
               <div className="relative w-full aspect-[4/5] md:aspect-auto md:h-full bg-slate-100 overflow-hidden shrink-0">
                 {selectedProgram.poster_link && !selectedProgramImgError ? (
                   <img
-                    src={selectedProgramUseDirect ? selectedProgram.poster_link : getProxiedImageUrl(selectedProgram.poster_link)}
+                    src={selectedProgramUseDirect 
+                      ? (selectedProgram.poster_link.includes('googleusercontent.com') && !selectedProgram.poster_link.includes('=s')
+                          ? `${selectedProgram.poster_link}=s1000`
+                          : selectedProgram.poster_link)
+                      : getProxiedImageUrl(selectedProgram.poster_link)
+                    }
                     alt={selectedProgram.title}
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
