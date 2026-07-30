@@ -37,11 +37,21 @@ export function formatTechnologyName(name: string | undefined | null): string {
 }
 
 export function getProxiedImageUrl(url: string | undefined | null): string {
-  if (!url) return '/placeholder.jpg';
-  // If it's a Google Drive link, route it through our API proxy to prevent 403 blocks
-  if (url.includes('drive.google.com') || url.includes('googleusercontent.com')) {
-    return `/api/image-proxy?url=${encodeURIComponent(url)}`;
+  if (!url) return '/placeholder.svg';
+  
+  let targetUrl = url;
+  // Normalize Google Drive URLs to direct CDN endpoint to bypass access blocks
+  const driveMatch = targetUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
+                     targetUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
+                     targetUrl.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
+  if (driveMatch && driveMatch[1]) {
+    targetUrl = `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
   }
-  return url;
+
+  // If it's a Google Drive/UserContent link, route it through our API proxy to prevent 403 blocks
+  if (targetUrl.includes('drive.google.com') || targetUrl.includes('googleusercontent.com')) {
+    return `/api/image-proxy?url=${encodeURIComponent(targetUrl)}`;
+  }
+  return targetUrl;
 }
 

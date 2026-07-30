@@ -18,7 +18,7 @@ interface BrowseInstitutionsProps {
   institutions?: InstitutionItem[];
 }
 
-const fallbackInstitutions = [
+const fallbackInstitutions: InstitutionItem[] = [
   { id: 'csir-niist', name: 'CSIR-National Institute for Interdisciplinary Science and Technology (NIIST)', techCount: 38, logo_url: '' },
   { id: 'kau', name: 'Kerala Agricultural University', techCount: 38, logo_url: '' },
   { id: 'kufos', name: 'Kerala University of Fisheries and Ocean Studies (KUFOS)', techCount: 26, logo_url: '' },

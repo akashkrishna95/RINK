@@ -12,7 +12,7 @@ export default function AboutRink() {
     { title: 'Research Incubation Programs', icon: TrendingUp, href: '/about/researchpreneurship' },
     { title: 'Demo Day & Exposure Visits', icon: UsersRound, href: '/about/demoday' },
     { title: 'IPR Support', icon: FileBadge, href: '/about/iprsupport' },
-    { title: 'Research & Development Grant', icon: Coins, href: '/about/RandD' },
+    { title: 'Research & Development Grant', icon: Coins, href: '/about/randd' },
   ];
 
   // Uniform arrow animation for all "View More" buttons

@@ -82,7 +82,7 @@ export default function TechnologyDetails({ id }: TechnologyDetailsProps) {
   const applications = technology.applications || '';
   const ipStatus = technology.patent_status || 'Not Specified';
   const trl = technology.trl || 'Not Specified';
-  const image = technology.image_url || '/placeholder.jpg';
+  const image = technology.image_url || '/placeholder.svg';
   const isFeatured = isFeaturedTechnology(technology.startup_potential);
 
   const getIPStatusColor = (status: string) => {
@@ -366,7 +366,7 @@ export default function TechnologyDetails({ id }: TechnologyDetailsProps) {
                     key={tech.technology_id}
                     id={String(tech.technology_id)}
                     name={tech.technology_name || 'Untitled Technology'}
-                    image={tech.image_url || '/placeholder.jpg'}
+                    image={tech.image_url || '/placeholder.svg'}
                     sector={tech.primary_sector || tech.sector || 'N/A'}
                     institution={tech.institution || 'N/A'}
                     ipStatus={normalizeIPStatus(tech.patent_status)}

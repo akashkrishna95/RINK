@@ -70,7 +70,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
                   sector: tech.primary_sector || tech.sector || 'N/A',
                   ipStatus: normalizeIPStatus(tech.patent_status),
                   featured: isFeatured,
-                  image: tech.image_url || '/placeholder.jpg',
+                  image: tech.image_url || '/placeholder.svg',
                   description: tech.description || tech.brief_description_abstract || tech.problem_solved || '',
                 });
               }

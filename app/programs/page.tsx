@@ -68,7 +68,7 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
       <div className="relative w-full aspect-[4/5] overflow-hidden bg-slate-100 flex-shrink-0">
         {program.poster_link && !imgError ? (
           <img
-            src={program.poster_link}
+            src={getProxiedImageUrl(program.poster_link)}
             alt={program.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             loading="lazy"

@@ -46,6 +46,30 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
 
   const gridRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [tooltipPosition, setTooltipPosition] = useState<{ top: number; left: number } | null>(null);
+
+  const updateTooltipPosition = () => {
+    if (activeInstitution === null) {
+      setTooltipPosition(null);
+      return;
+    }
+    const activeEl = document.getElementById(`logo-item-${activeInstitution}`);
+    const parentCardEl = gridRef.current?.closest('.parent-card');
+    if (activeEl && parentCardEl) {
+      const rect = activeEl.getBoundingClientRect();
+      const parentRect = parentCardEl.getBoundingClientRect();
+      setTooltipPosition({
+        top: rect.top - parentRect.top,
+        left: rect.left - parentRect.left + rect.width / 2,
+      });
+    } else {
+      setTooltipPosition(null);
+    }
+  };
+
+  useEffect(() => {
+    updateTooltipPosition();
+  }, [activeInstitution]);
 
   const handleGridScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.currentTarget;
@@ -53,6 +77,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
     if (totalScroll > 0) {
       setScrollProgress(target.scrollTop / totalScroll);
     }
+    updateTooltipPosition();
   };
 
   // Reset scroll progress when showMore changes
@@ -481,7 +506,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, amount: 0.15 }}
                                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-                                className="relative bg-white rounded-[24px] p-5 md:p-8 shadow-[0_4px_20px_rgb(0,0,0,0.04)] border border-white/60"
+                                className="relative bg-white rounded-[24px] p-5 md:p-8 shadow-[0_4px_20px_rgb(0,0,0,0.04)] border border-white/60 parent-card"
                               >
                                 {/* Smooth Expansion Container */}
                                 <div className="flex gap-4 items-stretch relative overflow-visible py-2">
@@ -501,29 +526,11 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                       const isActiveDistrict = activeDistrict === institution.district;
                       const isDimmed = activeDistrict !== null && !isActiveDistrict && !isActiveLogo;
 
-                      // 1. Prevent Vertical Clipping (Top Row)
-                      const isTopRowClipped = showMore && index < 5;
-
-                      // 2. Prevent Horizontal Clipping (Grid Edges)
-                      const isMobileLeft = index % 4 === 0;
-                      const isMobileRight = index % 4 === 3;
-                      const isDesktopLeft = index % 5 === 0;
-                      const isDesktopRight = index % 5 === 4;
-
-                      // Build base classes (Mobile: 4 columns)
-                      const baseAlign = isMobileLeft ? "left-0 translate-x-0" :
-                                        isMobileRight ? "right-0 translate-x-0" :
-                                        "left-1/2 -translate-x-1/2";
-
-                      // Build desktop classes (Desktop: 5 columns) with overrides
-                      const mdAlign = isDesktopLeft ? "md:left-0 md:translate-x-0 md:right-auto" :
-                                      isDesktopRight ? "md:right-0 md:translate-x-0 md:left-auto" :
-                                      "md:left-1/2 md:-translate-x-1/2 md:right-auto";
-
                       return (
                         <motion.div
                           initial={{ opacity: 0, scale: 0.8 }}
                           key={institution.id}
+                          id={`logo-item-${institution.id}`}
                           onMouseEnter={() => {
                             if (isLocked === null) {
                               handleLogoHover(institution.id, institution.district);
@@ -578,40 +585,6 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                </div>
                              )}
                            </div>
-
-                          {/* Liquid Glass Tooltip - Smart Positioning */}
-                          <AnimatePresence>
-                            {isActiveLogo && (
-                              <motion.div
-                                initial={{ opacity: 0, y: isTopRowClipped ? -10 : 10, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: isTopRowClipped ? -5 : 5, scale: 0.95 }}
-                                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                className={`absolute transform mb-2 p-3 rounded-xl w-44 shadow-[0_8px_32px_0_rgba(27,96,187,0.15)] backdrop-blur-md bg-white/95 border border-white text-center z-[100] pointer-events-auto 
-                                  ${isTopRowClipped ? "top-full mt-2" : "bottom-full mb-2"} 
-                                  ${baseAlign} ${mdAlign}
-                                `}
-                              >
-                                <div className="font-semibold text-[#1A365D] text-sm mb-0.5">
-                                  {institution.name}
-                                </div>
-                                <div className="text-[11px] text-[#1b60bb] font-medium mb-2">
-                                  {institution.techCount} Technologies
-                                </div>
-                                {institution.website && (
-                                  <a 
-                                    href={institution.website.startsWith('http') ? institution.website : `https://${institution.website}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
-                                    className="text-xs text-[#1b60bb] hover:text-[#1872dd] font-semibold inline-flex items-center gap-1 hover:underline cursor-pointer"
-                                  >
-                                    Visit Website <ArrowUpRight size={12} />
-                                  </a>
-                                )}
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
                         </motion.div>
                       );
                     })}
@@ -666,6 +639,53 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                   </span>
                 </motion.div>
               )}
+
+              {/* Floating Tooltip overlayed over parent card */}
+              <AnimatePresence>
+                {activeInstitution !== null && tooltipPosition !== null && (
+                  (() => {
+                    const inst = institutionLogos.find(i => i.id === activeInstitution);
+                    if (!inst) return null;
+                    
+                    const index = visibleLogos.findIndex(i => i.id === activeInstitution);
+                    const isTopRowClipped = showMore && index < 5;
+
+                    return (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        style={{
+                          top: `${tooltipPosition.top}px`,
+                          left: `${tooltipPosition.left}px`,
+                        }}
+                        className={`absolute transform w-44 shadow-[0_8px_32px_0_rgba(27,96,187,0.15)] backdrop-blur-md bg-white/95 border border-white text-center z-[100] p-3 rounded-xl pointer-events-auto -translate-x-1/2
+                          ${isTopRowClipped ? "mt-16" : "-translate-y-full -mt-2"}
+                        `}
+                      >
+                        <div className="font-semibold text-[#1A365D] text-sm mb-0.5">
+                          {inst.name}
+                        </div>
+                        <div className="text-[11px] text-[#1b60bb] font-medium mb-2">
+                          {inst.techCount} Technologies
+                        </div>
+                        {inst.website && (
+                          <a 
+                            href={inst.website.startsWith('http') ? inst.website : `https://${inst.website}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-xs text-[#1b60bb] hover:text-[#1872dd] font-semibold inline-flex items-center gap-1 hover:underline cursor-pointer"
+                          >
+                            Visit Website <ArrowUpRight size={12} />
+                          </a>
+                        )}
+                      </motion.div>
+                    );
+                  })()
+                )}
+              </AnimatePresence>
             </motion.div>
 
           </div>

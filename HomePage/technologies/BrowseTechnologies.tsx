@@ -547,7 +547,7 @@ export default function BrowseTechnologies() {
                       institution={tech.institution || 'N/A'}
                       sector={tech.primary_sector || tech.sector || 'N/A'}
                       ipStatus={normalizeIPStatus(tech.patent_status)}
-                      image={tech.image_url || '/placeholder.jpg'}
+                      image={tech.image_url || '/placeholder.svg'}
                       featured={isFeaturedTechnology(tech.startup_potential)}
                       description={tech.description || tech.brief_description_abstract || tech.problem_solved || ''}
                     />
@@ -567,7 +567,7 @@ export default function BrowseTechnologies() {
                       key={tech.technology_id}
                       id={String(tech.technology_id)}
                       name={tech.technology_name || 'Untitled Technology'}
-                      image={tech.image_url || '/placeholder.jpg'}
+                      image={tech.image_url || '/placeholder.svg'}
                       sector={tech.primary_sector || tech.sector || 'N/A'}
                       institution={tech.institution || 'N/A'}
                       ipStatus={normalizeIPStatus(tech.patent_status)}

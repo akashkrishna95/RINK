@@ -36,7 +36,7 @@ export default function AboutRinkPage() {
       title: 'Research & Development Grant',
       description: 'Catalyzing hardware innovation by financially supporting early-stage startups to develop breakthrough, market-ready products and technologies.',
       icon: <Coins size={32} className="text-[#5cc4fe]" />,
-      link: '/about/RandD',
+      link: '/about/randd',
     }
   ];
 

@@ -10,11 +10,22 @@ export async function GET(request: Request) {
   }
 
   try {
-    const parsedUrl = new URL(imageUrl);
+    let targetUrl = imageUrl;
+    
+    // Normalize Google Drive URLs to direct CDN endpoint to bypass access blocks
+    const driveMatch = targetUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
+                       targetUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
+                       targetUrl.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
+    if (driveMatch && driveMatch[1]) {
+      targetUrl = `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
+    }
+
+    const parsedUrl = new URL(targetUrl);
     const allowedHostnames = [
       'drive.google.com',
       'googleusercontent.com',
       'lh3.googleusercontent.com',
+      'usercontent.google.com',
       'rink.startupmission.in',
     ];
     
@@ -26,10 +37,11 @@ export async function GET(request: Request) {
       return new NextResponse('Forbidden hostname', { status: 403 });
     }
 
-    const response = await fetch(imageUrl, {
+    const response = await fetch(targetUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       },
+      cache: 'no-store',
     });
 
     const contentType = response.headers.get('content-type') || '';

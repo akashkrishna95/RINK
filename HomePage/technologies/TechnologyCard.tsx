@@ -48,7 +48,7 @@ export default function TechnologyCard({
     <div
       className="w-full h-full relative transition-transform duration-300 ease-out hover:-translate-y-4 hover:z-50 will-change-transform group"
     >
-      <Link href="https://rink-ksum.vercel.app/" target="_blank" rel="noopener noreferrer" className="block h-full outline-none">
+      <Link href={`https://rink-ksum.vercel.app/technologies/${id}`} target="_blank" rel="noopener noreferrer" className="block h-full outline-none">
         <div
           className="bg-white rounded-2xl overflow-hidden h-full flex flex-col relative border border-gray-100 shadow-[0_8px_16px_-3px_rgba(0,0,0,0.08)] group-hover:shadow-[0_25px_50px_-12px_rgba(27,96,187,0.15)] transition-shadow duration-300"
         >

@@ -1,7 +1,7 @@
 // C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\InteractiveMap.tsx
 'use client';
 
-import { MapContainer, TileLayer, Marker, Popup, useMap, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, GeoJSON, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect, useState } from 'react';
@@ -101,6 +101,20 @@ function MapController({
       }
     }
   }, [activeDistrict, activeInstitution, map, isExpanded, institutions]);
+
+  useEffect(() => {
+    if (isExpanded) {
+      map.dragging.enable();
+      map.scrollWheelZoom.enable();
+      map.doubleClickZoom.enable();
+      if (map.touchZoom) map.touchZoom.enable();
+    } else {
+      map.dragging.disable();
+      map.scrollWheelZoom.disable();
+      map.doubleClickZoom.disable();
+      if (map.touchZoom) map.touchZoom.disable();
+    }
+  }, [isExpanded, map]);
   
   useEffect(() => {
     const container = map.getContainer();
@@ -217,18 +231,18 @@ export default function InteractiveMap({
       </div>
 
       <MapContainer 
-        key={isExpanded ? 'expanded' : 'collapsed'}
         center={center} 
-        zoom={isExpanded ? 7 : 6.5} 
-        scrollWheelZoom={isExpanded}
-        dragging={isExpanded}
-        touchZoom={isExpanded}
-        doubleClickZoom={isExpanded}
-        zoomControl={isExpanded}
+        zoom={6.5} 
+        scrollWheelZoom={false}
+        dragging={false}
+        touchZoom={false}
+        doubleClickZoom={false}
+        zoomControl={false}
         attributionControl={false}
         className="w-full h-full overflow-hidden"
         style={{ borderRadius: isExpanded ? '0' : '1.5rem' }}
       >
+        {isExpanded && <ZoomControl position="topright" />}
         <TileLayer
           key={mapType}
           url={
