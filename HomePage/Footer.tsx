@@ -71,7 +71,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3">
               {[
-                { label: 'LinkedIn', href: 'https://linkedin.com/company/research-innovation-network-kerala/' },
+                { label: 'LinkedIn', href: 'https://in.linkedin.com/company/research-innovation-network-kerala/' },
                 { label: 'Instagram', href: '#' },
                 { label: 'YouTube', href: '#' }
               ].map((link) => (
