@@ -82,45 +82,6 @@ export default function RomiPortalPage() {
   const [hasEntered, setHasEntered] = useState(false);
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState('search');
-  const [stayTunedText, setStayTunedText] = useState('');
-
-  // Typing animation for STAY TUNED! text
-  useEffect(() => {
-    const fullText = 'STAY TUNED!';
-    let currentText = '';
-    let isDeleting = false;
-    let index = 0;
-    let timeoutId: any;
-
-    const tick = () => {
-      if (!isDeleting) {
-        currentText = fullText.substring(0, index + 1);
-        index++;
-        setStayTunedText(currentText);
-
-        if (index === fullText.length) {
-          isDeleting = true;
-          timeoutId = setTimeout(tick, 2500); // Pause when fully typed
-        } else {
-          timeoutId = setTimeout(tick, 150); // Type next letter
-        }
-      } else {
-        currentText = fullText.substring(0, index - 1);
-        index--;
-        setStayTunedText(currentText);
-
-        if (index === 0) {
-          isDeleting = false;
-          timeoutId = setTimeout(tick, 500); // Pause when cleared
-        } else {
-          timeoutId = setTimeout(tick, 80); // Delete letter faster
-        }
-      }
-    };
-
-    timeoutId = setTimeout(tick, 500);
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   // Listen to custom reset event from Navbar clicks and preload hero images
   useEffect(() => {
@@ -406,20 +367,11 @@ export default function RomiPortalPage() {
                 </div>
               </motion.div>
 
-              {/* Bottom gradient overlay with STAY TUNED! text */}
-              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#FDFDF9] via-[#FDFDF9]/95 to-transparent dark:from-zinc-950 dark:via-zinc-950/95 rounded-b-[40px] flex flex-col items-center justify-end pb-8 z-20 pointer-events-none">
-                <div className="flex items-center justify-center gap-1.5">
-                  <h2 
-                    className="font-helios text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-widest text-center select-none bg-gradient-to-t from-[#153156] via-[#1b60bb] to-[#219653] bg-clip-text text-transparent filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.08)]"
-                    style={{
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}
-                  >
-                    {stayTunedText}
-                  </h2>
-                  <span className="inline-block w-1.5 h-8 sm:h-12 bg-[#219653] shadow-[0_0_10px_#219653] animate-pulse rounded shrink-0"></span>
-                </div>
+              {/* Bottom glassmorphic overlay with STAY TUNED! text */}
+              <div className="absolute inset-x-0 bottom-0 h-20 sm:h-24 md:h-28 backdrop-blur-xl bg-white/20 dark:bg-black/35 border-t border-white/30 dark:border-white/15 rounded-b-[40px] flex items-center justify-center z-20 pointer-events-none">
+                <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-widest text-[#153156] dark:text-[#f3f4f6] text-center select-none uppercase">
+                  STAY TUNED!
+                </h2>
               </div>
             </motion.div>
 
