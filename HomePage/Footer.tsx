@@ -181,11 +181,11 @@ export default function Footer() {
           className="w-full flex items-end justify-center px-2" // Added px-2 to give the 'K' and 'K' room to breathe
         >
           <span 
-            className="font-helios font-black text-[#eff9ff] text-center w-full block whitespace-nowrap"
+            className="font-helios font-black text-[#eff9ff] text-center w-full block whitespace-nowrap tracking-tighter"
             style={{
-              fontSize: 'min(9.5vw, 160px)', 
+              fontSize: '11.8vw', 
               lineHeight: '0.75', 
-              marginBottom: '-0vw' // Sits perfectly on the floor
+              marginBottom: '-0.5vw' // Sits perfectly on the floor
             }}
           >
             KSUM ✦ RINK
