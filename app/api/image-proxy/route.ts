@@ -17,8 +17,8 @@ export async function GET(request: Request) {
                        targetUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
                        targetUrl.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
     if (driveMatch && driveMatch[1]) {
-      // Use Google Drive thumbnail endpoint (returns compressed static image previews for any format, e.g. images/videos/PDFs)
-      targetUrl = `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`;
+      // Append =s800 to resize using Google's high performance CDN directly (zero CPU usage on serverless!)
+      targetUrl = `https://lh3.googleusercontent.com/d/${driveMatch[1]}=s800`;
     }
 
     const parsedUrl = new URL(targetUrl);
@@ -56,9 +56,11 @@ export async function GET(request: Request) {
     const outputBuffer = Buffer.from(buffer);
     const outputContentType = contentType || 'image/jpeg';
 
-    return new NextResponse(outputBuffer, {
+    return new Response(outputBuffer, {
+      status: 200,
       headers: {
         'Content-Type': outputContentType,
+        'Content-Length': outputBuffer.length.toString(),
         'Cache-Control': 'public, max-age=86400',
       },
     });

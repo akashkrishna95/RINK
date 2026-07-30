@@ -64,7 +64,7 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
     program.poster_link.match(/[?&]docid=([a-zA-Z0-9_-]+)/)
   ) : null;
   const directUrl = driveMatch && driveMatch[1]
-    ? `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`
+    ? `https://lh3.googleusercontent.com/d/${driveMatch[1]}=s600`
     : (program.poster_link && program.poster_link.includes('googleusercontent.com') && !program.poster_link.includes('=s')
         ? `${program.poster_link}=s600`
         : program.poster_link);
@@ -215,7 +215,7 @@ function ProgramCarouselSection({
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex gap-5 md:gap-8 overflow-x-auto pb-6 pt-2 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-none"
+          className="flex gap-5 md:gap-8 overflow-x-auto pb-6 pt-2 -mx-4 pl-5 pr-5 sm:mx-0 sm:px-0 snap-x snap-mandatory scrollbar-none"
         >
           {programs.map((program, idx) => (
             <ProgramCard key={program.id} program={program} idx={idx} onClick={onCardClick} />
@@ -451,7 +451,7 @@ export default function ProgramsPage() {
                                              selectedProgram.poster_link.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
                                              selectedProgram.poster_link.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
                           if (driveMatch && driveMatch[1]) {
-                            return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`;
+                            return `https://lh3.googleusercontent.com/d/${driveMatch[1]}=s1000`;
                           }
                           return selectedProgram.poster_link.includes('googleusercontent.com') && !selectedProgram.poster_link.includes('=s')
                             ? `${selectedProgram.poster_link}=s1000`
