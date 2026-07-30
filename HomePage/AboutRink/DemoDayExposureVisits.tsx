@@ -71,11 +71,11 @@ export default function DemoDayExposureVisits() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="font-helios text-[32px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="font-helios text-[38px] xs:text-[44px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Demo Day & <br className="hidden md:block" />
               <span className="text-[#5cc4fe]">Exposure Visits</span>
             </h1>
-            <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white/80 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm xs:text-base md:text-lg lg:text-lg text-white/85 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed text-center px-2">
               Bridging the gap between groundbreaking research and commercial success by connecting innovators directly with industry and investors.
             </p>
           </motion.div>

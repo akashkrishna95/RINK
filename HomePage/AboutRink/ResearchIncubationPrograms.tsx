@@ -52,7 +52,7 @@ export default function ResearchIncubationPrograms() {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-helios font-black text-[26px] sm:text-4xl md:text-5xl lg:text-6xl text-white mb-4 sm:mb-6 leading-tight"
+            className="font-helios font-black text-[36px] xs:text-[42px] sm:text-4xl md:text-5xl lg:text-6xl text-white mb-4 sm:mb-6 leading-tight"
           >
             <span className="block sm:inline whitespace-nowrap">Research <span className="text-[#5cc4fe]">Incubation</span></span>{' '}
             <span className="block sm:inline">Programs</span>
@@ -61,7 +61,7 @@ export default function ResearchIncubationPrograms() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-xs sm:text-sm md:text-base text-white/90 font-poppins leading-relaxed max-w-3xl mx-auto"
+            className="text-sm xs:text-base md:text-lg text-white/90 font-poppins leading-relaxed max-w-3xl mx-auto text-center px-2"
           >
             Structured incubation and funding programs to guide researchers from breakthrough ideas to scalable commercial ventures.
           </motion.p>

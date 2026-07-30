@@ -42,6 +42,7 @@ export function getProxiedImageUrl(url: string | undefined | null): string {
   let targetUrl = url;
   // Normalize Google Drive URLs to direct CDN endpoint to bypass access blocks
   const driveMatch = targetUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
+                     targetUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
                      targetUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
                      targetUrl.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
   if (driveMatch && driveMatch[1]) {
