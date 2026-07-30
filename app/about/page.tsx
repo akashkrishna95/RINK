@@ -11,11 +11,11 @@ import Footer from '@/HomePage/Footer';
 export default function AboutRinkPage() {
   const initiatives = [
     {
-      id: 'incubation',
+      id: 'researchpreneurship',
       title: 'Research Incubation Programs',
       description: 'Fostering entrepreneurship among researchers by providing grants, mentorship, and business development support to convert innovative outcomes into commercial products.',
       icon: <FlaskConical size={32} className="text-[#5cc4fe]" />,
-      link: '/about/incubation',
+      link: '/about/researchpreneurship',
     },
     {
       id: 'demoday',
@@ -36,7 +36,7 @@ export default function AboutRinkPage() {
       title: 'Research & Development Grant',
       description: 'Catalyzing hardware innovation by financially supporting early-stage startups to develop breakthrough, market-ready products and technologies.',
       icon: <Coins size={32} className="text-[#5cc4fe]" />,
-      link: '/about/randd',
+      link: '/about/RandD',
     }
   ];
 
@@ -151,8 +151,8 @@ export default function AboutRinkPage() {
       {/* Core Ecosystem Pillars */}
       <section className="py-20 px-4 md:px-8 max-w-[1400px] mx-auto">
         <div className="text-center mb-16">
-          <h2 className="font-helios text-3xl md:text-4xl font-bold text-slate-800 mb-4">The RINK Ecosystem</h2>
-          <p className="text-slate-600 font-poppins max-w-2xl mx-auto text-lg">Comprehensive support structures designed to accelerate deep-tech innovation.</p>
+          <h2 className="font-helios text-4xl md:text-5xl font-bold text-slate-800 mb-6">The RINK Ecosystem</h2>
+          <p className="text-slate-600 font-poppins max-w-2xl mx-auto text-sm sm:text-base">Comprehensive support structures designed to accelerate deep-tech innovation.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -178,8 +178,8 @@ export default function AboutRinkPage() {
       {/* Initiatives Grid */}
       <section className="py-24 px-4 md:px-8 max-w-[1400px] mx-auto bg-slate-50 rounded-[3rem] my-20">
         <div className="text-center mb-16">
-          <h2 className="font-helios text-3xl md:text-4xl font-bold text-slate-800 mb-4">Our Initiatives</h2>
-          <p className="text-slate-600 font-poppins max-w-2xl mx-auto text-lg">Explore the specific programs and grants designed for researchers and startups.</p>
+          <h2 className="font-helios text-4xl md:text-5xl font-bold text-slate-800 mb-6">Our Initiatives</h2>
+          <p className="text-slate-600 font-poppins max-w-2xl mx-auto text-sm sm:text-base">Explore the specific programs and grants designed for researchers and startups.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">

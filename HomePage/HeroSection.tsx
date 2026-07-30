@@ -15,7 +15,7 @@ export default function HeroSection() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('/images/home-hero-bg.png')",
+            backgroundImage: "url('/images/home-hero-bg.webp')",
           }}
         >
           {/* Gradient overlay to match the deep blue/cyan design */}
@@ -39,7 +39,7 @@ export default function HeroSection() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mt-4 md:mt-6">
 
         {/* Card 1: Technologies */}
-        <Link href="/technologies" className="col-span-1">
+        <Link href="https://rink-ksum.vercel.app/" target="_blank" rel="noopener noreferrer" className="col-span-1">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -59,25 +59,27 @@ export default function HeroSection() {
         </Link>
 
         {/* Card 2: Instrumentation */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          whileHover={{ y: -5, scale: 1.01 }}
-          className="bg-[#cee3ef] rounded-2xl p-4 md:p-6 relative group cursor-pointer shadow-sm hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center col-span-1 overflow-hidden"
-        >
-          <ArrowUpRight className="absolute top-3 right-3 md:top-4 md:right-4 text-[#1b60bb] w-4 h-4 md:w-6 md:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-          <h3 className="font-helios text-[15px] sm:text-lg md:text-xl lg:text-[26px] font-bold text-[#1b60bb] mb-1 md:mb-2 w-full truncate mt-2 md:mt-0 text-center">
-            Instrumentation
-          </h3>
-          <p className="text-[#1b60bb] text-[10px] sm:text-xs md:text-sm w-full text-center leading-tight whitespace-normal">
-            Access advanced core labs
-          </p>
-        </motion.div>
+        <Link href="https://instruments.startupmission.in/" target="_blank" rel="noopener noreferrer" className="col-span-1">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            whileHover={{ y: -5, scale: 1.01 }}
+            className="bg-[#cee3ef] rounded-2xl p-4 md:p-6 relative group cursor-pointer shadow-sm hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center h-full overflow-hidden"
+          >
+            <ArrowUpRight className="absolute top-3 right-3 md:top-4 md:right-4 text-[#1b60bb] w-4 h-4 md:w-6 md:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            <h3 className="font-helios text-[15px] sm:text-lg md:text-xl lg:text-[26px] font-bold text-[#1b60bb] mb-1 md:mb-2 w-full truncate mt-2 md:mt-0 text-center">
+              Instrumentation
+            </h3>
+            <p className="text-[#1b60bb] text-[10px] sm:text-xs md:text-sm w-full text-center leading-tight whitespace-normal">
+              Access advanced core labs
+            </p>
+          </motion.div>
+        </Link>
 
         {/* Card 3: Researchpreneurship */}
-        <Link href="/about/incubation" className="col-span-2 md:col-span-1">
+        <Link href="/about/researchpreneurship" className="col-span-2 md:col-span-1">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

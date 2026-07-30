@@ -82,6 +82,45 @@ export default function RomiPortalPage() {
   const [hasEntered, setHasEntered] = useState(false);
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState('search');
+  const [stayTunedText, setStayTunedText] = useState('');
+
+  // Typing animation for STAY TUNED! text
+  useEffect(() => {
+    const fullText = 'STAY TUNED!';
+    let currentText = '';
+    let isDeleting = false;
+    let index = 0;
+    let timeoutId: any;
+
+    const tick = () => {
+      if (!isDeleting) {
+        currentText = fullText.substring(0, index + 1);
+        index++;
+        setStayTunedText(currentText);
+
+        if (index === fullText.length) {
+          isDeleting = true;
+          timeoutId = setTimeout(tick, 2500); // Pause when fully typed
+        } else {
+          timeoutId = setTimeout(tick, 150); // Type next letter
+        }
+      } else {
+        currentText = fullText.substring(0, index - 1);
+        index--;
+        setStayTunedText(currentText);
+
+        if (index === 0) {
+          isDeleting = false;
+          timeoutId = setTimeout(tick, 500); // Pause when cleared
+        } else {
+          timeoutId = setTimeout(tick, 80); // Delete letter faster
+        }
+      }
+    };
+
+    timeoutId = setTimeout(tick, 500);
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   // Listen to custom reset event from Navbar clicks and preload hero images
   useEffect(() => {
@@ -97,10 +136,10 @@ export default function RomiPortalPage() {
     // Preload hero images while user is in the portal to speed up navigation
     if (typeof window !== 'undefined') {
       const homeHero = new Image();
-      homeHero.src = '/images/home-hero-bg.png';
+      homeHero.src = '/images/home-hero-bg.webp';
       
       const techHero = new Image();
-      techHero.src = '/images/tech-hero-bg.png';
+      techHero.src = '/images/tech-hero-bg.webp';
     }
 
     return () => window.removeEventListener('reset-romi-chat', handleReset);
@@ -173,24 +212,30 @@ export default function RomiPortalPage() {
   }, [hasEntered]);
 
   const handleSearch = () => {
+    // Disabled to prevent entering active chat mode during STAY TUNED! phase
+    /*
     if (query.trim()) {
       setHasEntered(true);
     } else {
       setQuery('');
       setHasEntered(true);
     }
+    */
   };
 
   const handleSectorClick = (sector: string) => {
+    // Disabled to prevent entering active chat mode during STAY TUNED! phase
+    /*
     setQuery(`Show me ${sector} technologies`);
     setHasEntered(true);
+    */
   };
 
   return (
     <main 
       className={`bg-[#FDFDF9] dark:bg-zinc-950 relative font-sans flex flex-col ${hasEntered ? 'h-screen h-[100dvh] max-h-[100dvh] overflow-hidden' : 'min-h-screen'} transition-colors duration-300`}
       style={hasEntered ? {
-        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('/images/ROMI-PORTAL-BG.png')",
+        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('/images/ROMI-PORTAL-BG.webp')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         height: '100dvh',
@@ -214,7 +259,7 @@ export default function RomiPortalPage() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="w-full min-h-[70vh] md:min-h-[85vh] rounded-[40px] relative shadow-2xl border border-gray-100 flex flex-col items-center justify-center pt-24 pb-16 md:pt-32 md:pb-24 bg-cover bg-center shrink-0 mb-8 scroll-mt-20 gap-8 md:gap-12"
               style={{
-                backgroundImage: "url('/images/ROMI-PORTAL-BG.png')",
+                backgroundImage: "url('/images/ROMI-PORTAL-BG.webp')",
               }}
             >
               <div className="absolute inset-0 bg-white/20 pointer-events-none rounded-[40px]"></div>
@@ -245,7 +290,7 @@ export default function RomiPortalPage() {
                 </motion.div>
               </div>
 
-              {/* Search Bar Container */}
+              {/* Search Bar Container - Fully visible but temporarily disabled for Stay Tuned preview */}
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -257,7 +302,6 @@ export default function RomiPortalPage() {
                 }}>
                   <div className="bg-white/95 backdrop-blur-md rounded-[26px] md:rounded-[24px] p-3 md:p-5 flex flex-col gap-4 shadow-xl border border-white/80 focus-within:shadow-[0_15px_40px_rgba(27,96,187,0.06)] focus-within:border-[#1b60bb]/30 transition-all duration-300">
                     <div className="flex items-center relative overflow-hidden">
-                      {/* Animated Placeholder wrapper to smooth out text changes */}
                       <div className="relative w-full">
                         <AnimatePresence mode="wait">
                           <motion.input
@@ -268,24 +312,22 @@ export default function RomiPortalPage() {
                             transition={{ duration: 0.2 }}
                             type="text"
                             placeholder={currentPlaceholder}
-                            disabled={false}
-                            className="w-full bg-transparent border-none outline-none text-black placeholder:text-gray-400 text-[10px] min-[360px]:text-xs min-[400px]:text-sm sm:text-lg md:text-2xl font-sans font-medium px-1 md:px-4 pt-1 md:pt-2 pb-3 md:pb-6"
+                            disabled={true}
+                            className="w-full bg-transparent border-none outline-none text-black placeholder:text-gray-400 text-[10px] min-[360px]:text-xs min-[400px]:text-sm sm:text-lg md:text-2xl font-sans font-medium px-1 md:px-4 pt-1 md:pt-2 pb-3 md:pb-6 cursor-not-allowed"
                             value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                handleSearch();
-                              }
-                            }}
+                            // onChange={(e) => setQuery(e.target.value)}
+                            // onKeyDown={(e) => {
+                            //   if (e.key === 'Enter') {
+                            //     handleSearch();
+                            //   }
+                            // }}
                           />
                         </AnimatePresence>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between px-1 md:px-2 pb-1 gap-2">
-                      {/* Mobile Action Bar (plus icon + dropdown + selected pill) */}
                       <div className="flex md:hidden items-center gap-2 relative">
-                        {/* Premium Plus Button */}
                         <button
                           onClick={() => setIsMobileDropdownOpen(!isMobileDropdownOpen)}
                           className="w-8 h-8 rounded-full border border-gray-200 bg-white flex items-center justify-center text-gray-600 hover:bg-gray-50 active:scale-95 transition-all shrink-0 shadow-sm"
@@ -293,12 +335,10 @@ export default function RomiPortalPage() {
                           <span className="text-lg leading-none">+</span>
                         </button>
                         
-                        {/* Current selected pill */}
                         <div className="bg-black text-white px-3.5 py-1.5 rounded-full text-xs font-semibold font-sans capitalize shadow-sm">
-                          {activeTab === 'search' ? 'explore' : activeTab}
+                          {activeTab === 'search' ? 'Explore' : activeTab}
                         </div>
 
-                        {/* Mobile dropdown panel */}
                         <AnimatePresence>
                           {isMobileDropdownOpen && (
                             <motion.div
@@ -309,16 +349,16 @@ export default function RomiPortalPage() {
                               className="absolute top-full mt-2.5 left-0 bg-white border border-gray-100 rounded-2xl shadow-xl p-2.5 z-30 w-48 flex flex-col gap-1"
                             >
                               {[
-                                { id: 'search', label: 'explore', icon: <Search size={14} /> },
-                                { id: 'technologies', label: 'technologies', icon: <Cpu size={14} /> },
-                                { id: 'instrumentation', label: 'instrumentation', icon: <Wrench size={14} /> },
-                                { id: 'researchpreneurship', label: 'researchpreneurship', icon: <Lightbulb size={14} /> }
+                                { id: 'search', label: 'Explore', icon: <Search size={14} /> },
+                                { id: 'technologies', label: 'Technologies', icon: <Cpu size={14} /> },
+                                { id: 'instrumentation', label: 'Instrumentation', icon: <Wrench size={14} /> },
+                                { id: 'researchpreneurship', label: 'Researchpreneurship', icon: <Lightbulb size={14} /> }
                               ].map((option) => (
                                 <button
                                   key={option.id}
                                   onClick={() => {
                                     setActiveTab(option.id);
-                                    setQuery(''); // Clear query to show new placeholder
+                                    setQuery('');
                                     setIsMobileDropdownOpen(false);
                                   }}
                                   className={`w-full text-left px-3.5 py-2.5 text-xs rounded-xl transition-colors font-medium font-sans flex items-center gap-2.5 ${activeTab === option.id ? 'bg-black text-white' : 'text-gray-700 hover:bg-gray-50'}`}
@@ -334,14 +374,13 @@ export default function RomiPortalPage() {
                         </AnimatePresence>
                       </div>
 
-                      {/* Desktop Action Bar (original horizontal list) */}
                       <div className="hidden md:flex gap-2 overflow-x-auto flex-nowrap [&::-webkit-scrollbar]:hidden pb-1 -mb-1 relative">
                         {tabs.map((tab) => (
                           <button
                             key={tab}
                             onClick={() => {
                               setActiveTab(tab);
-                              setQuery(''); // Clear query to let placeholder rotate
+                              setQuery('');
                             }}
                             className={`relative px-4 md:px-5 py-1.5 md:py-2 text-[10px] md:text-xs rounded-full font-medium cursor-pointer transition-colors whitespace-nowrap shrink-0 ${activeTab === tab ? 'text-white' : 'text-black bg-[#FFF9E6] hover:bg-yellow-100'}`}
                           >
@@ -352,7 +391,7 @@ export default function RomiPortalPage() {
                                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
                               />
                             )}
-                            <span className="relative z-10">{tab === 'search' ? 'explore' : tab}</span>
+                            <span className="relative z-10 capitalize">{tab === 'search' ? 'Explore' : tab}</span>
                           </button>
                         ))}
                       </div>
@@ -366,289 +405,233 @@ export default function RomiPortalPage() {
                   </div>
                 </div>
               </motion.div>
+
+              {/* Bottom gradient overlay with STAY TUNED! text */}
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#FDFDF9] via-[#FDFDF9]/95 to-transparent dark:from-zinc-950 dark:via-zinc-950/95 rounded-b-[40px] flex flex-col items-center justify-end pb-8 z-20 pointer-events-none">
+                <div className="flex items-center justify-center gap-1.5">
+                  <h2 
+                    className="font-helios text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-widest text-center select-none bg-gradient-to-t from-[#153156] via-[#1b60bb] to-[#219653] bg-clip-text text-transparent filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.08)]"
+                    style={{
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    {stayTunedText}
+                  </h2>
+                  <span className="inline-block w-1.5 h-8 sm:h-12 bg-[#219653] shadow-[0_0_10px_#219653] animate-pulse rounded shrink-0"></span>
+                </div>
+              </div>
             </motion.div>
 
-            {/* Second Section: White Card Container (wrapping Stats Bar and onwards) */}
-            <div className="w-full bg-white rounded-[40px] shadow-2xl border border-gray-100 p-3 sm:p-6 md:p-12 flex flex-col gap-16 overflow-hidden">
+            {/* Second Section: White Card Container (wrapping Stats Bar and onwards) - Disabled for future enablement */}
+            {false && (
+              <div className="w-full bg-white rounded-[40px] shadow-2xl border border-gray-100 p-3 sm:p-6 md:p-12 flex flex-col gap-16 overflow-hidden">
 
-              {/* 2. How Romi works - Animated 3-step visual */}
-              <div className="py-20 px-6 max-w-7xl mx-auto">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                  className="text-center mb-16"
-                >
-                  <h2 className="text-5xl md:text-6xl font-bold font-helios text-gray-900 mb-4">How Romi Works</h2>
-                  <p className="text-gray-500 font-montserrat max-w-2xl mx-auto">Your AI copilot for technology discovery and market research.</p>
-                </motion.div>
+                <div className="py-20 px-6 max-w-7xl mx-auto">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center mb-16"
+                  >
+                    <h2 className="text-5xl md:text-6xl font-bold font-helios text-gray-900 mb-4">How Romi Works</h2>
+                    <p className="text-gray-500 font-montserrat max-w-2xl mx-auto">Your AI copilot for technology discovery and market research.</p>
+                  </motion.div>
 
-                <motion.div
-                  variants={containerVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-100px" }}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-y-16 gap-x-8 relative"
-                >
-                  {[
-                    {
-                      icon: <Search size={32} />,
-                      title: '1. Tell Romi your idea',
-                      desc: 'Input your sector, problem statement, or technology request.',
-                      color: 'bg-blue-50 text-[#1b60bb]'
-                    },
-                    {
-                      icon: <Zap size={32} />,
-                      title: '2. Match & Analyze',
-                      desc: 'Romi instantly finds matching IPs and runs deep market analysis.',
-                      color: 'bg-indigo-50 text-indigo-600'
-                    },
-                    {
-                      icon: <BarChart3 size={32} />,
-                      title: '3. Get Full Assessment',
-                      desc: 'Receive comprehensive licensing guidance and TAM/SAM/SOM charts.',
-                      color: 'bg-green-50 text-[#219653]'
-                    }
-                  ].map((step, idx) => (
-                    <motion.div
-                      key={idx}
-                      variants={itemVariants}
-                      whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
-                      className="flex flex-col items-center text-center relative z-10 bg-white p-6 rounded-2xl shadow-sm border border-gray-50 hover:shadow-md transition-shadow"
-                    >
-                      <div className={`w-16 h-16 ${step.color} rounded-2xl flex items-center justify-center mb-6 shadow-inner`}>
-                        {step.icon}
-                      </div>
-                      <h3 className="font-bold font-helios text-xl mb-2 text-gray-900">{step.title}</h3>
-                      <p className="text-gray-500 text-sm font-montserrat">{step.desc}</p>
-
-                      {/* Connectors for Step 1 and Step 2 */}
-                      {idx < 2 && (
-                        <>
-                          <div className="hidden md:block absolute top-1/2 -right-8 transform -translate-y-1/2 w-8 h-4 overflow-visible z-20">
-                            <svg className="w-8 h-4 overflow-visible" viewBox="0 0 32 16">
-                              <path d="M 0 8 L 32 8" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="3 3" />
-                              <path d="M 12 4 L 16 8 L 12 12" stroke="#cbd5e1" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                              <circle r="2.5" fill="#ff7a00">
-                                <animateMotion dur="1.2s" repeatCount="indefinite" path="M 0 8 L 32 8" />
-                              </circle>
-                            </svg>
-                          </div>
-                          <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 md:hidden w-6 h-16 overflow-visible z-20">
-                            <svg className="w-6 h-16 overflow-visible" viewBox="0 0 24 64">
-                              <path d="M 12 0 L 12 64" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="3 3" />
-                              <path d="M 8 28 L 12 32 L 16 28" stroke="#cbd5e1" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                              <circle r="2.5" fill="#ff7a00">
-                                <animateMotion dur="1.2s" repeatCount="indefinite" path="M 12 0 L 12 64" />
-                              </circle>
-                            </svg>
-                          </div>
-                        </>
-                      )}
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </div>
-
-              {/* 3. Technologies Feature Showcase (Interactive Romi AI Story & Capabilities) */}
-              <TechnologiesFeatureShowcase />
-              <InstrumentationStoryShowcase />
-
-              {/* 4. Comparative Advantage Section */}
-              <div className="py-20 px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center">
-                <div className="text-center mb-16 w-full flex flex-col items-center">
-                  
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
-                    Why ROMI AI Stands Alone
-                  </h2>
-                  <p className="text-gray-500 font-montserrat max-w-2xl mx-auto text-center">
-                    Purpose-built for deep-tech incubators. Compare how ROMI AI outperforms public AI models across every critical workflow.
-                  </p>
-                </div>
-
-                {/* 3-Column Comparative Table */}
-                <div className="w-[calc(100%+1rem)] -mx-2 md:w-full md:mx-auto max-w-4xl overflow-x-auto md:overflow-hidden rounded-3xl border border-gray-150 bg-white shadow-[0_20px_45px_-15px_rgba(27,96,187,0.12)]">
-                  <table className="w-full text-left border-collapse font-sans text-xs md:text-sm table-fixed min-w-[500px] md:min-w-0">
-                    <thead>
-                      <tr className="border-b border-gray-100 bg-gray-50/50">
-                        <th className="w-[30%] md:w-[22%] p-2.5 md:p-5 font-helios font-bold text-gray-500 text-xs md:text-sm">
-                          Features
-                        </th>
-                        <th className="w-[35%] md:w-[39%] p-2.5 md:p-5 text-center font-helios font-bold text-[#219653] text-xs md:text-sm border-r border-l border-gray-100 bg-green-50/5">
-                          ROMI AI
-                        </th>
-                        <th className="w-[35%] md:w-[39%] p-2.5 md:p-5 text-center font-helios font-bold text-gray-500 text-xs md:text-sm bg-red-50/5">
-                          Other AI
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100/80">
-                      {comparisonRows.map((row, idx) => (
-                        <tr key={idx} className="hover:bg-gray-50/10 transition-colors">
-                          {/* Feature Name */}
-                          <td className="px-2.5 py-3 md:p-5 font-helios font-bold text-gray-800 text-[11px] md:text-sm align-top leading-tight break-normal">
-                            {row.feature}
-                          </td>
-                          {/* ROMI AI */}
-                          <td className="px-2.5 py-3 md:p-5 bg-green-50/5 border-r border-l border-gray-100 align-top">
-                            <div className="flex items-start gap-1.5 md:gap-2">
-                              <Check size={14} className="text-green-600 shrink-0 mt-0.5" strokeWidth={3.5} />
-                              <span className="text-gray-700 text-[10px] md:text-sm font-medium leading-relaxed font-montserrat">
-                                {row.romi}
-                              </span>
-                            </div>
-                          </td>
-                          {/* Other AI */}
-                          <td className="px-2.5 py-3 md:p-5 align-top bg-red-50/5">
-                            <div className="flex items-start gap-1.5 md:gap-2">
-                              <CloseIcon size={14} className="text-red-500 shrink-0 mt-0.5" strokeWidth={3.5} />
-                              <span className="text-gray-500 text-[10px] md:text-sm font-medium leading-relaxed font-montserrat">
-                                {row.other}
-                              </span>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Target Use Case Grid */}
-              <div className="py-24 px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center">
-                <div className="text-center mb-16 w-full flex flex-col items-center">
-                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
-                    Tailored for Every Stakeholder
-                  </h2>
-                  <p className="text-gray-500 font-montserrat max-w-2xl mx-auto text-center">
-                    Whether you are building a venture or funding academic research, ROMI is optimized for your target goals.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                  {[
-                    { title: 'For Entrepreneurs and Industries', desc: "Discover, compare, and analyse commercialisable technologies from Kerala's leading R&D institutes. Find instruments and specialised services from research institutions and startups to accelerate your R&D.", icon: <Users size={22} />, color: 'text-blue-600 bg-blue-50' },
-                    { title: 'For Researchers and Innovators', desc: 'Refine your idea through AI-guided brainstorming, analyse market opportunities, and prepare your Researchpreneurship Program application for commercial potential validation.', icon: <Lightbulb size={22} />, color: 'text-amber-600 bg-amber-50' },
-                    { title: 'For Institutions', desc: 'Transform institutional research into startup and industry opportunities through AI-powered technology profiling, collaboration discovery, and enhanced visibility of research infrastructure.', icon: <Scale size={22} />, color: 'text-green-600 bg-green-50' }
-                  ].map((useCase, idx) => (
-                    <div key={idx} className="bg-white border border-gray-100 rounded-3xl p-8 hover:shadow-lg transition-all duration-300 group flex flex-col justify-between w-full mx-auto">
-                      <div>
-                        <div className={`w-11 h-11 ${useCase.color} rounded-xl flex items-center justify-center mb-6`}>{useCase.icon}</div>
-                        <h3 className="font-bold font-helios text-xl text-gray-900 mb-3">{useCase.title}</h3>
-                        <p className="text-gray-500 text-sm font-montserrat leading-relaxed">{useCase.desc}</p>
-                      </div>
-
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 5. Sample Conversation & Market Intelligence Preview */}
-              <div className="py-20 bg-[#FCFAF8] relative overflow-hidden w-full flex items-center justify-center rounded-[40px] shadow-sm my-4">
-                <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full relative z-10">
-
-                  {/* Left Column Text Content */}
-                  <div className="w-full flex flex-col justify-center">
-                    <h2 className="text-4xl md:text-5xl font-bold font-helios text-gray-900 mb-4 text-left">
-                      See Romi in action
-                    </h2>
-                    <p className="text-gray-500 font-montserrat mb-8 max-w-xl">
-                      Instantly generate market intelligence reports, compare technologies, and evaluate startup potential with premium visualizations.
-                    </p>
-
-                    {/* 6. ResearchPreneurship CTA Box */}
-                    <div className="bg-gradient-to-br from-[#1b60bb] to-indigo-700 p-6 sm:p-8 rounded-3xl text-white shadow-xl relative overflow-hidden w-full max-w-xl">
-                      <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
-                      <h3 className="font-bold font-helios text-2xl mb-2 relative z-10">Have a research idea?</h3>
-                      <p className="text-white/80 font-montserrat mb-6 relative z-10">Romi validates it and guides your ResearchPreneurship journey.</p>
-                      <button
-                        onClick={() => { setActiveTab('researchpreneurship'); setQuery('Assess my ResearchPreneurship idea '); setHasEntered(true); }}
-                        className="bg-white text-[#1b60bb] px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform relative z-10"
+                  <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-100px" }}
+                    className="grid grid-cols-1 md:grid-cols-3 gap-y-16 gap-x-8 relative"
+                  >
+                    {[
+                      {
+                        icon: <Search size={32} />,
+                        title: '1. Tell Romi your idea',
+                        desc: 'Input your sector, problem statement, or technology request.',
+                        color: 'bg-blue-50 text-[#1b60bb]'
+                      },
+                      {
+                        icon: <Zap size={32} />,
+                        title: '2. Match & Analyze',
+                        desc: 'Romi instantly finds matching IPs and runs deep market analysis.',
+                        color: 'bg-indigo-50 text-indigo-600'
+                      },
+                      {
+                        icon: <BarChart3 size={32} />,
+                        title: '3. Get Full Assessment',
+                        desc: 'Receive comprehensive licensing guidance and TAM/SAM/SOM charts.',
+                        color: 'bg-green-50 text-[#219653]'
+                      }
+                    ].map((step, idx) => (
+                      <motion.div
+                        key={idx}
+                        variants={itemVariants}
+                        whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+                        className="flex flex-col items-center text-center relative z-10 bg-white p-6 rounded-2xl shadow-sm border border-gray-50 hover:shadow-md transition-shadow"
                       >
-                        Start Assessment →
-                      </button>
-                    </div>
+                        <div className={`w-16 h-16 ${step.color} rounded-2xl flex items-center justify-center mb-6 shadow-inner`}>
+                          {step.icon}
+                        </div>
+                        <h3 className="font-bold font-helios text-xl mb-2 text-gray-900">{step.title}</h3>
+                        <p className="text-gray-500 text-sm font-montserrat">{step.desc}</p>
+
+                        {idx < 2 && (
+                          <>
+                            <div className="hidden md:block absolute top-1/2 -right-8 transform -translate-y-1/2 w-8 h-4 overflow-visible z-20">
+                              <svg className="w-8 h-4 overflow-visible" viewBox="0 0 32 16">
+                                <path d="M 0 8 L 32 8" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="3 3" />
+                                <path d="M 12 4 L 16 8 L 12 12" stroke="#cbd5e1" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                                <circle r="2.5" fill="#ff7a00">
+                                  <animateMotion dur="1.2s" repeatCount="indefinite" path="M 0 8 L 32 8" />
+                                </circle>
+                              </svg>
+                            </div>
+                            <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 md:hidden w-6 h-16 overflow-visible z-20">
+                              <svg className="w-6 h-16 overflow-visible" viewBox="0 0 24 64">
+                                <path d="M 12 0 L 12 64" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="3 3" />
+                                <path d="M 8 28 L 12 32 L 16 28" stroke="#cbd5e1" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                                <circle r="2.5" fill="#ff7a00">
+                                  <animateMotion dur="1.2s" repeatCount="indefinite" path="M 12 0 L 12 64" />
+                                </circle>
+                              </svg>
+                            </div>
+                          </>
+                        )}
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </div>
+
+                <TechnologiesFeatureShowcase />
+                <InstrumentationStoryShowcase />
+
+                <div className="py-24 px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center">
+                  <div className="text-center mb-16 w-full flex flex-col items-center">
+                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
+                      Tailored for Every Stakeholder
+                    </h2>
+                    <p className="text-gray-500 font-montserrat max-w-2xl mx-auto text-center">
+                      Whether you are building a venture or funding academic research, ROMI is optimized for your target goals.
+                    </p>
                   </div>
 
-                  {/* Right Column: Premium Interactive Mock Preview Card */}
-                  <div className="w-full max-w-xl mx-auto md:ml-auto md:mr-0">
-                    <div className="bg-white p-5 sm:p-7 rounded-[32px] shadow-2xl shadow-blue-900/10 border border-gray-100 relative transform sm:rotate-1 hover:rotate-0 transition-all duration-500 overflow-hidden">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                    {[
+                      { title: 'For Entrepreneurs and Industries', desc: "Discover, compare, and analyse commercialisable technologies from Kerala's leading R&D institutes. Find instruments and specialised services from research institutions and startups to accelerate your R&D.", icon: <Users size={22} />, color: 'text-blue-600 bg-blue-50' },
+                      { title: 'For Researchers and Innovators', desc: 'Refine your idea through AI-guided brainstorming, analyse market opportunities, and prepare your Researchpreneurship Program application for commercial potential validation.', icon: <Lightbulb size={22} />, color: 'text-amber-600 bg-amber-50' },
+                      { title: 'For Institutions', desc: 'Transform institutional research into startup and industry opportunities through AI-powered technology profiling, collaboration discovery, and enhanced visibility of research infrastructure.', icon: <Scale size={22} />, color: 'text-green-600 bg-green-50' }
+                    ].map((useCase, idx) => (
+                      <div key={idx} className="bg-white border border-gray-100 rounded-3xl p-8 hover:shadow-lg transition-all duration-300 group flex flex-col justify-between w-full mx-auto">
+                        <div>
+                          <div className={`w-11 h-11 ${useCase.color} rounded-xl flex items-center justify-center mb-6`}>{useCase.icon}</div>
+                          <h3 className="font-bold font-helios text-xl text-gray-900 mb-3">{useCase.title}</h3>
+                          <p className="text-gray-500 text-sm font-montserrat leading-relaxed">{useCase.desc}</p>
+                        </div>
 
-                      {/* User Query Layer */}
-                      <div className="flex gap-3 items-center mb-6 border-b border-gray-100 pb-4">
-                        <div className="w-8 h-8 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center shrink-0 shadow-sm">
-                          <User size={16} className="text-gray-500" />
-                        </div>
-                        <div className="bg-gray-50 p-3 rounded-2xl rounded-tl-sm text-sm font-montserrat text-gray-700 w-full border border-gray-100">
-                          Give Market Value of Agritech in 2026?
-                        </div>
                       </div>
+                    ))}
+                  </div>
+                </div>
 
-                      {/* AI System Stream */}
-                      <div className="flex gap-3 items-start relative z-10">
-                        <div className="shrink-0 flex items-center justify-center">
-                          <img src="/romi-avatar.png" alt="Romi" className="w-10 h-10 object-contain" />
+                <div className="py-20 bg-[#FCFAF8] relative overflow-hidden w-full flex items-center justify-center rounded-[40px] shadow-sm my-4">
+                  <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full relative z-10">
+
+                    <div className="w-full flex flex-col justify-center">
+                      <h2 className="text-4xl md:text-5xl font-bold font-helios text-gray-900 mb-4 text-left">
+                        See Romi in action
+                      </h2>
+                      <p className="text-gray-500 font-montserrat mb-8 max-w-xl">
+                        Instantly generate market intelligence reports, compare technologies, and evaluate startup potential with premium visualizations.
+                      </p>
+
+                      <div className="bg-gradient-to-br from-[#1b60bb] to-indigo-700 p-6 sm:p-8 rounded-3xl text-white shadow-xl relative overflow-hidden w-full max-w-xl">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+                        <h3 className="font-bold font-helios text-2xl mb-2 relative z-10">Have a research idea?</h3>
+                        <p className="text-white/80 font-montserrat mb-6 relative z-10">Romi validates it and guides your ResearchPreneurship journey.</p>
+                        <button
+                          onClick={() => { setActiveTab('researchpreneurship'); setQuery('Assess my ResearchPreneurship idea '); setHasEntered(true); }}
+                          className="bg-white text-[#1b60bb] px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform relative z-10"
+                        >
+                          Start Assessment →
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="w-full max-w-xl mx-auto md:ml-auto md:mr-0">
+                      <div className="bg-white p-5 sm:p-7 rounded-[32px] shadow-2xl shadow-blue-900/10 border border-gray-100 relative transform sm:rotate-1 hover:rotate-0 transition-all duration-500 overflow-hidden">
+
+                        <div className="flex gap-3 items-center mb-6 border-b border-gray-100 pb-4">
+                          <div className="w-8 h-8 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center shrink-0 shadow-sm">
+                            <User size={16} className="text-gray-500" />
+                          </div>
+                          <div className="bg-gray-50 p-3 rounded-2xl rounded-tl-sm text-sm font-montserrat text-gray-700 w-full border border-gray-100">
+                            Give Market Value of Agritech in 2026?
+                          </div>
                         </div>
 
-                        <div className="flex flex-col gap-4 w-full">
-                          {/* Answer Display Bubble */}
-                          <div className="bg-blue-50/50 p-4 rounded-2xl rounded-tr-sm border border-blue-100/50 text-sm font-montserrat text-gray-800 shadow-sm leading-relaxed">
-                            The global Agritech market is projected to reach <strong className="text-[#1b60bb]">$43.37 Billion</strong> by 2030, growing at a CAGR of 10.2%.
+                        <div className="flex gap-3 items-start relative z-10">
+                          <div className="shrink-0 flex items-center justify-center">
+                            <img src="/romi-avatar.webp" alt="Romi" className="w-10 h-10 object-contain" />
                           </div>
 
-                          {/* Visual Analytics Matrix Card Component */}
-                          <div className="bg-gray-50 border border-gray-100 rounded-2xl p-5 flex flex-col items-center justify-center gap-5 shadow-inner">
-                            <h4 className="font-helios font-bold text-xs text-gray-400 uppercase tracking-widest w-full text-left">
-                              TAM / SAM / SOM Breakdown
-                            </h4>
+                          <div className="flex flex-col gap-4 w-full">
+                            <div className="bg-blue-50/50 p-4 rounded-2xl rounded-tr-sm border border-blue-100/50 text-sm font-montserrat text-gray-800 shadow-sm leading-relaxed">
+                              The global Agritech market is projected to reach <strong className="text-[#1b60bb]">$43.37 Billion</strong> by 2030, growing at a CAGR of 10.2%.
+                            </div>
 
-                            {/* Stacked Proportional Chart Blocks */}
-                            <div className="relative w-full max-w-[160px] sm:max-w-[200px] flex flex-col items-center justify-end group cursor-pointer">
-                              {/* SOM */}
-                              <div className="w-1/2 h-8 sm:h-10 bg-[#1b60bb] rounded-t-lg sm:rounded-t-xl border-b border-white/20 flex items-center justify-center text-white font-bold text-[9px] sm:text-[11px] tracking-wide transition-all group-hover:bg-indigo-700 shadow-sm z-30 relative">
-                                SOM $2B
-                              </div>
+                            <div className="bg-gray-50 border border-gray-100 rounded-2xl p-5 flex flex-col items-center justify-center gap-5 shadow-inner">
+                              <h4 className="font-helios font-bold text-xs text-gray-400 uppercase tracking-widest w-full text-left">
+                                TAM / SAM / SOM Breakdown
+                              </h4>
 
-                              {/* SAM */}
-                              <div className="w-3/4 h-8 sm:h-10 bg-blue-300 rounded-t-md sm:rounded-t-lg border-b border-white/40 flex items-center justify-center text-blue-900 font-bold text-[9px] sm:text-[11px] tracking-wide transition-all group-hover:bg-blue-400 shadow-sm z-20 relative">
-                                SAM $15B
-                              </div>
+                              <div className="relative w-full max-w-[160px] sm:max-w-[200px] flex flex-col items-center justify-end group cursor-pointer">
+                                <div className="w-1/2 h-8 sm:h-10 bg-[#1b60bb] rounded-t-lg sm:rounded-t-xl border-b border-white/20 flex items-center justify-center text-white font-bold text-[9px] sm:text-[11px] tracking-wide transition-all group-hover:bg-indigo-700 shadow-sm z-30 relative">
+                                  SOM $2B
+                                </div>
 
-                              {/* TAM */}
-                              <div className="w-full h-8 sm:h-10 bg-blue-100 rounded-b-lg sm:rounded-b-xl border border-blue-200/40 flex items-center justify-center text-blue-800 font-bold text-[9px] sm:text-[11px] tracking-wide transition-all group-hover:bg-blue-200 shadow-sm z-10 relative">
-                                TAM $43B
+                                <div className="w-3/4 h-8 sm:h-10 bg-blue-300 rounded-t-md sm:rounded-t-lg border-b border-white/40 flex items-center justify-center text-blue-900 font-bold text-[9px] sm:text-[11px] tracking-wide transition-all group-hover:bg-blue-400 shadow-sm z-20 relative">
+                                  SAM $15B
+                                </div>
+
+                                <div className="w-full h-8 sm:h-10 bg-blue-100 rounded-b-lg sm:rounded-b-xl border border-blue-200/40 flex items-center justify-center text-blue-800 font-bold text-[9px] sm:text-[11px] tracking-wide transition-all group-hover:bg-blue-200 shadow-sm z-10 relative">
+                                  TAM $43B
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Soft UI Fade Layer */}
-                      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white via-white/90 to-transparent rounded-b-[32px] pointer-events-none z-20"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white via-white/90 to-transparent rounded-b-[32px] pointer-events-none z-20"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Remaining Page State & Portals */}
-            </div>
+              </div>
+            )}
           </>
         ) : (
-          <motion.div
-            layoutId="main-container"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 w-full bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-[0_25px_80px_-15px_rgba(0,0,0,0.2)] dark:shadow-none border border-gray-100 dark:border-zinc-800 flex flex-col mx-auto"
-          >
-            {/* CRITICAL FIX: Sending activeTab down as activeMode */}
-            <RomiPortalLayout 
-              query={query} 
-              activeMode={activeTab} 
-              onReset={() => { setHasEntered(false); setQuery(''); }} 
-            />
-          </motion.div>
+          <>
+            {/* Commented out chat container to prevent entry into active mode */}
+            {false && (
+              <motion.div
+                layoutId="main-container"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="flex-1 w-full bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-[0_25px_80px_-15px_rgba(0,0,0,0.2)] dark:shadow-none border border-gray-100 dark:border-zinc-800 flex flex-col mx-auto"
+              >
+                <RomiPortalLayout 
+                  query={query} 
+                  activeMode={activeTab} 
+                  onReset={() => { setHasEntered(false); setQuery(''); }} 
+                />
+              </motion.div>
+            )}
+          </>
         )}
       </div>
       {!hasEntered && <Footer />}

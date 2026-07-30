@@ -1,7 +1,7 @@
 // C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\InstitutionsGrid.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, ArrowDownRight, X, Maximize2 } from 'lucide-react';
 import Image from 'next/image';
@@ -43,6 +43,22 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
   const [showMore, setShowMore] = useState(false);
   const [isMapExpanded, setIsMapExpanded] = useState(false);
   const [expandedDistricts, setExpandedDistricts] = useState<Record<string, boolean>>({});
+
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const handleGridScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const totalScroll = target.scrollHeight - target.clientHeight;
+    if (totalScroll > 0) {
+      setScrollProgress(target.scrollTop / totalScroll);
+    }
+  };
+
+  // Reset scroll progress when showMore changes
+  useEffect(() => {
+    setScrollProgress(0);
+  }, [showMore]);
 
   // Auto-scroll left panel to selected institution
   useEffect(() => {
@@ -124,15 +140,19 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
               you need to bring your startup&apos;s vision to life.
             </p>
             <div className="w-full md:w-auto flex justify-end">
-              <Link href="/technologies/institutions">
+              <a 
+                href="https://rink-ksum.vercel.app/#institutions"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group bg-[#1b60bb] hover:bg-[#154b94] text-white px-5 py-2.5 md:py-2 rounded-lg font-medium text-sm md:text-base flex items-center gap-1.5 transition-colors shadow-sm whitespace-nowrap"
+                  className="group bg-[#1b60bb] hover:bg-[#154b94] text-white px-5 py-2.5 md:py-2 rounded-lg font-medium text-sm md:text-base flex items-center gap-1.5 transition-colors shadow-sm whitespace-nowrap cursor-pointer"
                 >
                   View More <ArrowUpRight size={18} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </motion.button>
-              </Link>
+              </a>
             </div>
           </motion.div>
 
@@ -185,7 +205,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                 exit={{ opacity: 0 }}
                 className="fixed inset-0 z-[999] flex items-center justify-center bg-[#153156]/60 backdrop-blur-md p-4 md:p-8"
               >
-                <div className="relative w-full h-full max-w-7xl bg-[#eff9ff] rounded-3xl overflow-hidden shadow-2xl flex flex-col-reverse md:flex-row border border-white/40 ring-1 ring-[#1b60bb]/10">
+                <div className="relative w-full h-full max-w-7xl bg-[#eff9ff] rounded-3xl overflow-hidden shadow-2xl flex flex-col-reverse md:flex-row ring-1 ring-[#1b60bb]/15">
                   {/* Left Side Panel - Institutions info */}
                   <div className="w-full md:w-[380px] flex-1 md:flex-initial bg-white border-b md:border-b-0 md:border-r border-[#daf1ff] p-6 flex flex-col z-40 overflow-y-auto shrink-0 animate-in fade-in slide-in-from-left duration-300 shadow-sm">
                     <h3 className="text-xl font-helios text-[#1b60bb]">Kerala Innovation Hubs</h3>
@@ -438,15 +458,19 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                   you need to bring your startup&apos;s vision to life.
                                 </p>
                                 <div className="w-full md:w-auto flex justify-end">
-                                  <Link href="/technologies/institutions">
+                                  <a 
+                                    href="https://rink-ksum.vercel.app/#institutions"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
                                     <motion.button
                                       whileHover={{ scale: 1.02 }}
                                       whileTap={{ scale: 0.98 }}
-                                      className="group bg-[#1b60bb] hover:bg-[#154b94] text-white px-5 py-2.5 md:py-2 rounded-lg font-medium text-sm md:text-base flex items-center gap-1.5 transition-colors shadow-sm whitespace-nowrap"
+                                      className="group bg-[#1b60bb] hover:bg-[#154b94] text-white px-5 py-2.5 md:py-2 rounded-lg font-medium text-sm md:text-base flex items-center gap-1.5 transition-colors shadow-sm whitespace-nowrap cursor-pointer"
                                     >
                                       View More <ArrowUpRight size={18} className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
                                     </motion.button>
-                                  </Link>
+                                  </a>
                                 </div>
                               </motion.div>
 
@@ -460,11 +484,17 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                 className="relative bg-white rounded-[24px] p-5 md:p-8 shadow-[0_4px_20px_rgb(0,0,0,0.04)] border border-white/60"
                               >
                                 {/* Smooth Expansion Container */}
-                                <motion.div layout className="relative overflow-visible w-full">
-                                  <motion.div
-                                    layout
-                                    className={`grid grid-cols-4 md:grid-cols-5 gap-y-6 md:gap-y-10 gap-x-2 md:gap-x-4 ${!showMore ? 'pb-12 md:pb-16' : 'pb-4'}`}
+                                <div className="flex gap-4 items-stretch relative overflow-visible py-2">
+                                  <motion.div 
+                                    layout 
+                                    ref={gridRef}
+                                    onScroll={handleGridScroll}
+                                    className={`relative flex-1 custom-scrollbar-grid ${showMore ? 'max-h-[260px] md:max-h-[340px] overflow-y-auto pr-3' : 'overflow-visible'}`}
                                   >
+                                    <motion.div
+                                      layout
+                                      className={`grid grid-cols-4 md:grid-cols-5 gap-y-6 md:gap-y-10 gap-x-2 md:gap-x-4 ${!showMore ? 'pb-12 md:pb-16' : 'pb-2'}`}
+                                    >
                                   <AnimatePresence>
                     {visibleLogos.map((institution, index) => {
                       const isActiveLogo = activeInstitution === institution.id;
@@ -492,7 +522,6 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
 
                       return (
                         <motion.div
-                          layout
                           initial={{ opacity: 0, scale: 0.8 }}
                           key={institution.id}
                           onMouseEnter={() => {
@@ -590,15 +619,32 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                 </motion.div>
               </motion.div>
 
+              {/* Mini Side Slider (visible when expanded) */}
+              {showMore && (
+                <div className="w-1.5 flex flex-col items-center justify-start bg-[#1b60bb]/10 rounded-full shrink-0 relative overflow-hidden py-1 my-2">
+                  <div 
+                    className="absolute left-0 right-0 bg-[#1b60bb] rounded-full w-full transition-all duration-75"
+                    style={{
+                      top: `${scrollProgress * 80}%`,
+                      height: '20%',
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+
               {/* Show More Gradient Overlay */}
               {!showMore && (
-                <div className="absolute bottom-0 left-0 w-full h-24 md:h-28 bg-gradient-to-t from-white via-white/95 to-transparent rounded-b-[24px] flex items-end p-5 md:p-8 pointer-events-none z-10">
+                <div className="absolute bottom-0 left-0 w-full h-24 md:h-28 bg-gradient-to-t from-white via-white/95 to-transparent rounded-b-[24px] flex items-end justify-between p-5 md:p-8 pointer-events-none z-10">
                   <button
                     onClick={() => setShowMore(true)}
-                    className="text-slate-400 font-sans text-[15px] hover:text-[#1b60bb] transition-colors pointer-events-auto font-medium"
+                    className="text-slate-400 font-sans text-[15px] hover:text-[#1b60bb] transition-colors pointer-events-auto font-medium cursor-pointer"
                   >
                     See More...
                   </button>
+                  <span className="text-slate-400 font-sans text-xs md:text-sm font-medium">
+                    Click logos to interact
+                  </span>
                 </div>
               )}
 
@@ -607,14 +653,17 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="mt-6 pt-4 border-t border-slate-100 flex justify-start"
+                  className="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center"
                 >
                   <button
                     onClick={() => setShowMore(false)}
-                    className="text-slate-400 font-sans text-[15px] hover:text-[#1b60bb] transition-colors font-medium"
+                    className="text-slate-400 font-sans text-[15px] hover:text-[#1b60bb] transition-colors font-medium cursor-pointer"
                   >
                     See Less...
                   </button>
+                  <span className="text-slate-400 font-sans text-xs md:text-sm font-medium">
+                    Click logos to interact
+                  </span>
                 </motion.div>
               )}
             </motion.div>
@@ -622,6 +671,32 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
           </div>
         </div>
       </div>
+      {/* Custom Scrollbar for grid */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .custom-scrollbar-grid {
+          -webkit-overflow-scrolling: touch;
+          scroll-behavior: smooth;
+          will-change: scroll-position, transform;
+        }
+        .custom-scrollbar-grid::-webkit-scrollbar {
+          width: 5px;
+        }
+        .custom-scrollbar-grid::-webkit-scrollbar-track {
+          background: rgba(27, 96, 187, 0.05);
+          border-radius: 8px;
+        }
+        .custom-scrollbar-grid::-webkit-scrollbar-thumb {
+          background: rgba(27, 96, 187, 0.25);
+          border-radius: 8px;
+        }
+        .custom-scrollbar-grid::-webkit-scrollbar-thumb:hover {
+          background: rgba(27, 96, 187, 0.45);
+        }
+        .logo-grid-item {
+          will-change: transform, opacity;
+          transform: translate3d(0, 0, 0);
+        }
+      `}} />
     </div>
   );
 }

@@ -161,7 +161,7 @@ export default function InteractiveMap({
   return (
     <div className={`w-full h-full relative z-10 ${className}`}>
       <style>{`
-        .leaflet-container { background: #eff9ff !important; }
+        .leaflet-container { background: #eff9ff !important; outline: none !important; }
         .custom-popup .leaflet-popup-content-wrapper {
           background: rgba(255, 255, 255, 0.95) !important;
           border: 1px solid rgba(27, 96, 187, 0.15) !important;

@@ -195,11 +195,13 @@ export async function getInstitutions(): Promise<Institution[]> {
     // Removed dynamic timestamp to allow Next.js ISR caching
     const sheetUrl = process.env.INSTITUTIONS_SPREADSHEET_URL || 'https://docs.google.com/spreadsheets/d/1HXlzT504-AhqzfU6Nm3bktAspIjaQm2l1z45qROZrFc/export?format=csv&gid=1582106736';
     
-    // Fetch from sheet with ISR caching (1 hour)
+    // Fetch from sheet dynamically to reflect changes immediately
     const response = await fetch(sheetUrl, { 
-      next: { revalidate: 3600 },
+      cache: 'no-store',
       headers: {
-        'User-Agent': 'Mozilla/5.0'
+        'User-Agent': 'Mozilla/5.0',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
       }
     });
 

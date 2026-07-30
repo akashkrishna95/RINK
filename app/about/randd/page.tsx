@@ -26,10 +26,10 @@ export default function RandDGrantPage() {
             transition={{ duration: 0.6 }}
           >
 
-            <h1 className="font-helios text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="font-helios text-[32px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Research & Development <span className="text-[#5cc4fe]">Grant</span>
             </h1>
-            <p className="text-lg md:text-xl text-white/80 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white/80 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed">
               Catalyzing hardware innovation by supporting startups to develop breakthrough products and technologies.
             </p>
           </motion.div>
@@ -69,33 +69,33 @@ export default function RandDGrantPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="font-helios text-3xl md:text-4xl font-bold text-[#1b60bb] mb-6">Empowering Hardware Startups</h2>
-            <p className="text-slate-600 font-poppins text-lg leading-relaxed mb-6">
+            <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-[#1b60bb] mb-6">Empowering Hardware Startups</h2>
+            <p className="text-slate-600 font-poppins text-xs sm:text-sm md:text-base leading-relaxed mb-6">
               Designed to support startups in developing innovative products, technologies, or solutions through rigorous research and development.
             </p>
-            <p className="text-slate-600 font-poppins text-lg leading-relaxed mb-8">
+            <p className="text-slate-600 font-poppins text-xs sm:text-sm md:text-base leading-relaxed mb-8">
               This grant specifically targets hardware startups with a strong R&D focus, encouraging deep-tech innovation and product development. Funding is directed primarily toward hardware development, prioritizing startups that have secured patents or are in the process of scaling.
             </p>
 
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-blue-50 mb-8">
-              <h3 className="font-helios font-bold text-slate-800 text-lg mb-4">Key Eligibility Criteria</h3>
+              <h3 className="font-helios font-bold text-slate-800 text-base sm:text-lg mb-4">Key Eligibility Criteria</h3>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <Settings className="text-[#5cc4fe] mt-0.5 shrink-0" size={20} />
-                  <span className="font-poppins text-slate-700">Hardware startups with a strong R&D focus</span>
+                  <span className="font-poppins text-slate-700 text-xs sm:text-sm md:text-base">Hardware startups with a strong R&D focus</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Microscope className="text-[#5cc4fe] mt-0.5 shrink-0" size={20} />
-                  <span className="font-poppins text-slate-700">Must have a working prototype</span>
+                  <span className="font-poppins text-slate-700 text-xs sm:text-sm md:text-base">Must have a working prototype</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Coins className="text-[#5cc4fe] mt-0.5 shrink-0" size={20} />
-                  <span className="font-poppins text-slate-700">Associated with an approved incubator in Kerala</span>
+                  <span className="font-poppins text-slate-700 text-xs sm:text-sm md:text-base">Associated with an approved incubator in Kerala</span>
                 </li>
               </ul>
             </div>
             
-            <a href="https://startupmission.kerala.gov.in/schemes/rd-grant" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#1b60bb] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#154a93] transition-colors shadow-md hover:shadow-lg group">
+            <a href="https://startupmission.kerala.gov.in/schemes/rd-grant" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#1b60bb] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#154a93] transition-colors shadow-md hover:shadow-lg group text-xs sm:text-sm md:text-base">
               Know More <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
             </a>
           </motion.div>

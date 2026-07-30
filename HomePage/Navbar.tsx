@@ -69,9 +69,9 @@ export default function Navbar() {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/RomiPortal', label: 'ROMI AI' },
-    { href: '/technologies', label: 'Technologies' },
-    { href: '/instrumentation', label: 'Instrumentation' },
-    { href: '/events', label: 'Events' },
+    { href: 'https://rink-ksum.vercel.app/', label: 'Technologies' },
+    { href: 'https://instruments.startupmission.in/', label: 'Instrumentation' },
+    { href: '/programs', label: 'Programs' },
     { href: '/about#contact', label: 'Contact Us' },
   ];
 
@@ -124,6 +124,8 @@ export default function Navbar() {
               <Link
                 key={link.label}
                 href={link.href}
+                target={link.href.startsWith('http') ? '_blank' : undefined}
+                rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                 onClick={(e) => handleLinkClick(e, link.href)}
                 className="relative font-helios text-[15px] font-medium text-[#1b60bb] hover:text-[#0f3a6d] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1b60bb] rounded-sm px-1 py-1.5 group"
               >
@@ -168,6 +170,8 @@ export default function Navbar() {
                  <Link
                   key={link.label}
                   href={link.href}
+                  target={link.href.startsWith('http') ? '_blank' : undefined}
+                  rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                   onClick={(e) => {
                     handleLinkClick(e, link.href);
                     setIsMobileMenuOpen(false);

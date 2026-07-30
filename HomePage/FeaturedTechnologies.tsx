@@ -204,7 +204,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
 
         {/* Top Inverted Curve Mask with Title */}
         <div
-          className="absolute top-0 left-0 right-0 h-[140px] md:h-[180px] bg-[#F3F7FB] rounded-b-[3rem] md:rounded-b-[4rem] z-10 w-full flex items-center justify-center pt-4 shadow-sm"
+          className="absolute top-0 left-0 right-0 h-[140px] md:h-[180px] bg-[#eff9ff] rounded-b-[3rem] md:rounded-b-[4rem] z-10 w-full flex items-center justify-center pt-4 shadow-sm"
         >
           <h2 className="font-helios font-black text-3xl md:text-[45px] lg:text-[50px] text-[#1b60bb] tracking-wide px-4 text-center leading-tight">
             Explore Technologies
@@ -223,7 +223,11 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
           <div
             ref={containerRef}
             className="flex gap-4 md:gap-6 overflow-x-auto pb-8 pt-4 md:pb-12 md:pt-6 px-[10vw] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] cursor-grab active:cursor-grabbing snap-y"
-            style={{ WebkitOverflowScrolling: 'touch' }}
+            style={{ 
+              WebkitOverflowScrolling: 'touch',
+              transform: 'translateZ(0)',
+              willChange: 'scroll-position',
+            }}
           >
             {extendedTechnologies.map((tech, index) => {
               const uniqueId = `${tech.id}-${index}`;
@@ -232,6 +236,10 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
                 <div
                   key={uniqueId}
                   className="flex-shrink-0 w-[240px] xs:w-[260px] sm:w-[280px] md:w-[320px] relative h-[360px] sm:h-[380px] md:h-[420px]"
+                  style={{
+                    contentVisibility: 'auto',
+                    containIntrinsicSize: '320px 420px',
+                  }}
                 >
                   <TechnologyCard 
                     id={tech.id}
@@ -256,7 +264,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
           <h3 className="text-[#1b60bb] text-[16px] md:text-[20px] font-medium text-center mb-3 leading-snug">
             Wanna Know What&apos;s New Technology<br className="hidden md:block" /> for your Startup?
           </h3>
-          <Link href="/technologies/browse_technologies">
+          <Link href="https://rink-ksum.vercel.app/" target="_blank" rel="noopener noreferrer">
             <button className="group/btn bg-[#0057b7] hover:bg-[#004494] text-white px-5 py-2 md:px-6 md:py-2.5 rounded-lg font-semibold text-sm md:text-base flex items-center gap-1.5 shadow-sm transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-md">
               Explore More
               <ArrowUpRight

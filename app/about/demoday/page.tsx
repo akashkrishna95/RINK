@@ -1,25 +1,56 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Play, CheckCircle2, Users, Lightbulb, TrendingUp } from 'lucide-react';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
 
 export default function DemoDayPage() {
-  const videos = [
-    { id: '4_4w6dkO1ik', title: 'ICAR-SUGARCANE BREEDING INSTITUTE KANNUR' },
-    { id: 'bY5FVptw0uI', title: 'MG UNIVERSITY' },
-    { id: 'uJnU7nZgzs8', title: 'Centre for Materials for Electronics Technology, CMET' },
-    { id: 'U0kmZCbR3nA', title: 'National Institute For Interdisciplinary Science and Technology, NIIST' },
-    { id: 'a3hbMuF5zl4', title: 'Central Plantation Crops Research Institute (CPCRI)' },
-    { id: '5jrxaZ5w7e0', title: 'CENTRAL TUBER CROPS RESEARCH INSTITUTE (CTCRI)' },
-    { id: 'NojFCP84yls', title: 'KERALA UNIVERSITY OF FISHERIES & OCEAN STUDIES (KUFOS)' },
-    { id: 'IF-XZPllRFU', title: 'Centre for Development of Advanced Computing (C-DAC)' },
-    { id: '8LDcim7TwwI', title: 'National Technology Day Special Demo Day' }
-  ];
+  const [videos, setVideos] = useState<{ id: string; title: string }[]>([]);
+  const [activeVideo, setActiveVideo] = useState<{ id: string; title: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [hasScrolledIntoView, setHasScrolledIntoView] = useState(false);
+  const playerRef = useRef<HTMLDivElement>(null);
 
-  const [activeVideo, setActiveVideo] = useState(videos[0]);
+  useEffect(() => {
+    async function loadVideos() {
+      try {
+        setLoading(true);
+        const res = await fetch('/api/demoday', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Failed to fetch videos');
+        const data = await res.json();
+        if (data.videos && data.videos.length > 0) {
+          setVideos(data.videos);
+          setActiveVideo(data.videos[0]);
+        }
+      } catch (err) {
+        console.error('Error loading Demo Day videos:', err);
+        setError('Failed to load videos. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadVideos();
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasScrolledIntoView(true);
+          observer.disconnect(); // Trigger only once
+        }
+      },
+      { threshold: 0.15 }
+    );
+    if (playerRef.current) {
+      observer.observe(playerRef.current);
+    }
+    return () => observer.disconnect();
+  }, [loading]);
 
   return (
     <main className="min-h-screen bg-[#F4F7FB] overflow-x-hidden">
@@ -41,11 +72,11 @@ export default function DemoDayPage() {
             transition={{ duration: 0.6 }}
           >
 
-            <h1 className="font-helios text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="font-helios text-[32px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Demo Day & <br className="hidden md:block" />
               <span className="text-[#5cc4fe]">Exposure Visits</span>
             </h1>
-            <p className="text-lg md:text-xl text-white/80 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white/80 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed">
               Bridging the gap between groundbreaking research and commercial success by connecting innovators directly with industry and investors.
             </p>
           </motion.div>
@@ -61,15 +92,15 @@ export default function DemoDayPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="font-helios text-3xl md:text-4xl font-bold text-[#1b60bb] mb-6">Connecting Research & Industry</h2>
-            <p className="text-slate-600 font-poppins text-lg leading-relaxed mb-6">
+            <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-[#1b60bb] mb-6">Connecting Research & Industry</h2>
+            <p className="text-slate-600 font-poppins text-xs sm:text-sm md:text-base leading-relaxed mb-6">
               RINK Demo Day acts as a vital bridge between leading research institutions and the startup ecosystem. We provide a platform for researchers and innovators to showcase their groundbreaking technologies, patents, and products.
             </p>
-            <p className="text-slate-600 font-poppins text-lg leading-relaxed mb-8">
+            <p className="text-slate-600 font-poppins text-xs sm:text-sm md:text-base leading-relaxed mb-8">
               Entrepreneurs, investors, and industry leaders get exclusive access to explore the commercial potential of these innovations, fostering collaborations that translate lab research into market-ready solutions.
             </p>
             
-            <a href="/events" className="inline-flex items-center gap-2 bg-[#1b60bb] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#154a93] transition-colors shadow-md hover:shadow-lg group">
+            <a href="/programs" className="inline-flex items-center gap-2 bg-[#1b60bb] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#154a93] transition-colors shadow-md hover:shadow-lg group text-xs sm:text-sm md:text-base">
               Join the Next Demo Day <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
             </a>
           </motion.div>
@@ -104,40 +135,80 @@ export default function DemoDayPage() {
       <section className="py-20 bg-[#011a38] text-white">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="text-center mb-12">
-            <h2 className="font-helios text-3xl md:text-4xl font-bold text-[#5cc4fe] mb-4">Past Demo Day Pitches</h2>
-            <p className="text-white/80 font-poppins max-w-2xl mx-auto text-lg">Watch highlights and pitches from our previous Demo Days.</p>
+            <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-[#5cc4fe] mb-4">Past Demo Day Pitches</h2>
+            <p className="text-white/80 font-poppins max-w-2xl mx-auto text-xs sm:text-sm md:text-base">Watch highlights and pitches from our previous Demo Days.</p>
           </div>
           
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Main Player */}
-            <div className="lg:w-2/3 w-full">
-              <motion.div 
-                key={activeVideo.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                className="w-full aspect-video rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 bg-black"
-              >
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src={`https://www.youtube.com/embed/${activeVideo.id}?autoplay=1&rel=0`}
-                  title={activeVideo.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full border-none"
-                ></iframe>
-              </motion.div>
-              <h3 className="font-helios text-2xl md:text-3xl font-bold mt-6 text-white">{activeVideo.title}</h3>
+            <div ref={playerRef} className="lg:w-2/3 w-full">
+              {loading ? (
+                <div className="w-full aspect-video rounded-3xl bg-slate-800 animate-pulse flex flex-col items-center justify-center text-white/50 font-poppins gap-3">
+                  <div className="w-12 h-12 rounded-full border-4 border-white/20 border-t-[#5cc4fe] animate-spin" />
+                  <span>Loading video player...</span>
+                </div>
+              ) : error ? (
+                <div className="w-full aspect-video rounded-3xl bg-slate-900/60 border border-red-500/20 flex items-center justify-center text-red-300 font-poppins px-6 text-center">
+                  {error}
+                </div>
+              ) : activeVideo ? (
+                <>
+                  <motion.div 
+                    key={activeVideo.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-full aspect-video rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 bg-black relative"
+                  >
+                    {hasScrolledIntoView ? (
+                      <iframe
+                        width="100%"
+                        height="100%"
+                        src={`https://www.youtube.com/embed/${activeVideo.id}?autoplay=1&rel=0`}
+                        title={activeVideo.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full border-none"
+                      ></iframe>
+                    ) : (
+                      <div 
+                        className="w-full h-full relative flex items-center justify-center bg-black/60 group cursor-pointer"
+                        onClick={() => setHasScrolledIntoView(true)}
+                      >
+                        <img 
+                          src={`https://img.youtube.com/vi/${activeVideo.id}/mqdefault.jpg`} 
+                          alt={activeVideo.title}
+                          className="absolute inset-0 w-full h-full object-cover opacity-50"
+                        />
+                        <div className="z-10 w-16 h-16 rounded-full bg-[#1b60bb] hover:bg-[#154a93] text-white flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 active:scale-95 duration-300">
+                          <Play fill="white" size={24} className="ml-1" />
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                  <h3 className="font-helios text-xl sm:text-2xl md:text-3xl font-bold mt-6 text-white">{activeVideo.title}</h3>
+                </>
+              ) : (
+                <div className="w-full aspect-video rounded-3xl bg-slate-900/60 flex items-center justify-center text-white/50 font-poppins">
+                  No video selected.
+                </div>
+              )}
             </div>
 
             {/* Playlist Grid */}
             <div className="lg:w-1/3 w-full max-h-[600px] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
-              {videos.map((video) => (
+              {loading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="w-full h-24 rounded-xl bg-white/5 border border-white/5 animate-pulse" />
+                ))
+              ) : videos.map((video) => (
                 <button
                   key={video.id}
-                  onClick={() => setActiveVideo(video)}
-                  className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 text-left ${activeVideo.id === video.id ? 'bg-[#1b60bb]/40 border border-[#5cc4fe]/50' : 'bg-white/5 border border-transparent hover:bg-white/10 hover:border-white/20'}`}
+                  onClick={() => {
+                    setActiveVideo(video);
+                    setHasScrolledIntoView(true);
+                  }}
+                  className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 text-left ${activeVideo?.id === video.id ? 'bg-[#1b60bb]/40 border border-[#5cc4fe]/50' : 'bg-white/5 border border-transparent hover:bg-white/10 hover:border-white/20'}`}
                 >
                   <div className="relative w-32 aspect-video shrink-0 rounded-lg overflow-hidden bg-black/50">
                     <img 
@@ -145,7 +216,7 @@ export default function DemoDayPage() {
                       alt={video.title}
                       className="w-full h-full object-cover"
                     />
-                    {activeVideo.id === video.id && (
+                    {activeVideo?.id === video.id && (
                       <div className="absolute inset-0 bg-[#1b60bb]/50 flex items-center justify-center">
                         <Play fill="white" size={20} className="text-white drop-shadow-md" />
                       </div>
@@ -185,9 +256,9 @@ export default function DemoDayPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <span className="text-[#1b60bb] font-helios font-bold tracking-wider uppercase text-sm mb-2 block">Exposure Visits</span>
-              <h2 className="font-helios text-3xl md:text-4xl font-bold text-slate-800 mb-6">Bringing Entrepreneurs Closer to Research</h2>
-              <p className="text-slate-600 font-poppins text-lg leading-relaxed mb-8">
+              <span className="text-[#1b60bb] font-helios font-bold tracking-wider uppercase text-xs sm:text-sm mb-2 block">Exposure Visits</span>
+              <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-6">Bringing Entrepreneurs Closer to Research</h2>
+              <p className="text-slate-600 font-poppins text-xs sm:text-sm md:text-base leading-relaxed mb-8">
                 Curated visits for entrepreneurs, startups, and innovators to leading research institutions and scientific facilities in Kerala.
               </p>
               
@@ -199,7 +270,7 @@ export default function DemoDayPage() {
                 ].map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <CheckCircle2 className="text-[#5cc4fe] mt-1 shrink-0" size={20} />
-                    <span className="font-poppins text-slate-700">{item}</span>
+                    <span className="font-poppins text-slate-700 text-xs sm:text-sm md:text-base">{item}</span>
                   </li>
                 ))}
               </ul>

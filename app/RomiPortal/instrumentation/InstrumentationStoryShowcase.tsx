@@ -1,3 +1,6 @@
+//app\RomiPortal\instrumentation\InstrumentationStoryShowcase.tsx
+
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -623,9 +626,6 @@ export default function InstrumentationStoryShowcase() {
       {/* INTERACTIVE STORY PROGRESS BAR */}
       <div className="w-full mb-8">
         <div className="flex items-center justify-between mb-3 px-1">
-          <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400 font-mono">
-            Interactive Story Walkthrough
-          </span>
           <button
             type="button"
             onClick={() => setIsPlaying(!isPlaying)}
@@ -713,7 +713,7 @@ export default function InstrumentationStoryShowcase() {
                 // Only render Romi's bubble if the user has finished typing
                 animationPhase !== 'user-typing' && (
                   <div className="flex gap-3 items-start font-sans">
-                    <img src="/romi-avatar.png" alt="Romi" className="w-8 h-8 object-contain shrink-0" />
+                    <img src="/romi-avatar.webp" alt="Romi" className="w-8 h-8 object-contain shrink-0" />
                     <div className="flex-1 text-xs font-sans space-y-3 min-w-0">
                       
                       {animationPhase === 'ai-typing' ? (
@@ -778,7 +778,7 @@ export default function InstrumentationStoryShowcase() {
                 /* STEPS 1, 2, 3: CARDS LIST (Images 2, 3, 4) */
                 animationPhase !== 'user-typing' && (
                   <div className="flex gap-3 items-start font-sans">
-                    <img src="/romi-avatar.png" alt="Romi" className="w-8 h-8 object-contain shrink-0" />
+                    <img src="/romi-avatar.webp" alt="Romi" className="w-8 h-8 object-contain shrink-0" />
                     <div className="flex-1 text-xs font-sans space-y-3 min-w-0">
                       
                       {animationPhase === 'ai-typing' ? (

@@ -26,10 +26,10 @@ export default function IPRSupportPage() {
             transition={{ duration: 0.6 }}
           >
 
-            <h1 className="font-helios text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="font-helios text-[32px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               IPR <span className="text-[#5cc4fe]">Support</span>
             </h1>
-            <p className="text-lg md:text-xl text-white/80 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white/80 font-poppins mb-10 max-w-2xl mx-auto leading-relaxed">
               Protect, manage, and commercialize your intellectual property with expert guidance and support from RINK partner institutions.
             </p>
           </motion.div>
@@ -51,8 +51,8 @@ export default function IPRSupportPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="font-helios text-3xl md:text-4xl font-bold text-slate-800 mb-6">Safeguarding Your Innovations</h2>
-              <p className="text-slate-600 font-poppins text-lg leading-relaxed mb-8">
+              <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-6">Safeguarding Your Innovations</h2>
+              <p className="text-slate-600 font-poppins text-xs sm:text-sm md:text-base leading-relaxed mb-8">
                 RINK, through its partner institutions, offers comprehensive IPR-related support for innovators. We help you navigate the complexities of intellectual property to ensure your breakthrough ideas are protected and ready for commercialization.
               </p>
               
@@ -62,8 +62,8 @@ export default function IPRSupportPage() {
                     <Search className="text-[#1b60bb]" size={24} />
                   </div>
                   <div>
-                    <h3 className="font-helios font-bold text-slate-800 text-xl mb-1">Free Searches</h3>
-                    <p className="text-slate-500 font-poppins">Comprehensive patent and trademark searches to validate your ideas.</p>
+                    <h3 className="font-helios font-bold text-slate-800 text-lg sm:text-xl mb-1">Free Searches</h3>
+                    <p className="text-slate-500 font-poppins text-xs sm:text-sm md:text-base">Comprehensive patent and trademark searches to validate your ideas.</p>
                   </div>
                 </div>
                 
@@ -72,23 +72,23 @@ export default function IPRSupportPage() {
                     <Users className="text-[#1b60bb]" size={24} />
                   </div>
                   <div>
-                    <h3 className="font-helios font-bold text-slate-800 text-xl mb-1">Expert Interaction</h3>
-                    <p className="text-slate-500 font-poppins">One-on-one sessions with empanelled IPR experts and attorneys.</p>
+                    <h3 className="font-helios font-bold text-slate-800 text-lg sm:text-xl mb-1">Expert Interaction</h3>
+                    <p className="text-slate-500 font-poppins text-xs sm:text-sm md:text-base">One-on-one sessions with empanelled IPR experts and attorneys.</p>
                   </div>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-slate-100">
-                <h3 className="font-helios font-semibold text-slate-700 text-lg mb-4">Who Can Apply?</h3>
+                <h3 className="font-helios font-semibold text-slate-700 text-base sm:text-lg mb-4">Who Can Apply?</h3>
                 <div className="flex flex-wrap gap-3 mb-8">
                   {['Startups', 'Student Innovators', 'Research Scholars', 'Faculty & Scientists'].map((tag, i) => (
-                    <span key={i} className="bg-slate-100 text-slate-600 px-4 py-2 rounded-lg text-sm font-medium font-poppins">
+                    <span key={i} className="bg-slate-100 text-slate-600 px-4 py-2 rounded-lg text-xs sm:text-sm font-medium font-poppins">
                       {tag}
                     </span>
                   ))}
                 </div>
                 
-                <a href="https://forms.gle/LkgvgzVRTj6WhQPu9" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#1b60bb] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#154a93] transition-all shadow-md hover:shadow-lg group">
+                <a href="https://forms.gle/LkgvgzVRTj6WhQPu9" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#1b60bb] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#154a93] transition-all shadow-md hover:shadow-lg group text-xs sm:text-sm md:text-base">
                   Book Your Slot <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
                 </a>
               </div>
@@ -110,8 +110,8 @@ export default function IPRSupportPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#011a38]/90 via-[#011a38]/20 to-transparent flex flex-col justify-end p-8">
                   <Lightbulb size={40} className="text-[#5cc4fe] mb-4" />
-                  <h3 className="font-helios text-2xl font-bold text-white mb-2">Secure Your Future</h3>
-                  <p className="text-white/80 font-poppins text-sm">Don't let your research go unprotected. Register your IP today.</p>
+                  <h3 className="font-helios text-xl sm:text-2xl font-bold text-white mb-2">Secure Your Future</h3>
+                  <p className="text-white/80 font-poppins text-xs sm:text-sm">Don't let your research go unprotected. Register your IP today.</p>
                 </div>
               </div>
               

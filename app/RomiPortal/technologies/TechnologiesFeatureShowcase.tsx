@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, Search, MessageSquare, BarChart3, ArrowRight, CheckCircle2, 
@@ -13,6 +13,7 @@ export default function TechnologiesFeatureShowcase() {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [flippedCardId, setFlippedCardId] = useState<number | null>(null);
+  const chatScrollRef = useRef<HTMLDivElement>(null);
   
   // Sequential Animation Flags
   const [userText, setUserText] = useState<string>('');
@@ -168,6 +169,30 @@ export default function TechnologiesFeatureShowcase() {
       clearTimeout(transitionTimeout);
     };
   }, [isStepComplete, activeStep, isPlaying]);
+
+  // Scroll management for step transitions and animations
+  useEffect(() => {
+    if (chatScrollRef.current) {
+      chatScrollRef.current.scrollTop = 0;
+    }
+  }, [activeStep]);
+
+  useEffect(() => {
+    if (!chatScrollRef.current) return;
+
+    // Smooth scroll to bottom when bar graph projections are revealed in Step 3
+    if (activeStep === 2 && showBarGraph) {
+      const scrollTimeout = setTimeout(() => {
+        if (chatScrollRef.current) {
+          chatScrollRef.current.scrollTo({
+            top: chatScrollRef.current.scrollHeight,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+      return () => clearTimeout(scrollTimeout);
+    }
+  }, [showBarGraph, activeStep]);
 
   // STRICTLY 3 SUBCARDS TOTAL
   const steps = [
@@ -373,9 +398,6 @@ export default function TechnologiesFeatureShowcase() {
       {/* INTERACTIVE STORY PROGRESS BAR */}
       <div className="w-full mb-6">
         <div className="flex items-center justify-between mb-3 px-1">
-          <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-zinc-400 font-mono">
-            Interactive Story Walkthrough
-          </span>
           <button
             type="button"
             onClick={() => setIsPlaying(!isPlaying)}
@@ -424,7 +446,7 @@ export default function TechnologiesFeatureShowcase() {
         </div>
 
         {/* CHAT WINDOW SIMULATION */}
-        <div className="bg-white/90 dark:bg-zinc-950/90 border border-gray-200/80 dark:border-zinc-800 rounded-2xl p-2.5 sm:p-4 md:p-5 shadow-inner min-h-[340px] sm:min-h-[370px] flex flex-col justify-between relative backdrop-blur-md">
+        <div className="bg-white/90 dark:bg-zinc-950/90 border border-gray-200/80 dark:border-zinc-800 rounded-2xl p-2.5 sm:p-4 md:p-5 shadow-inner h-[550px] sm:h-[580px] md:h-[600px] flex flex-col justify-between relative backdrop-blur-md">
           
           {/* HEADER BAR INSIDE CHAT */}
           <div className="flex flex-row flex-wrap items-center justify-between pb-2.5 border-b border-gray-100 dark:border-zinc-800/80 mb-3 gap-2">
@@ -440,7 +462,7 @@ export default function TechnologiesFeatureShowcase() {
           </div>
 
           {/* CHAT MESSAGES STREAM */}
-          <div className="flex flex-col gap-3.5 flex-1 overflow-y-auto mb-3 pr-1">
+          <div ref={chatScrollRef} className="flex flex-col gap-3.5 flex-1 overflow-y-auto mb-3 pr-1">
             
             {/* PHASE 1: USER MESSAGE BUBBLE */}
             <div className="flex gap-2 max-w-3xl ml-auto flex-row-reverse items-start">
@@ -456,7 +478,7 @@ export default function TechnologiesFeatureShowcase() {
             {/* PHASE 2: THINKING INDICATOR */}
             {isThinking && (
               <div className="flex gap-2.5 max-w-3xl mr-auto items-center">
-                <img src="/romi-avatar.png" alt="Romi" className="w-7 h-7 object-contain shrink-0" />
+                <img src="/romi-avatar.webp" alt="Romi" className="w-7 h-7 object-contain shrink-0" />
                 <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-full px-3.5 py-1.5 shadow-sm flex items-center gap-2 text-[10px] sm:text-xs text-gray-600 dark:text-zinc-400 font-sans">
                   <div className="w-2 h-2 rounded-full bg-[#1b60bb] animate-ping" />
                   <span>Romi is searching Kerala's live technology catalogue...</span>
@@ -467,7 +489,7 @@ export default function TechnologiesFeatureShowcase() {
             {/* PHASE 3: AI ASSISTANT MESSAGE STREAM WITH HIGHLIGHTED TERMS */}
             {(aiText || isTypingAi || aiDone) && (
               <div className={`flex gap-2.5 mr-auto items-start w-full ${activeStep === 0 ? 'max-w-3xl' : 'w-full'}`}>
-                <img src="/romi-avatar.png" alt="Romi" className="w-7 h-7 sm:w-9 sm:h-9 object-contain shrink-0 mt-0.5" />
+                <img src="/romi-avatar.webp" alt="Romi" className="w-7 h-7 sm:w-9 sm:h-9 object-contain shrink-0 mt-0.5" />
                 <div className="text-[11px] sm:text-xs text-gray-800 dark:text-zinc-200 flex-1 min-w-0 font-sans leading-relaxed w-full">
                   
                   {/* Clean Text Stream */}

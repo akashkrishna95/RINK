@@ -136,7 +136,7 @@ export default function TechnologiesHero() {
         {/* Background Image Setup */}
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/images/tech-hero-bg.png" 
+            src="/images/tech-hero-bg.webp" 
             alt="Technologies Background" 
             fill 
             className="object-cover" 

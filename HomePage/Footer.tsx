@@ -40,15 +40,17 @@ export default function Footer() {
             <ul className="space-y-3">
               {[
                 { label: 'About', href: '/about' },
-                { label: 'Technologies', href: '/technologies' },
-                { label: 'Instrumentation', href: '#' },
-                { label: 'Researchpreneurship', href: '/about/incubation' },
-                { label: 'Events', href: '/events' },
+                { label: 'Technologies', href: 'https://rink-ksum.vercel.app/' },
+                { label: 'Instrumentation', href: 'https://instruments.startupmission.in/' },
+                { label: 'Researchpreneurship', href: '/about/researchpreneurship' },
+                { label: 'Programs', href: '/programs' },
                 { label: 'Contact', href: '/about#contact' }
               ].map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
+                    target={link.href.startsWith('http') ? '_blank' : undefined}
+                    rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                     className="font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base block"
                   >
                     {link.label}

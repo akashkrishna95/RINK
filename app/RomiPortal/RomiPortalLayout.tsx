@@ -123,16 +123,27 @@ function cleanMarkdownForParsing(text: string): string {
 function parseMarketDataFromText(text: string) {
   if (!text) return null;
   const clean = cleanMarkdownForParsing(text);
-  const tamMatch = clean.match(/(?:Total\s+Addressable\s+Market\s+)?(?:\bTAM\b|\(TAM\))\s*(?:[:\-–—]|is|of|valued\s+at)?\s*(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)?\b)/i);
-  const samMatch = clean.match(/(?:Serviceable\s+Available\s+Market|Serviceable\s+Addressable\s+Market)?\s*(?:\bSAM\b|\(SAM\))\s*(?:[:\-–—]|is|of|valued\s+at)?\s*(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)?\b)/i);
-  const somMatch = clean.match(/(?:Serviceable\s+Obtainable\s+Market)?\s*(?:\bSOM\b|\(SOM\))\s*(?:[:\-–—]|is|of|valued\s+at)?\s*(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)?\b)/i);
 
-  if (tamMatch && samMatch && somMatch) {
-    return {
-      tam: tamMatch[1].trim(),
-      sam: samMatch[1].trim(),
-      som: somMatch[1].trim()
-    };
+  const extractValueForMetric = (metricRegex: RegExp): string | null => {
+    const match = clean.match(metricRegex);
+    if (!match) return null;
+    const startIndex = match.index! + match[0].length;
+    // Look ahead up to 250 characters for a financial figure
+    const window = clean.slice(startIndex, startIndex + 250);
+    const valMatch = window.match(/(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)?\b)/i);
+    if (valMatch && valMatch[1] && /\d/.test(valMatch[1]) && !/^20\d\d$/.test(valMatch[1].trim())) {
+      const trimmed = valMatch[1].trim();
+      return trimmed.startsWith('$') ? trimmed : `$${trimmed}`;
+    }
+    return null;
+  };
+
+  const tam = extractValueForMetric(/(?:Total\s+Addressable\s+Market\s*(?:\([^)]+\))?|\bTAM\b|\(TAM\))/i);
+  const sam = extractValueForMetric(/(?:Serviceable\s+Available\s+Market\s*(?:\([^)]+\))?|Serviceable\s+Addressable\s+Market\s*(?:\([^)]+\))?|\bSAM\b|\(SAM\))/i);
+  const som = extractValueForMetric(/(?:Serviceable\s+Obtainable\s+Market\s*(?:\([^)]+\))?|\bSOM\b|\(SOM\))/i);
+
+  if (tam && sam && som) {
+    return { tam, sam, som };
   }
   return null;
 }
@@ -142,26 +153,24 @@ function parseYearSeriesFromText(text: string) {
   const clean = cleanMarkdownForParsing(text);
   const seriesMap = new Map<number, { label: string; value: number; displayValue: string }>();
 
-  // Pattern 1: Year followed by Value (e.g., "2024: $10M" or "2024 is $10M")
-  const regex1 = /\b(20\d{2})\b\s*(?:[:\-–—]|is|of|valued\s+at|to\s+reach)?\s*(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)?\b)/gi;
-  let match;
-  while ((match = regex1.exec(clean)) !== null) {
+  // Extract all distinct 4-digit years in 2020-2039 range
+  const yearMatches = Array.from(clean.matchAll(/\b(20[2-3]\d)\b/g));
+  for (const match of yearMatches) {
     const year = parseInt(match[1], 10);
-    const displayVal = match[2].trim();
-    const numericVal = parseNumericValue(displayVal);
-    if (numericVal > 0) {
-      seriesMap.set(year, { label: String(year), value: numericVal, displayValue: displayVal });
-    }
-  }
+    if (seriesMap.has(year)) continue;
 
-  // Pattern 2: Value followed by Year (e.g., "$10M by 2024" or "$10M in 2024")
-  const regex2 = /(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)?\b)\s*(?:by|in|for|expected\s+by)\s*\b(20\d{2})\b/gi;
-  while ((match = regex2.exec(clean)) !== null) {
-    const displayVal = match[1].trim();
-    const year = parseInt(match[2], 10);
-    const numericVal = parseNumericValue(displayVal);
-    if (numericVal > 0 && !seriesMap.has(year)) {
-      seriesMap.set(year, { label: String(year), value: numericVal, displayValue: displayVal });
+    const idx = match.index!;
+    const windowStart = Math.max(0, idx - 60);
+    const windowEnd = Math.min(clean.length, idx + 100);
+    const windowText = clean.slice(windowStart, windowEnd);
+
+    const valMatch = windowText.match(/(\$?\d+(?:\.\d+)?\s*(?:M|B|T|Million|Billion|Trillion|Million\s+USD|M\s+USD|USD)\b)/i);
+    if (valMatch && valMatch[1]) {
+      const displayVal = valMatch[1].trim();
+      const numericVal = parseNumericValue(displayVal);
+      if (numericVal > 0) {
+        seriesMap.set(year, { label: String(year), value: numericVal, displayValue: displayVal.startsWith('$') ? displayVal : `$${displayVal}` });
+      }
     }
   }
 
@@ -411,6 +420,32 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
         setDeviceType('Tablet');
       } else {
         setDeviceType('Desktop');
+      }
+    }
+  }, []);
+
+  // Preload Leaflet resources for instant map initialization
+  useEffect(() => {
+    const LEAFLET_JS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';
+    const LEAFLET_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';
+
+    if (typeof window !== 'undefined') {
+      const w = window as any;
+      if (!w.L) {
+        // Pre-inject stylesheet
+        if (!document.querySelector(`link[href="${LEAFLET_CSS}"]`)) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = LEAFLET_CSS;
+          document.head.appendChild(link);
+        }
+        // Pre-inject javascript script
+        if (!document.querySelector(`script[src="${LEAFLET_JS}"]`)) {
+          const s = document.createElement('script');
+          s.src = LEAFLET_JS;
+          s.async = true;
+          document.body.appendChild(s);
+        }
       }
     }
   }, []);
@@ -1356,7 +1391,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
       <div
         className="flex-1 flex flex-col h-full relative overflow-hidden"
         style={{
-          backgroundImage: "url('/images/ROMI-PORTAL-BG.png')",
+          backgroundImage: "url('/images/ROMI-PORTAL-BG.webp')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -1422,7 +1457,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
             >
               {/* Sticky Progress Bar on Top */}
               {mode === 'researchpreneurship' && (
-                <div className="w-full pt-2.5 pb-4 z-30 shrink-0 sticky top-0 bg-gradient-to-b from-[#FDFDF9] to-[#FDFDF9]/0 dark:from-zinc-950 dark:to-transparent -mx-2 sm:-mx-4 md:-mx-8 px-2 sm:px-4 md:px-8 pointer-events-none">
+                <div className="w-full pt-2.5 pb-4 z-30 shrink-0 sticky top-0 -mx-2 sm:-mx-4 md:-mx-8 px-2 sm:px-4 md:px-8 pointer-events-none">
                   <div className="max-w-4xl mx-auto pointer-events-auto">
                     <RomiProgressBar
                       overallProgressPercent={assessmentState.progress ?? 0}
@@ -1441,7 +1476,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                     className="flex flex-col items-center max-w-xl mx-auto w-full"
                   >
                     <div className="w-16 h-16 sm:w-20 sm:h-20 mb-4 rounded-3xl bg-white/80 dark:bg-zinc-900/80 border border-gray-200/80 dark:border-zinc-700/80 p-3 shadow-md flex items-center justify-center backdrop-blur-md">
-                      <img src="/romi-avatar.png" alt="Romi AI" className="w-full h-full object-contain" />
+                      <img src="/romi-avatar.webp" alt="Romi AI" className="w-full h-full object-contain" />
                     </div>
                     <h2 className="text-xl sm:text-2xl font-bold font-helios text-gray-900 dark:text-white mb-2 tracking-tight">
                       Welcome to ROMI AI
@@ -1522,7 +1557,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                         <User size={14} />
                       </div>
                     ) : (
-                      <img src="/romi-avatar.png" alt="Romi" className="w-7 h-7 sm:w-12 sm:h-12 object-contain" />
+                      <img src="/romi-avatar.webp" alt="Romi" className="w-7 h-7 sm:w-12 sm:h-12 object-contain" />
                     )}
                   </div>
 
@@ -1853,7 +1888,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                                     const isInst = !!instLoc || !!msg.instrumentation;
                                     const websiteUrl = sheetItem?.url || instLoc?.url;
                                     const customHref = isInst
-                                      ? `https://rink-ui.vercel.app/instrument/${tech.technology_id}`
+                                      ? `https://rink-ui.vercel.app/instruments/${tech.technology_id}`
                                       : websiteUrl
                                         ? (websiteUrl.startsWith('http') ? websiteUrl : `https://${websiteUrl}`)
                                         : undefined;
@@ -2045,7 +2080,7 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
               {isThinking && (thinkingSessionId === currentSessionId || thinkingSessionId === sessionRef.current) && (
                 <div className="flex gap-3 max-w-4xl w-full mr-auto items-center">
                   <div className="shrink-0 flex items-center justify-center">
-                    <img src="/romi-avatar.png" alt="Romi" className="w-8 h-8 sm:w-12 sm:h-12 object-contain" />
+                    <img src="/romi-avatar.webp" alt="Romi" className="w-8 h-8 sm:w-12 sm:h-12 object-contain" />
                   </div>
                   <div className="mr-auto pl-1">
                     <RomiThinkingIndicator query={messages[messages.length - 1]?.content || ''} />

@@ -49,7 +49,8 @@ export default function MiniCard({ technology, className, customHref, isInstrume
         findAndSetImage(cachedInstrumentData);
       } else {
         if (!fetchPromise) {
-          fetchPromise = fetch('https://rink-git-cron.vercel.app/instrument.json')
+          const instrumentsUrl = process.env.NEXT_PUBLIC_INSTRUMENTS_JSON_URL || 'https://rink-git-cron.vercel.app/instrument.json';
+          fetchPromise = fetch(instrumentsUrl)
             .then(res => res.json())
             .catch(err => {
               console.error("Error fetching instrument data", err);
@@ -68,9 +69,11 @@ export default function MiniCard({ technology, className, customHref, isInstrume
     function findAndSetImage(data: any) {
       const inst = data.main_data?.find((item: any) => item.id === technology.technology_id);
       if (inst && inst.image_link) {
+        const instrumentsUrl = process.env.NEXT_PUBLIC_INSTRUMENTS_JSON_URL || 'https://rink-git-cron.vercel.app/instrument.json';
+        const baseUrl = instrumentsUrl.replace(/\/instrument\.json$/, '');
         const imgUrl = inst.image_link.startsWith('http') 
           ? inst.image_link 
-          : `https://rink-git-cron.vercel.app${inst.image_link}`;
+          : `${baseUrl}${inst.image_link}`;
         setDynamicImageUrl(imgUrl);
       }
     }
@@ -79,7 +82,7 @@ export default function MiniCard({ technology, className, customHref, isInstrume
   console.log("MiniCard received technology object:", technology);
 
   const defaultHref = isInstrumentation
-    ? `https://rink-ui.vercel.app/instrument/${technology.technology_id}`
+    ? `https://rink-ui.vercel.app/instruments/${technology.technology_id}`
     : `/technologies/${technology.technology_id}`;
 
 

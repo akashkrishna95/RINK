@@ -9,10 +9,10 @@ import Link from 'next/link';
 
 export default function AboutRink() {
   const featureCards = [
-    { title: 'Research Incubation Programs', icon: TrendingUp, href: '/about/incubation' },
+    { title: 'Research Incubation Programs', icon: TrendingUp, href: '/about/researchpreneurship' },
     { title: 'Demo Day & Exposure Visits', icon: UsersRound, href: '/about/demoday' },
     { title: 'IPR Support', icon: FileBadge, href: '/about/iprsupport' },
-    { title: 'Research & Development Grant', icon: Coins, href: '/about/randd' },
+    { title: 'Research & Development Grant', icon: Coins, href: '/about/RandD' },
   ];
 
   // Uniform arrow animation for all "View More" buttons
@@ -56,7 +56,7 @@ export default function AboutRink() {
               className="relative w-full h-full lg:h-[450px]"
             >
               <Image
-                src="/images/rink-3d-logo.svg"
+                src="/images/rink-3d-logo.webp"
                 alt="RINK 3D Logo"
                 fill
                 className="object-contain"
@@ -166,13 +166,11 @@ export default function AboutRink() {
           transition={{ ease: "linear", duration: 15, repeat: Infinity }}
           className="flex text-[#1b60bb] font-helios text-base md:text-lg font-medium tracking-widest uppercase w-max"
         >
-          <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK </span>
-          <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK </span>
-          <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK </span>
-          <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK </span>
+          <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK</span>
+          <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK</span>
+          <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK</span>
         </motion.div>
       </motion.div>
-
     </div>
   );
 }

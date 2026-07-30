@@ -4,7 +4,8 @@ import type { Metadata, Viewport } from 'next'
 import { Poppins } from 'next/font/google'
 import localFont from 'next/font/local'
 import NextTopLoader from 'nextjs-toploader'
-import RomiRedirectWidget from '@/HomePage/RomiAI/RomiRedirectWidget'
+// import RomiRedirectWidget from '@/HomePage/RomiAI/RomiRedirectWidget'
+import Script from 'next/script'
 
 import './globals.css'
 
@@ -32,11 +33,11 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/images/rink-3d-logo.svg',
-        type: 'image/svg+xml',
+        url: '/images/favicon.png',
+        type: 'image/png',
       },
     ],
-    apple: '/images/rink-3d-logo.svg',
+    apple: '/images/favicon.png',
   },
 }
 
@@ -60,9 +61,25 @@ export default function RootLayout({
         
         {children}
         
-        <RomiRedirectWidget />
+        {/* <RomiRedirectWidget /> */}
         
         {process.env.NODE_ENV === 'production' && <Analytics />}
+        
+        {/* Anti-download scripts for images and logos */}
+        <Script id="anti-download" strategy="afterInteractive">
+          {`
+            document.addEventListener('contextmenu', (e) => {
+              if (e.target.tagName === 'IMG' || e.target.closest('img')) {
+                e.preventDefault();
+              }
+            }, true);
+            document.addEventListener('dragstart', (e) => {
+              if (e.target.tagName === 'IMG' || e.target.closest('img')) {
+                e.preventDefault();
+              }
+            }, true);
+          `}
+        </Script>
       </body>
     </html>
   )

@@ -240,3 +240,35 @@
   scrollbar-width: thin !important;
   scrollbar-color: rgba(156, 163, 175, 0.4) transparent !important;
 }
+
+/* Prevent image dragging, text selection, and right-clicks on all images/logos */
+img {
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
+  -khtml-user-drag: none !important;
+  -moz-user-drag: none !important;
+  -o-user-drag: none !important;
+}
+
+/* Premium thin scrollbar for Institutions Grid */
+.institutions-grid-scrollbar::-webkit-scrollbar {
+  width: 6px !important;
+  display: block !important;
+}
+.institutions-grid-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.institutions-grid-scrollbar::-webkit-scrollbar-thumb {
+  background: #bde7ff !important;
+  border-radius: 10px !important;
+}
+.institutions-grid-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #1b60bb !important;
+}
+.institutions-grid-scrollbar {
+  -ms-overflow-style: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #bde7ff transparent !important;
+}

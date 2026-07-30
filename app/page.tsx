@@ -10,7 +10,7 @@ import Footer from '@/HomePage/Footer';
 import { getFeaturedTechnologies } from '@/lib/getFeaturedTechnologies';
 import { getInstitutions } from '@/lib/getInstitutions';
 
-export const revalidate = 3600; // Cache for 1 hour
+export const dynamic = 'force-dynamic';
 
 export default async function Page() {
   const initialTechnologies = getFeaturedTechnologies();
