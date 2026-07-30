@@ -58,7 +58,7 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
 
   const proxiedUrl = getProxiedImageUrl(program.poster_link);
   const directUrl = program.poster_link && program.poster_link.includes('googleusercontent.com') && !program.poster_link.includes('=s')
-    ? `${program.poster_link}=s600`
+    ? `${program.poster_link}=s600-rj`
     : program.poster_link;
 
   const handleImageError = () => {
@@ -438,7 +438,7 @@ export default function ProgramsPage() {
                   <img
                     src={selectedProgramUseDirect 
                       ? (selectedProgram.poster_link.includes('googleusercontent.com') && !selectedProgram.poster_link.includes('=s')
-                          ? `${selectedProgram.poster_link}=s1000`
+                          ? `${selectedProgram.poster_link}=s1000-rj`
                           : selectedProgram.poster_link)
                       : getProxiedImageUrl(selectedProgram.poster_link)
                     }
