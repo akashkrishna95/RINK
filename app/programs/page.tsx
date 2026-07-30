@@ -416,7 +416,7 @@ export default function ProgramsPage() {
               <div className="relative w-full aspect-[4/5] md:aspect-auto md:h-full bg-slate-100 overflow-hidden shrink-0">
                 {selectedProgram.poster_link && !selectedProgramImgError ? (
                   <img
-                    src={selectedProgram.poster_link}
+                    src={getProxiedImageUrl(selectedProgram.poster_link)}
                     alt={selectedProgram.title}
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
