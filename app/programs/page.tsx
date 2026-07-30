@@ -6,6 +6,7 @@ import { Calendar, MapPin, ExternalLink, Image as ImageIcon, X, Clock, ChevronDo
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
 import { getProxiedImageUrl } from '@/lib/utils';
+import Image from 'next/image';
 
 interface SheetProgram {
   id: string;
@@ -93,12 +94,12 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
     >
       <div className="relative w-full aspect-[4/5] overflow-hidden bg-slate-100 flex-shrink-0">
         {program.poster_link && !imgError ? (
-          <img
+          <Image
             src={useDirectUrl ? directUrl : proxiedUrl}
             alt={program.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
-            referrerPolicy="no-referrer"
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="(max-w-768px) 100vw, 300px"
             onError={handleImageError}
           />
         ) : (
@@ -443,7 +444,7 @@ export default function ProgramsPage() {
               </button>
               <div className="relative w-full aspect-[4/5] md:aspect-auto md:h-full bg-slate-100 overflow-hidden shrink-0">
                 {selectedProgram.poster_link && !selectedProgramImgError ? (
-                  <img
+                  <Image
                     src={selectedProgramUseDirect 
                       ? (() => {
                           const driveMatch = selectedProgram.poster_link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
@@ -460,8 +461,9 @@ export default function ProgramsPage() {
                       : getProxiedImageUrl(selectedProgram.poster_link)
                     }
                     alt={selectedProgram.title}
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
+                    fill
+                    className="object-cover"
+                    sizes="(max-w-768px) 100vw, 50vw"
                     onError={() => {
                       if (!selectedProgramUseDirect) {
                         setSelectedProgramUseDirect(true);
