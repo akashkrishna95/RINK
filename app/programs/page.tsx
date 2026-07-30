@@ -280,8 +280,14 @@ export default function ProgramsPage() {
     if (selectedProgram) {
       setSelectedProgramImgError(false);
       setSelectedProgramUseDirect(false);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
-  }, [selectedProgram?.id]);
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedProgram]);
 
   useEffect(() => {
     const load = async () => {
@@ -440,12 +446,12 @@ export default function ProgramsPage() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] max-w-[400px] sm:max-w-2xl md:max-w-4xl h-[80vh] md:h-[600px] bg-white rounded-3xl shadow-2xl z-[101] overflow-hidden flex flex-row"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[320px] sm:max-w-[340px] max-h-[85vh] bg-white rounded-3xl shadow-2xl z-[101] overflow-hidden flex flex-col"
             >
               <button onClick={() => setSelectedProgram(null)} className="absolute top-3 right-3 p-2 bg-white/80 hover:bg-white backdrop-blur-md rounded-full shadow-md transition-colors z-20">
                 <X size={18} className="text-slate-700" />
               </button>
-              <div className="relative w-[45%] h-full bg-slate-100 overflow-hidden shrink-0">
+              <div className="relative w-full aspect-[4/5] bg-slate-100 overflow-hidden shrink-0">
                 {selectedProgram.poster_link && !selectedProgramImgError ? (
                   <Image
                     src={selectedProgramUseDirect 
@@ -455,10 +461,10 @@ export default function ProgramsPage() {
                                              selectedProgram.poster_link.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
                                              selectedProgram.poster_link.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
                           if (driveMatch && driveMatch[1]) {
-                            return `https://lh3.googleusercontent.com/d/${driveMatch[1]}=s1000`;
+                            return `https://lh3.googleusercontent.com/d/${driveMatch[1]}=s800`;
                           }
                           return selectedProgram.poster_link.includes('googleusercontent.com') && !selectedProgram.poster_link.includes('=s')
-                            ? `${selectedProgram.poster_link}=s1000`
+                            ? `${selectedProgram.poster_link}=s800`
                             : selectedProgram.poster_link;
                         })()
                       : getProxiedImageUrl(selectedProgram.poster_link)
@@ -467,7 +473,7 @@ export default function ProgramsPage() {
                     fill
                     unoptimized={true}
                     className="object-cover"
-                    sizes="(max-w-768px) 100vw, 50vw"
+                    sizes="300px"
                     onError={() => {
                       if (!selectedProgramUseDirect) {
                         setSelectedProgramUseDirect(true);
@@ -486,64 +492,64 @@ export default function ProgramsPage() {
                   <span className="font-helios font-bold text-xs tracking-wide uppercase text-[#1b60bb]">{selectedProgram.status}</span>
                 </div>
               </div>
-              <div className="w-[55%] p-4 sm:p-6 md:p-10 flex flex-col h-full overflow-hidden">
+              <div className="relative w-full aspect-[4/5] p-4 sm:p-5 flex flex-col overflow-hidden bg-white shrink-0">
                 <div className="flex-shrink-0">
-                  <h2 className="font-helios text-xl sm:text-2xl md:text-4xl font-bold text-slate-800 mb-2 sm:mb-4 leading-tight">{selectedProgram.title}</h2>
+                  <h2 className="font-helios text-lg sm:text-xl font-bold text-slate-800 mb-2 leading-tight">{selectedProgram.title}</h2>
                 </div>
 
-                <div className="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar pr-2 mb-4 min-h-0 space-y-4">
-                  <div className="space-y-2 sm:space-y-3 p-3 sm:p-4 bg-gradient-to-b from-[#f0f4f9]/90 to-[#e8eef6]/80 rounded-2xl shadow-[inset_0_2px_5px_rgba(0,0,0,0.06),inset_0_-1px_2px_rgba(255,255,255,0.8)] border border-slate-200/60">
+                <div className="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar pr-2 mb-3 min-h-0 space-y-3">
+                  <div className="space-y-2 p-3 bg-gradient-to-b from-[#f0f4f9]/90 to-[#e8eef6]/80 rounded-2xl border border-slate-200/60">
                     {selectedProgram.date && (
-                      <div className="flex items-center gap-2.5 sm:gap-3">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
-                          <Calendar size={14} className="text-[#1b60bb]" />
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
+                          <Calendar size={13} className="text-[#1b60bb]" />
                         </div>
                         <div>
-                          <p className="font-helios font-semibold text-slate-800 text-[10px] sm:text-xs">Date</p>
-                          <p className="text-slate-600 font-poppins text-[10px] sm:text-xs">{formatDateLong(selectedProgram.date)}</p>
+                          <p className="font-helios font-semibold text-slate-800 text-[10px]">Date</p>
+                          <p className="text-slate-600 font-poppins text-[10px]">{formatDateLong(selectedProgram.date)}</p>
                         </div>
                       </div>
                     )}
                     {selectedProgram.time && (
-                      <div className="flex items-center gap-2.5 sm:gap-3">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
-                          <Clock size={14} className="text-[#1b60bb]" />
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
+                          <Clock size={13} className="text-[#1b60bb]" />
                         </div>
                         <div>
-                          <p className="font-helios font-semibold text-slate-800 text-[10px] sm:text-xs">Time</p>
-                          <p className="text-slate-600 font-poppins text-[10px] sm:text-xs">{selectedProgram.time}</p>
+                          <p className="font-helios font-semibold text-slate-800 text-[10px]">Time</p>
+                          <p className="text-slate-600 font-poppins text-[10px]">{selectedProgram.time}</p>
                         </div>
                       </div>
                     )}
                     {selectedProgram.location && (
-                      <div className="flex items-center gap-2.5 sm:gap-3">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
-                          <MapPin size={14} className="text-[#1b60bb]" />
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
+                          <MapPin size={13} className="text-[#1b60bb]" />
                         </div>
                         <div>
-                          <p className="font-helios font-semibold text-slate-800 text-[10px] sm:text-xs">Location</p>
-                          <p className="text-slate-600 font-poppins text-[10px] sm:text-xs">{selectedProgram.location}</p>
+                          <p className="font-helios font-semibold text-slate-800 text-[10px]">Location</p>
+                          <p className="text-slate-600 font-poppins text-[10px]">{selectedProgram.location}</p>
                         </div>
                       </div>
                     )}
                   </div>
 
                   {selectedProgram.description && (
-                    <p className="text-slate-600 font-poppins text-[11px] sm:text-xs md:text-sm leading-relaxed whitespace-pre-line break-words">{selectedProgram.description}</p>
+                    <p className="text-slate-600 font-poppins text-[11px] sm:text-xs leading-relaxed whitespace-pre-line break-words">{selectedProgram.description}</p>
                   )}
                 </div>
 
-                <div className="flex-shrink-0 pt-2 border-t border-slate-100 flex flex-col gap-2 sm:gap-3">
+                <div className="flex-shrink-0 pt-2 border-t border-slate-100 flex flex-col gap-2">
                   {selectedProgram.registration_link && selectedProgram.status !== 'past' && (
-                    <a href={selectedProgram.registration_link} target="_blank" rel="noreferrer" className="w-full py-2.5 sm:py-3.5 bg-[#1b60bb] hover:bg-[#154a93] text-white rounded-xl font-helios font-bold text-xs sm:text-base text-center transition-colors flex items-center justify-center gap-2 group/btn">
+                    <a href={selectedProgram.registration_link} target="_blank" rel="noreferrer" className="w-full py-2 bg-[#1b60bb] hover:bg-[#154a93] text-white rounded-xl font-helios font-bold text-xs text-center transition-colors flex items-center justify-center gap-2 group/btn">
                       Register for Program
-                      <ExternalLink size={16} className="group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5 transition-transform" />
+                      <ExternalLink size={13} className="group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5 transition-transform" />
                     </a>
                   )}
                   {selectedProgram.status === 'past' && selectedProgram.event_gallery && (
-                    <button onClick={() => openGallery(selectedProgram)} className="w-full py-2.5 sm:py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-helios font-bold text-xs sm:text-base text-center transition-colors flex items-center justify-center gap-2 group/btn">
+                    <button onClick={() => openGallery(selectedProgram)} className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-helios font-bold text-xs text-center transition-colors flex items-center justify-center gap-2 group/btn">
                       View Program Gallery
-                      <ImageIcon size={16} className="group-hover/btn:scale-110 transition-transform" />
+                      <ImageIcon size={13} className="group-hover/btn:scale-110 transition-transform" />
                     </button>
                   )}
                 </div>

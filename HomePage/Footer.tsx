@@ -70,13 +70,19 @@ export default function Footer() {
               Connect
             </h4>
             <ul className="space-y-3">
-              {['LinkedIn', 'Instagram', 'YouTube'].map((link) => (
-                <li key={link}>
+              {[
+                { label: 'LinkedIn', href: 'https://linkedin.com/company/research-innovation-network-kerala/' },
+                { label: 'Instagram', href: '#' },
+                { label: 'YouTube', href: '#' }
+              ].map((link) => (
+                <li key={link.label}>
                   <Link
-                    href="#"
+                    href={link.href}
+                    target={link.href.startsWith('http') ? '_blank' : undefined}
+                    rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                     className="font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base block"
                   >
-                    {link}
+                    {link.label}
                   </Link>
                 </li>
               ))}

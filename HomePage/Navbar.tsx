@@ -199,7 +199,7 @@ export default function Navbar() {
                   </div>
                 </a>
 
-                <a href="#" className="flex items-center gap-4 text-[#1b60bb] hover:text-[#113a70] transition-colors group">
+                <a href="https://linkedin.com/company/research-innovation-network-kerala/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-[#1b60bb] hover:text-[#113a70] transition-colors group">
                   <LinkedinIcon className="w-5 h-5 text-gray-400 group-hover:text-[#1b60bb] transition-colors" />
                   <div className="flex flex-col">
                     <span className="font-helios text-xs text-gray-500 font-medium">Social</span>
