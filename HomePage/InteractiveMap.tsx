@@ -295,14 +295,14 @@ export default function InteractiveMap({
                   <div className="p-1 min-w-[220px] max-w-[280px] flex flex-col gap-2 text-[#153156]">
                     <div 
                       className="font-bold text-sm leading-snug text-[#1b60bb]"
-                      style={{ fontFamily: "'Helios Extended', sans-serif" }}
+                      style={{ fontFamily: "var(--font-helios), sans-serif" }}
                     >
                       {inst.name}
                     </div>
                     <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px]">
                       <span 
                         className="text-[#1b4f8d] font-semibold bg-[#eff9ff] px-2 py-0.5 rounded"
-                        style={{ fontFamily: "'Helios Extended', sans-serif" }}
+                        style={{ fontFamily: "var(--font-helios), sans-serif" }}
                       >
                         {inst.district}
                       </span>

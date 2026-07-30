@@ -144,8 +144,8 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
           {/* --- MOBILE TITLE --- */}
           <div className="flex lg:hidden items-center gap-3 order-1 px-2">
             <h2
-              className="font-normal text-[40px] sm:text-[44px] text-[#1b60bb] leading-none tracking-wide"
-              style={{ fontFamily: "'Helios Extended', sans-serif" }}
+              className="font-helios text-[40px] sm:text-[44px] text-[#1b60bb] leading-none tracking-wide"
+              style={{ fontFamily: "var(--font-helios), sans-serif" }}
             >
               Institutions Grid
             </h2>
@@ -275,13 +275,13 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                 <div>
                                   <span 
                                     className="text-[10px] bg-[#daf1ff] text-[#1b60bb] px-2 py-0.5 rounded font-semibold uppercase tracking-wider"
-                                    style={{ fontFamily: "'Helios Extended', sans-serif" }}
+                                    style={{ fontFamily: "var(--font-helios), sans-serif" }}
                                   >
                                     {inst.district}
                                   </span>
                                   <h4 
                                     className="text-lg font-bold text-[#153156] mt-2 leading-snug"
-                                    style={{ fontFamily: "'Helios Extended', sans-serif" }}
+                                    style={{ fontFamily: "var(--font-helios), sans-serif" }}
                                   >
                                     {inst.name}
                                   </h4>
@@ -368,7 +368,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                   </svg>
                                   <h4 
                                     className={`text-sm font-bold transition-colors ${isDistrictActive ? 'text-[#1b60bb]' : 'text-slate-700 group-hover:text-[#36a8fb]'}`}
-                                    style={{ fontFamily: "'Helios Extended', sans-serif" }}
+                                    style={{ fontFamily: "var(--font-helios), sans-serif" }}
                                   >
                                     {district}
                                   </h4>
@@ -463,7 +463,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                               <div className="hidden lg:flex items-center gap-3 mb-2">
                                 <h2
                                   className="font-normal text-[52px] xl:text-[60px] text-[#1b60bb] leading-none tracking-wide"
-                                  style={{ fontFamily: "'Helios Extended', sans-serif" }}
+                                  style={{ fontFamily: "var(--font-helios), sans-serif" }}
                                 >
                                   Institutions Grid
                                 </h2>
