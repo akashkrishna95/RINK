@@ -64,13 +64,9 @@ function formatDriveImageUrl(url: string): string {
 }
 
 export async function GET() {
-  const url = process.env.PROGRAMS_SPREADSHEET_URL;
-  if (!url) return NextResponse.json({ error: 'PROGRAMS_SPREADSHEET_URL not configured' }, { status: 500 });
+  const url = process.env.PROGRAMS_SPREADSHEET_URL || 'https://docs.google.com/spreadsheets/d/1HXlzT504-AhqzfU6Nm3bktAspIjaQm2l1z45qROZrFc/export?format=csv&gid=23667768';
   try {
-    // Append a unique timestamp query parameter to bypass all layers of Next.js/Vercel/CDN fetch caching
-    const separator = url.includes('?') ? '&' : '?';
-    const fetchUrl = `${url}${separator}t=${Date.now()}`;
-    const res = await fetch(fetchUrl, {
+    const res = await fetch(url, {
       cache: 'no-store',
       headers: {
         'Pragma': 'no-cache',

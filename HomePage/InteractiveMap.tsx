@@ -201,12 +201,10 @@ export default function InteractiveMap({
         }
       `}</style>
       
-      {/* Floating Layer Toggle (moves next to zoom controls when expanded) */}
+      {/* Floating Layer Toggle */}
       <div 
         onClick={(e) => e.stopPropagation()}
-        className={`absolute top-4 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-lg border border-[#daf1ff] p-1 flex gap-1 transition-all duration-300 ${
-          isExpanded ? 'left-14' : 'left-4'
-        }`}
+        className="absolute top-4 left-4 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-lg border border-[#daf1ff] p-1 flex gap-1"
       >
         <button 
           onClick={() => setMapType('default')}

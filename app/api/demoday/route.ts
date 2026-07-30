@@ -53,10 +53,7 @@ function parseCSV(csvText: string): Record<string, string>[] {
 }
 
 export async function GET() {
-  const url = process.env.DEMODAY_SPREADSHEET_URL;
-  if (!url) {
-    return NextResponse.json({ error: 'DEMODAY_SPREADSHEET_URL not configured' }, { status: 500 });
-  }
+  const url = process.env.DEMODAY_SPREADSHEET_URL || 'https://docs.google.com/spreadsheets/d/1HXlzT504-AhqzfU6Nm3bktAspIjaQm2l1z45qROZrFc/export?format=csv&gid=1506498637';
 
   try {
     const res = await fetch(url, {
