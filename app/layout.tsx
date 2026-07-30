@@ -26,6 +26,18 @@ const gotham = localFont({
   variable: '--font-gotham',
 })
 
+const helios = localFont({
+  src: [
+    {
+      path: '../public/fonts/HeliosExt.woff',
+      weight: '400 900',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-helios',
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
   title: 'RINK - Research Innovation Network Kerala',
   description: 'Connecting Innovation to Impact. Aligning India\'s top research institutions, market-ready IP, and Researchpreneurship.',
@@ -55,7 +67,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${poppins.variable} ${gotham.variable}`}>
+    <html lang="en" className={`${poppins.variable} ${gotham.variable} ${helios.variable}`}>
       <body className="font-poppins antialiased" style={{ backgroundColor: '#F4F7FB' }}>
         <NextTopLoader color="#1b60bb" showSpinner={false} height={3} />
         

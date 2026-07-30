@@ -1,3 +1,5 @@
+// C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\programs\page.tsx
+
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -98,6 +100,7 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
             src={useDirectUrl ? directUrl : proxiedUrl}
             alt={program.title}
             fill
+            unoptimized={true}
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             sizes="(max-w-768px) 100vw, 300px"
             onError={handleImageError}
@@ -335,7 +338,7 @@ export default function ProgramsPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#F4F7FB] relative">
+    <main className="min-h-screen bg-[#F4F7FB] relative w-full overflow-x-hidden">
       <Navbar />
 
       <section className="relative w-full h-[400px] flex items-center justify-center overflow-hidden">
@@ -437,12 +440,12 @@ export default function ProgramsPage() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[360px] sm:max-w-md md:max-w-4xl h-[90vh] md:h-[600px] bg-white rounded-3xl shadow-2xl z-[101] overflow-hidden flex flex-col md:grid md:grid-cols-2"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] max-w-[400px] sm:max-w-2xl md:max-w-4xl h-[80vh] md:h-[600px] bg-white rounded-3xl shadow-2xl z-[101] overflow-hidden flex flex-row"
             >
               <button onClick={() => setSelectedProgram(null)} className="absolute top-3 right-3 p-2 bg-white/80 hover:bg-white backdrop-blur-md rounded-full shadow-md transition-colors z-20">
                 <X size={18} className="text-slate-700" />
               </button>
-              <div className="relative w-full aspect-[4/5] md:aspect-auto md:h-full bg-slate-100 overflow-hidden shrink-0">
+              <div className="relative w-[45%] h-full bg-slate-100 overflow-hidden shrink-0">
                 {selectedProgram.poster_link && !selectedProgramImgError ? (
                   <Image
                     src={selectedProgramUseDirect 
@@ -462,6 +465,7 @@ export default function ProgramsPage() {
                     }
                     alt={selectedProgram.title}
                     fill
+                    unoptimized={true}
                     className="object-cover"
                     sizes="(max-w-768px) 100vw, 50vw"
                     onError={() => {
@@ -482,7 +486,7 @@ export default function ProgramsPage() {
                   <span className="font-helios font-bold text-xs tracking-wide uppercase text-[#1b60bb]">{selectedProgram.status}</span>
                 </div>
               </div>
-              <div className="p-4 sm:p-6 md:p-10 flex flex-col flex-grow h-0 md:h-full overflow-hidden">
+              <div className="w-[55%] p-4 sm:p-6 md:p-10 flex flex-col h-full overflow-hidden">
                 <div className="flex-shrink-0">
                   <h2 className="font-helios text-xl sm:text-2xl md:text-4xl font-bold text-slate-800 mb-2 sm:mb-4 leading-tight">{selectedProgram.title}</h2>
                 </div>
