@@ -9,6 +9,8 @@ import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
 import { getProxiedImageUrl } from '@/lib/utils';
 import Image from 'next/image';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface SheetProgram {
   id: string;
@@ -37,6 +39,11 @@ function formatDateLong(dateStr: string) {
   const d = new Date(dateStr);
   if (isNaN(d.getTime())) return dateStr;
   return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function stripMarkdownLinks(text: string): string {
+  if (!text) return '';
+  return text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
 }
 
 function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: number; onClick: (p: SheetProgram) => void }) {
@@ -121,7 +128,7 @@ function ProgramCard({ program, idx, onClick }: { program: SheetProgram; idx: nu
           <ArrowUpRight size={16} className="shrink-0 text-slate-400 group-hover:text-[#1b60bb] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
         </h3>
         {!isPast && program.description && (
-          <p className={`text-slate-600 font-poppins text-[11px] sm:text-xs leading-relaxed mb-3 sm:mb-4 ${clampClass}`}>{program.description}</p>
+          <p className={`text-slate-600 font-poppins text-[11px] sm:text-xs leading-relaxed mb-3 sm:mb-4 whitespace-pre-line ${clampClass}`}>{stripMarkdownLinks(program.description)}</p>
         )}
         {metaCount > 0 && (
           <div className="bg-gradient-to-b from-[#f0f4f9]/90 to-[#e8eef6]/80 rounded-2xl p-3.5 sm:p-4 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06),inset_0_-1px_2px_rgba(255,255,255,0.8)] border border-slate-200/60 space-y-2.5 sm:space-y-3 mt-auto">
@@ -554,7 +561,23 @@ export default function ProgramsPage() {
                   </div>
 
                   {selectedProgram.description && (
-                    <p className="text-slate-600 font-poppins text-[11px] sm:text-xs md:text-[13px] leading-relaxed whitespace-pre-line break-words">{selectedProgram.description}</p>
+                    <div className="text-slate-600 font-poppins text-[11px] sm:text-xs md:text-[13px] leading-relaxed whitespace-pre-wrap break-words markdown-content">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          a: ({ node, ...props }) => (
+                            <a
+                              {...props}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#1b60bb] hover:underline font-semibold"
+                            />
+                          )
+                        }}
+                      >
+                        {selectedProgram.description}
+                      </ReactMarkdown>
+                    </div>
                   )}
                 </div>
 
@@ -701,7 +724,7 @@ export default function ProgramsPage() {
       </AnimatePresence>
 
       <Footer />
-      <style dangerouslySetInnerHTML={{ __html: `.custom-scrollbar::-webkit-scrollbar{width:8px}.custom-scrollbar::-webkit-scrollbar-track{background:rgba(0,0,0,0.05);border-radius:8px}.custom-scrollbar::-webkit-scrollbar-thumb{background:rgba(27,96,187,0.3);border-radius:8px}.custom-scrollbar::-webkit-scrollbar-thumb:hover{background:rgba(27,96,187,0.6)}.scrollbar-none::-webkit-scrollbar{display:none}.scrollbar-none{-ms-overflow-style:none;scrollbar-width:none}` }} />
+      <style dangerouslySetInnerHTML={{ __html: `.custom-scrollbar{scrollbar-width:thin;scrollbar-color:#1b60bb rgba(0,0,0,0.02)}.custom-scrollbar::-webkit-scrollbar{width:4px}.custom-scrollbar::-webkit-scrollbar-track{background:rgba(0,0,0,0.02);border-radius:4px}.custom-scrollbar::-webkit-scrollbar-thumb{background:#1b60bb;border-radius:4px}.custom-scrollbar::-webkit-scrollbar-thumb:hover{background:#154a93}.scrollbar-none::-webkit-scrollbar{display:none}.scrollbar-none{-ms-overflow-style:none;scrollbar-width:none}` }} />
     </main>
   );
 }
