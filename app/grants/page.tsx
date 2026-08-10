@@ -278,11 +278,14 @@ export default function GrantsPage() {
       setSelectedGrantUseDirect(false);
       setImageAspectRatio(null);
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
     return () => {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, [selectedGrant]);
 
@@ -452,7 +455,7 @@ export default function GrantsPage() {
       <AnimatePresence>
         {selectedGrant && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedGrant(null)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] touch-none" />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedGrant(null)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]" />
              <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -463,7 +466,7 @@ export default function GrantsPage() {
                 <X size={18} className="text-slate-700" />
               </button>
               <div 
-                className="relative w-full h-[42%] md:h-full bg-slate-100 overflow-hidden shrink-0 touch-none"
+                className="relative w-full h-[42%] md:h-full bg-slate-100 overflow-hidden shrink-0"
                 style={{ 
                   width: isDesktop && imageAspectRatio ? `${Math.min(Math.max(504 * imageAspectRatio, 250), 504)}px` : undefined 
                 }}
@@ -536,7 +539,7 @@ export default function GrantsPage() {
                   <h2 className="font-helios text-lg sm:text-xl font-bold text-slate-800 mb-2 leading-tight">{selectedGrant.title}</h2>
                 </div>
 
-                <div className="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar pr-2 mb-3 min-h-0 space-y-3 overscroll-contain">
+                <div className="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar pr-2 mb-3 min-h-0 space-y-3">
                   <div className="space-y-2.5 p-3 md:p-4 bg-gradient-to-b from-[#f0f4f9]/90 to-[#e8eef6]/80 rounded-2xl border border-slate-200/60">
                     <div className="flex items-center gap-3">
                       <div className="w-7 h-7 md:w-9 md:h-9 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)] flex items-center justify-center shrink-0">
