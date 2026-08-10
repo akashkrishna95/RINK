@@ -43,6 +43,7 @@ export default function Footer() {
                 { label: 'Technologies', href: 'https://rink-ksum.vercel.app/' },
                 { label: 'Instrumentation', href: 'https://instruments.startupmission.in/' },
                 { label: 'Researchpreneurship', href: '/about/researchpreneurship' },
+                { label: 'Grants', href: '/grants' },
                 { label: 'Programs', href: '/programs' },
                 { label: 'Contact', href: '/about#contact' }
               ].map((link) => (

@@ -71,6 +71,7 @@ export default function Navbar() {
     { href: '/RomiPortal', label: 'ROMI AI' },
     { href: 'https://rink-ksum.vercel.app/', label: 'Technologies' },
     { href: 'https://rink-ui.vercel.app/', label: 'Instrumentation' },
+    { href: '/grants', label: 'Grants' },
     { href: '/programs', label: 'Programs' },
     { href: '/contact', label: 'Contact Us' },
   ];
