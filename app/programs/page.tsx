@@ -283,6 +283,15 @@ export default function ProgramsPage() {
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
   const [filterOpen, setFilterOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState<number | null>(null);
+  const [imageAspectRatio, setImageAspectRatio] = useState<number | null>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 768);
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Keyboard navigation for image lightbox
   useEffect(() => {
@@ -306,6 +315,7 @@ export default function ProgramsPage() {
     if (selectedProgram) {
       setSelectedProgramImgError(false);
       setSelectedProgramUseDirect(false);
+      setImageAspectRatio(null);
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -467,20 +477,25 @@ export default function ProgramsPage() {
       <AnimatePresence>
         {selectedProgram && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProgram(null)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]" />
-            <motion.div
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProgram(null)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] touch-none" />
+             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[280px] sm:max-w-[300px] md:max-w-4xl h-auto max-h-[85vh] md:h-[504px] md:max-h-none bg-white rounded-3xl shadow-2xl z-[101] overflow-hidden flex flex-col md:flex-row md:items-stretch"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] xs:w-[85%] max-w-[340px] md:max-w-4xl h-[78vh] md:h-[504px] bg-white rounded-3xl shadow-2xl z-[101] overflow-hidden flex flex-col md:flex-row md:items-stretch"
             >
               <button onClick={() => setSelectedProgram(null)} className="absolute top-3 right-3 p-2 bg-white/80 hover:bg-white backdrop-blur-md rounded-full shadow-md transition-colors z-20">
                 <X size={18} className="text-slate-700" />
               </button>
-              <div className="relative w-full md:w-[45%] aspect-[4/5] md:aspect-auto md:h-full bg-slate-100 overflow-hidden shrink-0">
+              <div 
+                className="relative w-full h-[42%] md:h-full bg-slate-100 overflow-hidden shrink-0 touch-none"
+                style={{ 
+                  width: isDesktop && imageAspectRatio ? `${Math.min(Math.max(504 * imageAspectRatio, 250), 504)}px` : undefined 
+                }}
+              >
                 {selectedProgram.poster_link && !selectedProgramImgError ? (
-                  <Image
-                    src={selectedProgramUseDirect 
+                  (() => {
+                    const posterSrc = selectedProgramUseDirect 
                       ? (() => {
                           const driveMatch = selectedProgram.poster_link.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
                                              selectedProgram.poster_link.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
@@ -493,21 +508,42 @@ export default function ProgramsPage() {
                             ? `${selectedProgram.poster_link}=s800`
                             : selectedProgram.poster_link;
                         })()
-                      : getProxiedImageUrl(selectedProgram.poster_link)
-                    }
-                    alt={selectedProgram.title}
-                    fill
-                    unoptimized={true}
-                    className="object-cover"
-                    sizes="(max-w-768px) 300px, 45vw"
-                    onError={() => {
-                      if (!selectedProgramUseDirect) {
-                        setSelectedProgramUseDirect(true);
-                      } else {
-                        setSelectedProgramImgError(true);
-                      }
-                    }}
-                  />
+                      : getProxiedImageUrl(selectedProgram.poster_link);
+                    return (
+                      <>
+                        {/* Blurred ambient background */}
+                        <Image
+                          src={posterSrc}
+                          alt=""
+                          fill
+                          unoptimized={true}
+                          className="object-cover filter blur-md opacity-25 scale-110 pointer-events-none"
+                        />
+                        {/* Sharp foreground containing the full poster */}
+                        <Image
+                          src={posterSrc}
+                          alt={selectedProgram.title}
+                          fill
+                          unoptimized={true}
+                          className="object-contain z-10"
+                          sizes="(max-w-768px) 300px, 45vw"
+                          onLoad={(e) => {
+                            const { naturalWidth, naturalHeight } = e.currentTarget;
+                            if (naturalWidth && naturalHeight) {
+                              setImageAspectRatio(naturalWidth / naturalHeight);
+                            }
+                          }}
+                          onError={() => {
+                            if (!selectedProgramUseDirect) {
+                              setSelectedProgramUseDirect(true);
+                            } else {
+                              setSelectedProgramImgError(true);
+                            }
+                          }}
+                        />
+                      </>
+                    );
+                  })()
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#011a38] via-[#00050e] to-[#1b60bb] p-6 text-center">
                     <ImageIcon size={48} className="text-white/40 mb-3" />
@@ -518,12 +554,12 @@ export default function ProgramsPage() {
                   <span className="font-helios font-bold text-xs tracking-wide uppercase text-[#1b60bb]">{selectedProgram.status}</span>
                 </div>
               </div>
-              <div className="relative w-full md:w-[55%] aspect-[4/5] md:aspect-auto md:h-full p-4 sm:p-5 flex flex-col overflow-hidden bg-white min-h-0 shrink md:shrink">
+              <div className="relative w-full md:w-[55%] h-[58%] md:h-full p-4 sm:p-5 flex flex-col overflow-hidden bg-white min-h-0 shrink md:shrink">
                 <div className="flex-shrink-0">
                   <h2 className="font-helios text-lg sm:text-xl font-bold text-slate-800 mb-2 leading-tight">{selectedProgram.title}</h2>
                 </div>
 
-                <div className="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar pr-2 mb-3 min-h-0 space-y-3">
+                <div className="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar pr-2 mb-3 min-h-0 space-y-3 overscroll-contain">
                   <div className="space-y-2.5 p-3 md:p-4 bg-gradient-to-b from-[#f0f4f9]/90 to-[#e8eef6]/80 rounded-2xl border border-slate-200/60">
                     {selectedProgram.date && (
                       <div className="flex items-center gap-3">
