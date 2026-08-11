@@ -158,15 +158,15 @@ export default function Footer() {
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 lg:gap-4 text-xs text-[#eff9ff]/60">
             <span>© 2025 Kerala Startup Mission</span>
             <span className="hidden sm:inline text-[#eff9ff]/30">•</span>
-            <Link href="/privacy?tab=privacy" className="hover:text-[#eff9ff] transition-colors">
+            <Link href="/privacy/privacy-policy" className="hover:text-[#eff9ff] transition-colors">
               Privacy Policy
             </Link>
             <span className="hidden sm:inline text-[#eff9ff]/30">•</span>
-            <Link href="/privacy?tab=terms" className="hover:text-[#eff9ff] transition-colors">
+            <Link href="/privacy/terms" className="hover:text-[#eff9ff] transition-colors">
               Terms & Conditions
             </Link>
             <span className="hidden sm:inline text-[#eff9ff]/30">•</span>
-            <Link href="/privacy?tab=cookies" className="hover:text-[#eff9ff] transition-colors">
+            <Link href="/privacy/cookies" className="hover:text-[#eff9ff] transition-colors">
               Cookies
             </Link>
           </div>
