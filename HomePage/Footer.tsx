@@ -39,7 +39,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3">
               {[
-                { label: 'About', href: '/about' },
+                { label: 'Home', href: '/' },
                 { label: 'Technologies', href: 'https://rink-ksum.vercel.app/' },
                 { label: 'Instrumentation', href: 'https://instruments.startupmission.in/' },
                 { label: 'Researchpreneurship', href: '/about/researchpreneurship' },
@@ -52,9 +52,12 @@ export default function Footer() {
                     href={link.href}
                     target={link.href.startsWith('http') ? '_blank' : undefined}
                     rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base block"
+                    className="group font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base inline-block w-fit"
                   >
-                    {link.label}
+                    <span className="relative">
+                      {link.label}
+                      <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -73,15 +76,18 @@ export default function Footer() {
             <ul className="space-y-3">
               {[
                 { label: 'LinkedIn', href: 'https://in.linkedin.com/company/research-innovation-network-kerala/' },
-                ].map((link) => (
+              ].map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
                     target={link.href.startsWith('http') ? '_blank' : undefined}
                     rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base block"
+                    className="group font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base inline-block w-fit"
                   >
-                    {link.label}
+                    <span className="relative">
+                      {link.label}
+                      <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -105,20 +111,26 @@ export default function Footer() {
               >
                 <span className="font-avenir text-base lg:text-lg text-[#eff9ff] relative">
                   rink@startupmission.in
-                  <span className="absolute bottom-0 left-0 w-0 h-px bg-[#eff9ff] group-hover:w-full transition-all duration-300" />
+                  <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
                 </span>
               </a>
               <p className="font-avenir text-[#eff9ff]/70 text-sm leading-relaxed w-full max-w-sm pr-4">
                 G3B, Thejaswini, Technopark Campus Kariyavattom, Trivandrum, Kerala 695581
               </p>
               <div className="space-y-2">
-                <a href="tel:08047180470" className="flex items-center gap-2 font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base w-fit">
-                  <Phone className="w-4 h-4" />
-                  <span>08047180470</span>
+                <a href="tel:08047180470" className="group flex items-center gap-2 font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base w-fit">
+                  <Phone className="w-4 h-4 shrink-0" />
+                  <span className="relative">
+                    08047180470
+                    <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+                  </span>
                 </a>
-                <a href="tel:04712700270" className="flex items-center gap-2 font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base w-fit">
-                  <Phone className="w-4 h-4" />
-                  <span>0471-2700270</span>
+                <a href="tel:04712700270" className="group flex items-center gap-2 font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base w-fit">
+                  <Phone className="w-4 h-4 shrink-0" />
+                  <span className="relative">
+                    0471-2700270
+                    <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+                  </span>
                 </a>
               </div>
             </div>
@@ -155,19 +167,28 @@ export default function Footer() {
           transition={{ duration: 0.6, ease: easePremium, delay: 0.4 }}
           className="flex flex-col md:flex-row items-center justify-between gap-4 font-avenir"
         >
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 lg:gap-4 text-xs text-[#eff9ff]/60">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 lg:gap-4 text-sm sm:text-base text-[#eff9ff]/80">
             <span>© 2025 Kerala Startup Mission</span>
-            <span className="hidden sm:inline text-[#eff9ff]/30">•</span>
-            <Link href="/privacy/privacy-policy" className="hover:text-[#eff9ff] transition-colors">
-              Privacy Policy
+            <span className="hidden sm:inline text-[#eff9ff]/40">•</span>
+            <Link href="/privacy/privacy-policy" className="group hover:text-[#eff9ff] transition-colors inline-block w-fit">
+              <span className="relative">
+                Privacy Policy
+                <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+              </span>
             </Link>
-            <span className="hidden sm:inline text-[#eff9ff]/30">•</span>
-            <Link href="/privacy/terms" className="hover:text-[#eff9ff] transition-colors">
-              Terms & Conditions
+            <span className="hidden sm:inline text-[#eff9ff]/40">•</span>
+            <Link href="/privacy/terms" className="group hover:text-[#eff9ff] transition-colors inline-block w-fit">
+              <span className="relative">
+                Terms & Conditions
+                <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+              </span>
             </Link>
-            <span className="hidden sm:inline text-[#eff9ff]/30">•</span>
-            <Link href="/privacy/cookies" className="hover:text-[#eff9ff] transition-colors">
-              Cookies
+            <span className="hidden sm:inline text-[#eff9ff]/40">•</span>
+            <Link href="/privacy/cookies" className="group hover:text-[#eff9ff] transition-colors inline-block w-fit">
+              <span className="relative">
+                Cookies
+                <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+              </span>
             </Link>
           </div>
         </motion.div>

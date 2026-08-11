@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
           {/* KSUM and RINK logos side-by-side - Clickable to Home Hero */}
           <Link 
             href="/" 
-            className="flex items-center gap-4 sm:gap-6 md:gap-8 justify-center bg-white/40 py-4 px-8 rounded-2xl border border-white/50 shadow-[inset_2px_2px_5px_#c8d0e7,_inset_-2px_-2px_5px_#ffffff] hover:scale-[1.01] hover:bg-white/60 active:scale-[0.98] transition-all duration-300 cursor-pointer"
+            className="flex items-center gap-4 sm:gap-6 md:gap-8 justify-center bg-white/40 py-4 px-8 rounded-2xl border border-white/50 shadow-[inset_2px_2px_5px_#c8d0e7,_inset_-2px_-2px_5px_#ffffff] hover:bg-white/60 transition-all duration-300 cursor-pointer"
             title="Go to Home"
           >
             {/* KSUM Logo */}

@@ -53,7 +53,7 @@ export default function ContactPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="bg-gradient-to-br from-[#fbfcfe] to-[#eaeff7] p-5 sm:p-6 rounded-[2rem] border border-white/60 shadow-[6px_6px_12px_#c8d0e7,_-6px_-6px_12px_#ffffff] flex items-center gap-4 hover:shadow-[3px_3px_6px_#c8d0e7,_-3px_-3px_6px_#ffffff] hover:scale-[1.01] transition-all duration-300"
+              className="bg-gradient-to-br from-[#fbfcfe] to-[#eaeff7] p-5 sm:p-6 rounded-[2rem] border border-white/60 shadow-[6px_6px_12px_#c8d0e7,_-6px_-6px_12px_#ffffff] flex items-center gap-4 hover:shadow-[3px_3px_6px_#c8d0e7,_-3px_-3px_6px_#ffffff] hover:scale-[1.01] transition-all duration-300 will-change-transform transform-gpu [backface-visibility:hidden]"
             >
               <div className="w-12 h-12 rounded-full bg-[#F4F7FB] flex items-center justify-center shrink-0 border border-white/40 shadow-[inset_2px_2px_5px_#c8d0e7,_inset_-2px_-2px_5px_#ffffff]">
                 <Phone size={20} className="text-[#1b60bb]" />
@@ -66,11 +66,11 @@ export default function ContactPage() {
                   Call Us
                 </h4>
                 <div className="text-[#1b60bb] font-poppins text-xs xs:text-sm sm:text-base font-medium whitespace-nowrap flex items-center gap-1.5 overflow-hidden">
-                  <a href="tel:+914712700270" className="underline decoration-[#1b60bb]/45 underline-offset-4 hover:decoration-[#1b60bb] hover:text-[#1872dd] transition-all truncate">
+                  <a href="tel:+914712700270" className="underline decoration-[#1b60bb]/45 underline-offset-4 hover:decoration-[#1b60bb] hover:text-[#1872dd] transition-[color,text-decoration-color] duration-200 truncate">
                     +91 471 2700 270
                   </a>
                   <span className="text-slate-300 shrink-0">|</span>
-                  <a href="tel:+914712700271" className="underline decoration-[#1b60bb]/45 underline-offset-4 hover:decoration-[#1b60bb] hover:text-[#1872dd] transition-all truncate">
+                  <a href="tel:+914712700271" className="underline decoration-[#1b60bb]/45 underline-offset-4 hover:decoration-[#1b60bb] hover:text-[#1872dd] transition-[color,text-decoration-color] duration-200 truncate">
                     +91 471 2700 271
                   </a>
                 </div>
@@ -85,7 +85,7 @@ export default function ContactPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="bg-gradient-to-br from-[#fbfcfe] to-[#eaeff7] p-4 sm:p-6 rounded-[2rem] border border-white/60 shadow-[6px_6px_12px_#c8d0e7,_-6px_-6px_12px_#ffffff] flex flex-col items-center text-center hover:shadow-[3px_3px_6px_#c8d0e7,_-3px_-3px_6px_#ffffff] hover:scale-[1.02] transition-all duration-300 justify-center"
+                className="bg-gradient-to-br from-[#fbfcfe] to-[#eaeff7] p-4 sm:p-6 rounded-[2rem] border border-white/60 shadow-[6px_6px_12px_#c8d0e7,_-6px_-6px_12px_#ffffff] flex flex-col items-center text-center hover:shadow-[3px_3px_6px_#c8d0e7,_-3px_-3px_6px_#ffffff] hover:scale-[1.02] transition-all duration-300 justify-center will-change-transform transform-gpu [backface-visibility:hidden]"
               >
                 <div className="w-12 h-12 rounded-full bg-[#F4F7FB] flex items-center justify-center shrink-0 border border-white/40 shadow-[inset_2px_2px_5px_#c8d0e7,_inset_-2px_-2px_5px_#ffffff] mb-3">
                   <MapPin size={20} className="text-[#1b60bb]" />
@@ -114,7 +114,7 @@ export default function ContactPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="bg-gradient-to-br from-[#fbfcfe] to-[#eaeff7] p-4 sm:p-6 rounded-[2rem] border border-white/60 shadow-[6px_6px_12px_#c8d0e7,_-6px_-6px_12px_#ffffff] flex flex-col items-center text-center hover:shadow-[3px_3px_6px_#c8d0e7,_-3px_-3px_6px_#ffffff] hover:scale-[1.02] transition-all duration-300 justify-center"
+                className="bg-gradient-to-br from-[#fbfcfe] to-[#eaeff7] p-4 sm:p-6 rounded-[2rem] border border-white/60 shadow-[6px_6px_12px_#c8d0e7,_-6px_-6px_12px_#ffffff] flex flex-col items-center text-center hover:shadow-[3px_3px_6px_#c8d0e7,_-3px_-3px_6px_#ffffff] hover:scale-[1.02] transition-all duration-300 justify-center will-change-transform transform-gpu [backface-visibility:hidden]"
               >
                 <div className="w-12 h-12 rounded-full bg-[#F4F7FB] flex items-center justify-center shrink-0 border border-white/40 shadow-[inset_2px_2px_5px_#c8d0e7,_inset_-2px_-2px_5px_#ffffff] mb-3">
                   <Mail size={20} className="text-[#1b60bb]" />
@@ -126,10 +126,10 @@ export default function ContactPage() {
                   Email
                 </h4>
                 <div className="flex flex-col gap-1 w-full text-[10px] xs:text-xs sm:text-sm font-medium text-[#1b60bb] overflow-hidden">
-                  <a href="mailto:rink@startupmission.in" className="underline decoration-[#1b60bb]/45 underline-offset-4 hover:decoration-[#1b60bb] hover:text-[#1872dd] transition-all truncate block">
+                  <a href="mailto:rink@startupmission.in" className="underline decoration-[#1b60bb]/45 underline-offset-4 hover:decoration-[#1b60bb] hover:text-[#1872dd] transition-[color,text-decoration-color] duration-200 truncate block">
                     rink@startupmission.in
                   </a>
-                  <a href="mailto:info@startupmission.in" className="underline decoration-[#1b60bb]/45 underline-offset-4 hover:decoration-[#1b60bb] hover:text-[#1872dd] transition-all truncate block">
+                  <a href="mailto:info@startupmission.in" className="underline decoration-[#1b60bb]/45 underline-offset-4 hover:decoration-[#1b60bb] hover:text-[#1872dd] transition-[color,text-decoration-color] duration-200 truncate block">
                     info@startupmission.in
                   </a>
                 </div>

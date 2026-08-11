@@ -377,7 +377,7 @@ export default function ProgramsPage() {
       <Navbar />
 
       <section className="relative w-full h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80')" }}>
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/programs/hero.jpg')" }}>
           <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/85 to-[#1b60bb]/80" />
         </div>
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">

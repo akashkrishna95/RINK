@@ -104,7 +104,7 @@ export default function ResearchIncubationPrograms() {
         {/* Background Image & Overlay */}
         <div 
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=75')" }}
+          style={{ backgroundImage: "url('/images/researchpreneurship/hero.jpg')" }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/80 to-[#1b60bb]/70"></div>
         </div>
@@ -271,7 +271,7 @@ export default function ResearchIncubationPrograms() {
 
         {/* Impact Metrics Cards Area */}
         <section className="relative w-full bg-[#011a38] text-white pt-12 sm:pt-16 pb-12 sm:pb-16 md:pb-24 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80')] opacity-5 bg-cover bg-center"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('/images/researchpreneurship/pattern.jpg')] opacity-5 bg-cover bg-center"></div>
           <div className="max-w-[1200px] mx-auto px-4 relative z-20">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {[

@@ -14,7 +14,7 @@ export default function IPRSupport() {
       <section className="relative w-full h-[450px] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=75')" }}
+          style={{ backgroundImage: "url('/images/iprsupport/hero.jpg')" }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/85 to-[#1b60bb]/70"></div>
         </div>
@@ -109,7 +109,7 @@ export default function IPRSupport() {
             >
               <div className="relative aspect-[4/3] md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
                 <img 
-                  src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=75"
+                  src="/images/iprsupport/gavel.jpg"
                   alt="IPR Support"
                   loading="lazy"
                   decoding="async"

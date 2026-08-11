@@ -46,7 +46,7 @@ export default function DemoDayExposureVisits() {
       <section className="relative w-full h-[500px] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=75')" }}
+          style={{ backgroundImage: "url('/images/demoday/hero.jpg')" }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/80 to-[#1b60bb]/70"></div>
         </div>
