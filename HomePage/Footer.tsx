@@ -165,25 +165,26 @@ export default function Footer() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: easePremium, delay: 0.4 }}
-          className="flex flex-col md:flex-row items-center justify-between gap-4 font-avenir"
+          className="flex flex-col md:flex-row items-center justify-between gap-4 font-avenir text-center md:text-left text-[#eff9ff]/80"
         >
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 lg:gap-4 text-sm sm:text-base text-[#eff9ff]/80">
-            <span>© 2025 Kerala Startup Mission</span>
-            <span className="hidden sm:inline text-[#eff9ff]/40">•</span>
+          <div className="text-sm sm:text-base">
+            © 2025 Kerala Startup Mission
+          </div>
+          <div className="flex items-center justify-center gap-2.5 sm:gap-4 text-[11px] xs:text-xs sm:text-sm md:text-base whitespace-nowrap">
             <Link href="/privacy/privacy-policy" className="group hover:text-[#eff9ff] transition-colors inline-block w-fit">
               <span className="relative">
                 Privacy Policy
                 <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
               </span>
             </Link>
-            <span className="hidden sm:inline text-[#eff9ff]/40">•</span>
+            <span className="text-[#eff9ff]/40">•</span>
             <Link href="/privacy/terms" className="group hover:text-[#eff9ff] transition-colors inline-block w-fit">
               <span className="relative">
                 Terms & Conditions
                 <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
               </span>
             </Link>
-            <span className="hidden sm:inline text-[#eff9ff]/40">•</span>
+            <span className="text-[#eff9ff]/40">•</span>
             <Link href="/privacy/cookies" className="group hover:text-[#eff9ff] transition-colors inline-block w-fit">
               <span className="relative">
                 Cookies
