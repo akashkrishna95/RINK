@@ -44,7 +44,6 @@ const config: Config = {
         barlow: ['var(--font-barlow)', 'system-ui', 'sans-serif'],
         gotham: ['var(--font-gotham)', 'system-ui', 'sans-serif'],
         'plus-jakarta': ['var(--font-plus-jakarta)', 'system-ui', 'sans-serif'],
-        trap: ['var(--font-trap)', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         '4xl': '2rem',

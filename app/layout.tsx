@@ -35,37 +35,7 @@ const gotham = localFont({
   display: 'swap',
 })
 
-const trap = localFont({
-  src: [
-    {
-      path: '../public/fonts/Trap-Regular.otf',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/Trap-Medium.otf',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/Trap-SemiBold.otf',
-      weight: '600',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/Trap-Bold.otf',
-      weight: '700',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/Trap-Black.otf',
-      weight: '900',
-      style: 'normal',
-    },
-  ],
-  variable: '--font-trap',
-  display: 'swap',
-})
+
 
 const bricolageGrotesque = Bricolage_Grotesque({
   variable: '--font-bricolage',
@@ -102,7 +72,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${barlow.variable} ${plusJakartaSans.variable} ${gotham.variable} ${bricolageGrotesque.variable} ${trap.variable}`}>
+    <html lang="en" className={`${barlow.variable} ${plusJakartaSans.variable} ${gotham.variable} ${bricolageGrotesque.variable}`}>
       <body className="font-poppins antialiased" style={{ backgroundColor: '#F4F7FB' }}>
         <NextTopLoader color="#1b60bb" showSpinner={false} height={3} />
         
