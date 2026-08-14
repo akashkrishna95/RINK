@@ -36,10 +36,13 @@ const config: Config = {
         },
       },
       fontFamily: {
-        helios: ['var(--font-helios)', 'system-ui', 'sans-serif'],
+        helios: ['var(--font-clash)', 'system-ui', 'sans-serif'],
+        clash: ['var(--font-clash)', 'system-ui', 'sans-serif'],
+        'clash-medium': ['var(--font-clash-medium)', 'system-ui', 'sans-serif'],
         avenir: ['system-ui', '-apple-system', 'sans-serif'],
         poppins: ['var(--font-poppins)', 'system-ui', 'sans-serif'],
         gotham: ['var(--font-gotham)', 'system-ui', 'sans-serif'],
+        'plus-jakarta': ['var(--font-plus-jakarta)', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         '4xl': '2rem',

@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ArrowUp, Phone } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Custom premium easing curve matching the reference design
 const easePremium = [0.16, 1, 0.3, 1] as [number, number, number, number];
@@ -26,13 +27,77 @@ export default function Footer() {
 
       {/* Main Footer Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8 py-20 lg:py-28 pb-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-12 gap-8 lg:gap-12">
           
-          {/* Column 1: NAVIGATE */}
+          {/* Column 1: LOGOS & CONTACT */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, ease: easePremium }}
+            className="col-span-12 md:col-span-5 flex flex-col gap-6"
+          >
+            {/* Logos */}
+            <div className="flex items-center gap-3">
+              <Image
+                src="/images/ksum-logo.svg"
+                alt="Kerala Startup Mission Logo"
+                width={180}
+                height={60}
+                className="h-12 md:h-14 w-auto object-contain brightness-0 invert"
+              />
+              <div className="w-px h-12 md:h-14 bg-[#eff9ff]/20"></div>
+              <Image
+                src="/images/rink-logo.svg"
+                alt="Research Innovation Network Kerala Logo"
+                width={210}
+                height={60}
+                className="h-12 md:h-14 w-auto object-contain brightness-0 invert"
+              />
+            </div>
+
+            {/* Address & Contact Info below logos */}
+            <div className="space-y-4">
+              <p className="font-avenir text-[#eff9ff]/70 text-sm leading-relaxed max-w-sm">
+                Kerala Startup Mission, G3B, Thejaswini, Technopark Campus Kariyavattom, Trivandrum, Kerala 695581
+              </p>
+              
+              <div className="space-y-2">
+                <a href="tel:08047180470" className="group flex items-center gap-2 font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base w-fit">
+                  <Phone className="w-4 h-4 shrink-0" />
+                  <span className="relative">
+                    08047180470
+                    <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+                  </span>
+                </a>
+                <a href="tel:04712700270" className="group flex items-center gap-2 font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base w-fit">
+                  <Phone className="w-4 h-4 shrink-0" />
+                  <span className="relative">
+                    0471-2700270
+                    <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+                  </span>
+                </a>
+                <a
+                  href="mailto:rink@startupmission.in"
+                  className="group flex items-center gap-2 font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base w-fit"
+                >
+                  <svg className="w-4 h-4 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span className="relative">
+                    rink@startupmission.in
+                    <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+                  </span>
+                </a>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Column 2: NAVIGATE */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, ease: easePremium, delay: 0.1 }}
+            className="col-span-6 sm:col-span-5 md:col-span-3"
           >
             <h4 className="font-helios text-sm font-bold text-[#eff9ff] uppercase tracking-wider mb-4">
               Navigate
@@ -64,11 +129,12 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-          {/* Column 2: CONNECT */}
+          {/* Column 3: CONNECT */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease: easePremium, delay: 0.1 }}
+            transition={{ duration: 0.6, ease: easePremium, delay: 0.2 }}
+            className="col-span-4 sm:col-span-4 md:col-span-2"
           >
             <h4 className="font-helios text-sm font-bold text-[#eff9ff] uppercase tracking-wider mb-4">
               Connect
@@ -94,58 +160,16 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-          {/* Column 3: CONTACT */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease: easePremium, delay: 0.2 }}
-            className="col-span-2 md:col-span-1"
-          >
-            <h4 className="font-helios text-sm font-bold text-[#eff9ff] uppercase tracking-wider mb-4">
-              Contact
-            </h4>
-            <div className="space-y-4">
-              <a
-                href="mailto:rink@startupmission.in"
-                className="group block w-fit"
-              >
-                <span className="font-avenir text-base lg:text-lg text-[#eff9ff] relative">
-                  rink@startupmission.in
-                  <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
-                </span>
-              </a>
-              <p className="font-avenir text-[#eff9ff]/70 text-sm leading-relaxed w-full max-w-sm pr-4">
-                G3B, Thejaswini, Technopark Campus Kariyavattom, Trivandrum, Kerala 695581
-              </p>
-              <div className="space-y-2">
-                <a href="tel:08047180470" className="group flex items-center gap-2 font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base w-fit">
-                  <Phone className="w-4 h-4 shrink-0" />
-                  <span className="relative">
-                    08047180470
-                    <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
-                  </span>
-                </a>
-                <a href="tel:04712700270" className="group flex items-center gap-2 font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base w-fit">
-                  <Phone className="w-4 h-4 shrink-0" />
-                  <span className="relative">
-                    0471-2700270
-                    <span className="absolute bottom-0 left-0 w-full h-px bg-[#eff9ff] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
-                  </span>
-                </a>
-              </div>
-            </div>
-          </motion.div>
-
           {/* Column 4: Back to Top Button */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, ease: easePremium, delay: 0.3 }}
-            className="col-span-2 md:col-span-1 flex justify-start md:justify-end md:items-start"
+            className="col-span-2 sm:col-span-3 md:col-span-2 flex justify-end items-start"
           >
             <button
               onClick={scrollToTop}
-              className="group w-12 h-12 bg-[#eff9ff] text-[#1b4f8d] rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+              className="group w-12 h-12 bg-[#eff9ff] text-[#1b4f8d] rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg cursor-pointer"
             >
               <ArrowUp className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
             </button>
@@ -195,26 +219,7 @@ export default function Footer() {
         </motion.div>
       </div>
 
-      {/* Massive Brand Anchor - Fixed to prevent 'K' from clipping */}
-      <div className="relative w-full flex items-end justify-center pointer-events-none select-none z-50 -mt-[3vw]">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: easePremium, delay: 0.5 }}
-          className="w-full flex items-end justify-center px-0"
-        >
-          <span 
-            className="font-helios font-black text-[#eff9ff] text-center w-full block whitespace-nowrap tracking-tighter"
-            style={{
-              fontSize: '13.2vw', 
-              lineHeight: '0.75', 
-              marginBottom: '-0.5vw' // Sits perfectly on the floor
-            }}
-          >
-            KSUM ✦ RINK
-          </span>
-        </motion.div>
-      </div>
+
     </footer>
   );
 }

@@ -1,7 +1,7 @@
 // C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\layout.tsx
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Poppins } from 'next/font/google'
+import { Poppins, Plus_Jakarta_Sans } from 'next/font/google'
 import localFont from 'next/font/local'
 import NextTopLoader from 'nextjs-toploader'
 // import RomiRedirectWidget from '@/HomePage/RomiAI/RomiRedirectWidget'
@@ -13,6 +13,12 @@ const poppins = Poppins({
   variable: '--font-poppins',
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
+})
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: '--font-plus-jakarta',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
 })
 
 const gotham = localFont({
@@ -27,15 +33,27 @@ const gotham = localFont({
   display: 'swap',
 })
 
-const helios = localFont({
+const clashDisplay = localFont({
   src: [
     {
-      path: '../public/fonts/HeliosExt.woff',
-      weight: '400 900',
+      path: '../public/fonts/ClashDisplay-Regular.otf',
+      weight: '400',
       style: 'normal',
     },
   ],
-  variable: '--font-helios',
+  variable: '--font-clash',
+  display: 'swap',
+})
+
+const clashDisplayMedium = localFont({
+  src: [
+    {
+      path: '../public/fonts/ClashDisplay-Medium.otf',
+      weight: '500',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-clash-medium',
   display: 'swap',
 })
 
@@ -68,7 +86,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${poppins.variable} ${gotham.variable} ${helios.variable}`}>
+    <html lang="en" className={`${poppins.variable} ${plusJakartaSans.variable} ${gotham.variable} ${clashDisplay.variable} ${clashDisplayMedium.variable}`}>
       <body className="font-poppins antialiased" style={{ backgroundColor: '#F4F7FB' }}>
         <NextTopLoader color="#1b60bb" showSpinner={false} height={3} />
         

@@ -135,8 +135,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
           {/* --- MOBILE TITLE --- */}
           <div className="flex lg:hidden items-center gap-3 order-1 px-2">
             <h2
-              className="font-helios text-[40px] sm:text-[44px] text-[#1b60bb] leading-none tracking-wide"
-              style={{ fontFamily: "var(--font-helios), sans-serif" }}
+              className="font-helios font-medium text-4xl sm:text-5xl md:text-7xl text-[#1b60bb] leading-none tracking-wide"
             >
               Institutions Grid
             </h2>
@@ -438,8 +437,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                               {/* DESKTOP TITLE */}
                               <div className="hidden lg:flex items-center gap-3 mb-2">
                                 <h2
-                                  className="font-normal text-[52px] xl:text-[60px] text-[#1b60bb] leading-none tracking-wide"
-                                  style={{ fontFamily: "var(--font-helios), sans-serif" }}
+                                  className="font-helios font-medium text-4xl sm:text-5xl md:text-7xl text-[#1b60bb] leading-none tracking-wide"
                                 >
                                   Institutions Grid
                                 </h2>

@@ -93,8 +93,7 @@ export default function PastVisitedInstitutions() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="font-helios font-black text-3xl md:text-5xl lg:text-6xl text-[#1b60bb] tracking-tight text-center md:text-left"
-          style={{ fontFamily: "var(--font-helios), sans-serif" }}
+          className="font-helios font-medium text-4xl sm:text-5xl md:text-7xl text-[#1b60bb] tracking-tight text-center md:text-left"
         >
           Past Visited Institutions
         </motion.h2>

@@ -192,7 +192,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
         <div
           className="absolute top-0 left-0 right-0 h-[140px] md:h-[180px] bg-[#eff9ff] rounded-b-[3rem] md:rounded-b-[4rem] z-10 w-full flex items-center justify-center pt-4 shadow-sm"
         >
-          <h2 className="font-helios font-black text-3xl md:text-[45px] lg:text-[50px] text-[#1b60bb] tracking-wide px-4 text-center leading-tight">
+          <h2 className="font-helios font-medium text-4xl sm:text-5xl md:text-6xl text-[#1b60bb] tracking-wide px-4 text-center leading-tight">
             Explore Technologies
           </h2>
         </div>

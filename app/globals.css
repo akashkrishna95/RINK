@@ -6,9 +6,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-helios);
+  --font-heading: var(--font-clash);
   --font-sans: var(--font-poppins);
-  --font-helios: var(--font-helios);
+  --font-helios: var(--font-clash);
+  --font-clash: var(--font-clash);
+  --font-clash-medium: var(--font-clash-medium);
   --font-gotham: var(--font-gotham);
   --font-poppins: var(--font-poppins);
   --font-mono: 'Menlo', 'Courier New', monospace;

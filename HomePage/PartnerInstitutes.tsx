@@ -48,9 +48,9 @@ export default function PartnerInstitutes({ initialInstitutes }: { initialInstit
           transition={{ duration: 0.5 }}
           className="mb-10 md:mb-12"
         >
-          <h1 className="font-helios font-black text-3xl md:text-5xl lg:text-6xl text-[#1b60bb] tracking-tight">
+          <h2 className="font-helios font-medium text-4xl sm:text-5xl md:text-7xl text-[#1b60bb] tracking-tight">
             Partnered Institutes
-          </h1>
+          </h2>
         </motion.div>
 
         {/* Logo Grid - 3 columns on mobile, up to 6 on desktop */}
