@@ -25,7 +25,14 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
   const containerRef = useRef<HTMLDivElement>(null);
   const isInteracting = useRef(false);
   const isVisible = useRef(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  
+  // Drag-to-scroll states for desktop swiping
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef(0);
+  const dragScrollLeft = useRef(0);
+
   const [extendedTechnologies, setExtendedTechnologies] = useState<Technology[]>(() => {
     if (initialTechnologies.length > 0) {
       return [...initialTechnologies, ...initialTechnologies, ...initialTechnologies];
@@ -127,12 +134,54 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
   // Handler for pausing the entire carousel
   const handleInteractionStart = useCallback(() => {
     isInteracting.current = true;
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
   }, []);
 
-  // Handler for resuming the animation immediately when interaction stops
+  // Handler for resuming the animation after 3 seconds of no interaction
   const handleInteractionEnd = useCallback(() => {
-    isInteracting.current = false;
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      isInteracting.current = false;
+      timeoutRef.current = null;
+    }, 3000);
   }, []);
+
+  // Drag-to-scroll handlers for desktop swiping
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const container = containerRef.current;
+    if (!container) return;
+    setIsDragging(true);
+    handleInteractionStart();
+    dragStart.current = e.pageX - container.offsetLeft;
+    dragScrollLeft.current = container.scrollLeft;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const container = containerRef.current;
+    if (!container) return;
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - dragStart.current) * 1.5; // Drag sensitivity multiplier
+    container.scrollLeft = dragScrollLeft.current - walk;
+  };
+
+  const handleMouseUpOrLeave = () => {
+    if (isDragging) {
+      setIsDragging(false);
+      handleInteractionEnd();
+    }
+  };
+
+  const handleWheel = () => {
+    handleInteractionStart();
+    handleInteractionEnd(); // Automatically starts the 5s delay timer
+  };
 
   // Infinite Auto-Scroll Logic (Moves Right to Left automatically)
   useEffect(() => {
@@ -140,8 +189,18 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
     const container = containerRef.current;
     if (!container) return;
 
+    // Cache scrollWidth to prevent layouts thrashing reflows inside requestAnimationFrame loop
+    let scrollWidth = container.scrollWidth;
+
+    const handleResize = () => {
+      if (container) {
+        scrollWidth = container.scrollWidth;
+      }
+    };
+    window.addEventListener('resize', handleResize);
+
     // Start user in the middle section for infinite drag in both directions
-    container.scrollLeft = container.scrollWidth / 3;
+    container.scrollLeft = scrollWidth / 3;
 
     let animationId: number;
     let currentScroll = container.scrollLeft;
@@ -158,8 +217,8 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
         const speed = 0.10; // pixels per millisecond (speed set to 0.10)
         currentScroll += speed * clampedDelta;
 
-        // Loop back seamlessly using direct calculation to avoid jumps
-        const oneThird = container.scrollWidth / 3;
+        // Loop back seamlessly using cached calculation
+        const oneThird = scrollWidth / 3;
         if (currentScroll >= oneThird * 2) {
           currentScroll -= oneThird;
         } else if (currentScroll <= 0) {
@@ -177,6 +236,10 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
 
     return () => {
       cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', handleResize);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     };
   }, [isMounted, extendedTechnologies.length]);
 
@@ -186,11 +249,15 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
     <div className="w-full relative">
 
       {/* Main Container Gradient */}
-      <div className="bg-gradient-to-b from-[#36a8fb] via-[#1b60bb] to-[#153156] relative pt-[140px] md:pt-[180px] pb-[100px] md:pb-[140px] overflow-hidden flex flex-col justify-center">
+      <div 
+        className="bg-gradient-to-b from-[#36a8fb] via-[#1b60bb] to-[#153156] relative pt-[140px] md:pt-[180px] pb-[100px] md:pb-[140px] overflow-hidden flex flex-col justify-center"
+        style={{ border: 'none', borderWidth: 0, boxShadow: 'none' }}
+      >
 
         {/* Top Inverted Curve Mask with Title */}
         <div
-          className="absolute top-0 left-0 right-0 h-[140px] md:h-[180px] bg-[#eff9ff] rounded-b-[3rem] md:rounded-b-[4rem] z-10 w-full flex items-center justify-center pt-4 shadow-sm"
+          className="absolute top-0 left-0 right-0 h-[140px] md:h-[180px] bg-[#eff9ff] rounded-b-[3rem] md:rounded-b-[4rem] z-10 w-full flex items-center justify-center pt-4"
+          style={{ border: 'none', borderWidth: 0, boxShadow: 'none', top: '-2px' }}
         >
           <h2 className="font-helios font-medium text-4xl sm:text-5xl md:text-6xl text-[#1b60bb] tracking-wide px-4 text-center leading-tight">
             Explore Technologies
@@ -198,17 +265,23 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
         </div>
 
         {/* Carousel Container */}
-        <div
-          className="w-full relative z-20"
-          onMouseEnter={handleInteractionStart}
-          onMouseLeave={handleInteractionEnd}
-          onTouchStart={handleInteractionStart}
-          onTouchEnd={handleInteractionEnd}
-        >
+        <div className="w-full relative z-20">
           <div
             ref={containerRef}
-            className="flex gap-4 md:gap-6 overflow-x-auto pb-16 pt-16 md:pt-20 px-[10vw] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] cursor-grab active:cursor-grabbing snap-y"
-            style={{ WebkitOverflowScrolling: 'touch' }}
+            className="flex gap-4 md:gap-6 overflow-x-auto pb-16 pt-16 md:pt-20 px-[10vw] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] cursor-grab active:cursor-grabbing snap-y select-none transform-gpu"
+            style={{ 
+              WebkitOverflowScrolling: 'touch',
+              willChange: 'scroll-position',
+              transform: 'translate3d(0, 0, 0)',
+              backfaceVisibility: 'hidden'
+            }}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUpOrLeave}
+            onMouseLeave={handleMouseUpOrLeave}
+            onTouchStart={handleInteractionStart}
+            onTouchEnd={handleInteractionEnd}
+            onWheel={handleWheel}
           >
             {extendedTechnologies.map((tech, index) => {
               const uniqueId = `${tech.id}-${index}`;
@@ -216,7 +289,11 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
               return (
                 <div
                   key={uniqueId}
-                  className="flex-shrink-0 w-[240px] xs:w-[260px] sm:w-[280px] md:w-[320px] relative h-[360px] sm:h-[380px] md:h-[420px] transition-transform duration-300 ease-out hover:-translate-y-4 hover:z-50 will-change-transform"
+                  className="flex-shrink-0 w-[240px] xs:w-[260px] sm:w-[280px] md:w-[320px] relative h-[360px] sm:h-[380px] md:h-[420px] transition-transform duration-300 ease-out hover:-translate-y-4 hover:z-50 will-change-transform transform-gpu"
+                  style={{
+                    transform: 'translate3d(0, 0, 0)',
+                    backfaceVisibility: 'hidden'
+                  }}
                 >
                   <TechnologyCard
                     id={tech.id}
@@ -237,6 +314,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
         {/* Bottom Inverted Curve Mask */}
         <div
           className="absolute bottom-0 left-0 right-0 h-[80px] md:h-[120px] bg-[#eff9ff] rounded-t-[3rem] md:rounded-t-[4rem] z-10 w-full"
+          style={{ border: 'none', borderWidth: 0, boxShadow: 'none', bottom: '-2px' }}
         />
 
       </div>

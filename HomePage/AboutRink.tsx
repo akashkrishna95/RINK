@@ -28,12 +28,12 @@ export default function AboutRink() {
       <div className="relative max-w-7xl mx-auto px-8 z-10">
 
         {/* Top Section: Arrow on the left, Heading on the right */}
-        <div className="flex justify-between items-start mb-8 lg:mb-10">
+        <div className="flex justify-between items-center mb-8 lg:mb-10">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-[#1b60bb] mt-2"
+            className="text-[#1b60bb]"
           >
             <ArrowDownRight size={80} strokeWidth={2.5} className="w-12 h-12 md:w-20 md:h-20" />
           </motion.div>
@@ -77,7 +77,7 @@ export default function AboutRink() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
               className="bg-white/95 backdrop-blur-sm rounded-[16px] p-4 lg:px-5 lg:py-4 shadow-sm border border-gray-100 w-full"
             >
-              <p className="font-avenir text-gray-700 text-[13px] md:text-sm lg:text-[15px] leading-relaxed">
+              <p className="font-avenir text-gray-700 text-[14px] md:text-[15px] lg:text-[16px] leading-relaxed">
                 An initiative of the Kerala Startup Mission, <span className="text-[#1b60bb] font-medium">RINK</span> bridges
                 the gap between breakthrough lab research and commercial enterprise,
                 empowering the research fraternity to{' '}
@@ -111,11 +111,11 @@ export default function AboutRink() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, amount: 0.1 }}
                       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 + index * 0.05 }}
-                      className="bg-[#5cc4fe]/95 backdrop-blur-sm rounded-[10px] p-3 md:p-4 flex flex-col justify-between min-h-[90px] shadow-sm group-hover:shadow-md transition-shadow h-full"
+                      className="bg-[#5cc4fe]/95 backdrop-blur-sm rounded-[10px] p-3 md:p-4 flex flex-col justify-between min-h-[110px] md:min-h-[125px] shadow-sm group-hover:shadow-md transition-shadow h-full"
                     >
                       <div className="flex items-center gap-2 mb-2">
                         <Icon className="text-[#153156] w-5 h-5 md:w-6 md:h-6 flex-shrink-0" strokeWidth={2} />
-                        <h4 className="font-helios text-[#153156] font-normal text-[13px] md:text-[17px] leading-[1.15] pr-1 tracking-tight">
+                        <h4 className="font-helios text-[#153156] font-normal text-[15px] md:text-[19px] lg:text-[20px] leading-[1.15] pr-1 tracking-tight">
                           {feature.title}
                         </h4>
                       </div>

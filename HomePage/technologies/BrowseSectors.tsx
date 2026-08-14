@@ -104,7 +104,7 @@ export default function BrowseSectors() {
           <h2 className="font-helios text-[28px] md:text-4xl lg:text-5xl font-black text-[#1b60bb] tracking-tight mb-4">
             Browse Technologies by Domain
           </h2>
-          <p className="font-poppins text-sm md:text-[15px] text-gray-600 max-w-2xl leading-relaxed">
+          <p className="font-poppins text-[15px] md:text-[16px] text-gray-600 max-w-2xl leading-relaxed">
             Explore opportunities by industry domain and discover technologies ready for commercialization.
           </p>
         </motion.div>

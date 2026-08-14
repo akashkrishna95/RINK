@@ -141,7 +141,7 @@ export default function Navbar() {
             <Link
               href="/RomiPortal"
               onClick={(e) => handleLinkClick(e, '/RomiPortal')}
-              className="font-plus-jakarta text-xs min-[360px]:text-sm min-[400px]:text-[15px] font-bold text-[#1b60bb] hover:text-[#0f3a6d] transition-colors focus:outline-none py-1.5 whitespace-nowrap"
+              className="font-plus-jakarta text-xs min-[360px]:text-sm min-[400px]:text-[15px] font-medium text-[#1b60bb] hover:text-[#0f3a6d] transition-colors focus:outline-none py-1.5 whitespace-nowrap"
             >
               ROMI AI
             </Link>

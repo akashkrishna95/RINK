@@ -633,11 +633,11 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
                         <div className="text-[11px] text-[#1b60bb] font-semibold">
                           Innovation Output
                         </div>
-                        <div className="text-xl font-black text-[#153156] mt-0.5 font-sans">
+                        <div className="text-xl font-normal text-[#153156] mt-0.5 font-sans">
                           {selectedInstrument.techCount || 1} {selectedInstrument.kind === 'instrument' ? 'Instruments' : 'Technologies'}
                         </div>
                       </div>
-                      <div className="text-xs bg-[#1b60bb] text-white px-3 py-1 rounded-lg font-bold">
+                      <div className="text-xs bg-[#1b60bb] text-white px-3 py-1 rounded-lg font-medium">
                         Active
                       </div>
                     </div>

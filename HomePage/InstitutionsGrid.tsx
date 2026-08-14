@@ -135,7 +135,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
           {/* --- MOBILE TITLE --- */}
           <div className="flex lg:hidden items-center gap-3 order-1 px-2">
             <h2
-              className="font-helios font-medium text-4xl sm:text-5xl md:text-7xl text-[#1b60bb] leading-none tracking-wide"
+              className="font-helios font-bold text-4xl sm:text-5xl md:text-7xl text-[#1b60bb] leading-none tracking-tight"
             >
               Institutions Grid
             </h2>
@@ -150,7 +150,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="flex lg:hidden order-4 bg-white rounded-[20px] p-5 md:p-7 shadow-[0_4px_20px_rgb(0,0,0,0.04)] border border-white/60"
           >
-            <p className="text-[#1A365D] text-[13px] md:text-[14px] leading-relaxed font-medium">
+            <p className="text-[#1A365D] text-[14px] md:text-[15px] leading-relaxed font-medium">
               Partner with Kerala&apos;s leading research hubs. Access the labs, experts, and tech
               you need to bring your startup&apos;s vision to life.
             </p>
@@ -270,11 +270,11 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                 <div className="bg-[#eff9ff] rounded-xl p-4 border border-[#bde7ff] flex items-center justify-between">
                                   <div>
                                     <div className="text-[11px] text-[#1b60bb] font-semibold">Innovation Output</div>
-                                    <div className="text-xl font-black text-[#153156] mt-0.5">
+                                    <div className="text-xl font-normal text-[#153156] mt-0.5">
                                       {inst.techCount} Technologies
                                     </div>
                                   </div>
-                                  <div className="text-xs bg-[#1b60bb] text-white px-2.5 py-1 rounded-lg font-bold">
+                                  <div className="text-xs bg-[#1b60bb] text-white px-2.5 py-1 rounded-lg font-medium">
                                     Active
                                   </div>
                                 </div>
@@ -342,7 +342,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                     <polyline points="6 9 12 15 18 9"></polyline>
                                   </svg>
                                   <h4 
-                                    className={`text-sm font-bold transition-colors ${isDistrictActive ? 'text-[#1b60bb]' : 'text-slate-700 group-hover:text-[#36a8fb]'}`}
+                                    className={`text-base md:text-lg font-bold transition-colors ${isDistrictActive ? 'text-[#1b60bb]' : 'text-slate-700 group-hover:text-[#36a8fb]'}`}
                                     style={{ fontFamily: "var(--font-helios), sans-serif" }}
                                   >
                                     {district}
@@ -437,7 +437,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                               {/* DESKTOP TITLE */}
                               <div className="hidden lg:flex items-center gap-3 mb-2">
                                 <h2
-                                  className="font-helios font-medium text-4xl sm:text-5xl md:text-7xl text-[#1b60bb] leading-none tracking-wide"
+                                  className="font-helios font-bold text-4xl sm:text-5xl md:text-7xl text-[#1b60bb] leading-none tracking-tight"
                                 >
                                   Institutions Grid
                                 </h2>
@@ -451,9 +451,9 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                                 className="hidden lg:flex bg-white rounded-[20px] p-5 md:p-7 shadow-[0_4px_20px_rgb(0,0,0,0.04)] border border-white/60"
                               >
-                                <p className="text-[#1A365D] text-[13px] md:text-[14px] leading-relaxed font-medium">
-                                  Partner with Kerala&apos;s leading research hubs. Access the labs, experts, and tech
-                                  you need to bring your startup&apos;s vision to life.
+                                <p className="text-[#1A365D] text-[14px] md:text-[15px] leading-relaxed font-medium">
+                                  Partner with Kerala&apos;s leading research hubs. Access the labs, experts,
+                                  and tech you need to bring your startup&apos;s vision to life.
                                 </p>
                               </motion.div>
 

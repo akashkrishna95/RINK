@@ -25,7 +25,7 @@ export default function HeroSection() {
 
         {/* Hero Content */}
         <div className="relative h-full flex flex-col justify-center px-6 sm:px-8 md:px-12 z-10 max-w-3xl">
-          <h1 className="font-helios font-black text-3xl sm:text-4xl md:text-5xl lg:text-[54px] text-white leading-[1.15] md:leading-[1.1] mb-3 md:mb-4 tracking-wide">
+          <h1 className="font-helios font-normal text-3xl sm:text-4xl md:text-5xl lg:text-[54px] text-white leading-[1.15] md:leading-[1.1] mb-3 md:mb-4 tracking-tight">
             Connecting Innovation to <span className="text-[#51B3F9]">Impact.</span>
           </h1>
           <p className="text-white/95 text-base sm:text-lg md:text-xl leading-relaxed max-w-xl">
@@ -49,10 +49,10 @@ export default function HeroSection() {
             className="bg-[#cee3ef] rounded-2xl p-4 md:p-6 relative group cursor-pointer shadow-sm hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center h-full overflow-hidden"
           >
             <ArrowUpRight className="absolute top-3 right-3 md:top-4 md:right-4 text-[#1b60bb] w-4 h-4 md:w-6 md:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            <h3 className="font-helios text-[15px] sm:text-lg md:text-xl lg:text-[26px] font-bold text-[#1b60bb] mb-1 md:mb-2 w-full truncate mt-2 md:mt-0 text-center">
+            <h3 className="font-helios text-[19px] sm:text-2xl md:text-3xl lg:text-[32px] font-bold text-[#1b60bb] mb-1 md:mb-2 w-full truncate mt-2 md:mt-0 text-center">
               Technologies
             </h3>
-            <p className="text-[#1b60bb] text-[10px] sm:text-xs md:text-sm w-full text-center leading-tight whitespace-normal">
+            <p className="text-[#1b60bb] text-[12px] sm:text-sm md:text-[15px] w-full text-center leading-tight whitespace-normal">
               License breakthrough IP
             </p>
           </motion.div>
@@ -69,10 +69,10 @@ export default function HeroSection() {
             className="bg-[#cee3ef] rounded-2xl p-4 md:p-6 relative group cursor-pointer shadow-sm hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center h-full overflow-hidden"
           >
             <ArrowUpRight className="absolute top-3 right-3 md:top-4 md:right-4 text-[#1b60bb] w-4 h-4 md:w-6 md:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            <h3 className="font-helios text-[15px] sm:text-lg md:text-xl lg:text-[26px] font-bold text-[#1b60bb] mb-1 md:mb-2 w-full truncate mt-2 md:mt-0 text-center">
+            <h3 className="font-helios text-[19px] sm:text-2xl md:text-3xl lg:text-[32px] font-bold text-[#1b60bb] mb-1 md:mb-2 w-full truncate mt-2 md:mt-0 text-center">
               Instrumentation
             </h3>
-            <p className="text-[#1b60bb] text-[10px] sm:text-xs md:text-sm w-full text-center leading-tight whitespace-normal">
+            <p className="text-[#1b60bb] text-[12px] sm:text-sm md:text-[15px] w-full text-center leading-tight whitespace-normal">
               Access advanced core labs
             </p>
           </motion.div>
@@ -89,10 +89,10 @@ export default function HeroSection() {
             className="bg-[#1b60bb] rounded-2xl p-4 md:p-6 relative group cursor-pointer shadow-sm hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center h-full overflow-hidden"
           >
             <ArrowUpRight className="absolute top-3 right-3 md:top-4 md:right-4 text-white w-4 h-4 md:w-6 md:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            <h3 className="font-helios text-[15px] sm:text-lg md:text-xl lg:text-[26px] font-bold text-white mb-1 md:mb-2 w-full truncate mt-1 md:mt-0 text-center">
+            <h3 className="font-helios text-[19px] sm:text-2xl md:text-3xl lg:text-[32px] font-bold text-white mb-1 md:mb-2 w-full truncate mt-1 md:mt-0 text-center">
               Researchpreneurship
             </h3>
-            <p className="text-white/90 text-[10px] sm:text-xs md:text-sm w-full text-center leading-tight whitespace-normal">
+            <p className="text-white/90 text-[12px] sm:text-sm md:text-[15px] w-full text-center leading-tight whitespace-normal">
               Turn your research into startups
             </p>
           </motion.div>

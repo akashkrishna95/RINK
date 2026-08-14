@@ -1,7 +1,7 @@
 // C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\layout.tsx
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Poppins, Plus_Jakarta_Sans } from 'next/font/google'
+import { Barlow, Plus_Jakarta_Sans, Bricolage_Grotesque } from 'next/font/google'
 import localFont from 'next/font/local'
 import NextTopLoader from 'nextjs-toploader'
 // import RomiRedirectWidget from '@/HomePage/RomiAI/RomiRedirectWidget'
@@ -9,10 +9,12 @@ import Script from 'next/script'
 
 import './globals.css'
 
-const poppins = Poppins({
-  variable: '--font-poppins',
+const barlow = Barlow({
+  variable: '--font-barlow',
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  style: ['normal', 'italic'],
+  display: 'swap',
 })
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -33,27 +35,41 @@ const gotham = localFont({
   display: 'swap',
 })
 
-const clashDisplay = localFont({
+const trap = localFont({
   src: [
     {
-      path: '../public/fonts/ClashDisplay-Regular.otf',
+      path: '../public/fonts/Trap-Regular.otf',
       weight: '400',
       style: 'normal',
     },
-  ],
-  variable: '--font-clash',
-  display: 'swap',
-})
-
-const clashDisplayMedium = localFont({
-  src: [
     {
-      path: '../public/fonts/ClashDisplay-Medium.otf',
+      path: '../public/fonts/Trap-Medium.otf',
       weight: '500',
       style: 'normal',
     },
+    {
+      path: '../public/fonts/Trap-SemiBold.otf',
+      weight: '600',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/Trap-Bold.otf',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/Trap-Black.otf',
+      weight: '900',
+      style: 'normal',
+    },
   ],
-  variable: '--font-clash-medium',
+  variable: '--font-trap',
+  display: 'swap',
+})
+
+const bricolageGrotesque = Bricolage_Grotesque({
+  variable: '--font-bricolage',
+  subsets: ['latin'],
   display: 'swap',
 })
 
@@ -86,7 +102,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${poppins.variable} ${plusJakartaSans.variable} ${gotham.variable} ${clashDisplay.variable} ${clashDisplayMedium.variable}`}>
+    <html lang="en" className={`${barlow.variable} ${plusJakartaSans.variable} ${gotham.variable} ${bricolageGrotesque.variable} ${trap.variable}`}>
       <body className="font-poppins antialiased" style={{ backgroundColor: '#F4F7FB' }}>
         <NextTopLoader color="#1b60bb" showSpinner={false} height={3} />
         

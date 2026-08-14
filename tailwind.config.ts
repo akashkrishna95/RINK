@@ -41,8 +41,10 @@ const config: Config = {
         'clash-medium': ['var(--font-clash-medium)', 'system-ui', 'sans-serif'],
         avenir: ['system-ui', '-apple-system', 'sans-serif'],
         poppins: ['var(--font-poppins)', 'system-ui', 'sans-serif'],
+        barlow: ['var(--font-barlow)', 'system-ui', 'sans-serif'],
         gotham: ['var(--font-gotham)', 'system-ui', 'sans-serif'],
         'plus-jakarta': ['var(--font-plus-jakarta)', 'system-ui', 'sans-serif'],
+        trap: ['var(--font-trap)', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         '4xl': '2rem',
