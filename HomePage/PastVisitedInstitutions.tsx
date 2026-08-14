@@ -3,13 +3,10 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { getProxiedImageUrl } from '@/lib/utils';
+import { useRealTimeSync } from '@/hooks/useRealTimeSync';
+import { pb, mapPbPastVisitedInstitution, PastVisitedInstitution } from '@/lib/pocketbase';
 
-interface Institution {
-  name: string;
-  logoUrl: string;
-}
-
-function InstitutionLogoCard({ inst, index }: { inst: Institution; index: number }) {
+function InstitutionLogoCard({ inst }: { inst: PastVisitedInstitution }) {
   const [imgError, setImgError] = useState(false);
 
   return (
@@ -36,35 +33,22 @@ function InstitutionLogoCard({ inst, index }: { inst: Institution; index: number
   );
 }
 
-export default function PastVisitedInstitutions() {
-  const [institutions, setInstitutions] = useState<Institution[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function PastVisitedInstitutions({ initialInstitutions }: { initialInstitutions: PastVisitedInstitution[] }) {
+  const institutions = useRealTimeSync<PastVisitedInstitution>(
+    'past_visited_institutions',
+    initialInstitutions || [],
+    mapPbPastVisitedInstitution
+  );
 
-  useEffect(() => {
-    async function loadInstitutions() {
-      try {
-        const res = await fetch('/api/past-visited-institutions');
-        const data = await res.json();
-        if (data.success && data.institutions) {
-          setInstitutions(data.institutions);
-        }
-      } catch (err) {
-        console.error('Failed to load past visited institutions:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadInstitutions();
-  }, []);
+  const activeInstitutions = institutions.length > 0 ? institutions : initialInstitutions;
 
-  if (loading || institutions.length === 0) return null;
+  if (!activeInstitutions || activeInstitutions.length === 0) return null;
 
-  // Doubled list for seamless infinite marquee loop (saves 33% DOM nodes compared to tripling)
-  const listToRender = [...institutions, ...institutions];
+  // Doubled list for seamless infinite marquee loop
+  const listToRender = [...activeInstitutions, ...activeInstitutions];
 
   return (
     <section className="w-full py-16 bg-[#F4F7FB] overflow-hidden border-t border-slate-200/50">
-      {/* Inject GPU Accelerated CSS Marquee */}
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes marquee-smooth {
           0% { transform: translate3d(0, 0, 0); }
@@ -110,7 +94,6 @@ export default function PastVisitedInstitutions() {
             <InstitutionLogoCard
               key={`${inst.name}-${index}`}
               inst={inst}
-              index={index}
             />
           ))}
         </div>

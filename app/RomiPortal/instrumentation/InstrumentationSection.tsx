@@ -15,21 +15,11 @@ const InteractiveMap = dynamic(() => import('@/HomePage/InteractiveMap'), {
   )
 });
 
-interface Institution {
-  id: number;
-  name: string;
-  website: string;
-  district: string;
-  techCount: number;
-  lat: number;
-  lng: number;
-  location: string;
-  partnered: boolean;
-}
+import { Institution } from '@/lib/pocketbase';
 
 const defaultInstitutions: Institution[] = [
   {
-    id: 1,
+    id: '1',
     name: 'CUSAT Advanced Technology Centre',
     website: 'cusat.ac.in',
     district: 'Ernakulam',
@@ -37,10 +27,11 @@ const defaultInstitutions: Institution[] = [
     lat: 10.0284,
     lng: 76.3285,
     location: 'Kalamassery, Kochi, Kerala 682022',
-    partnered: true
+    logoUrl: '',
+    isPartnered: true
   },
   {
-    id: 2,
+    id: '2',
     name: 'Kerala Agricultural University (KAU)',
     website: 'kau.in',
     district: 'Thrissur',
@@ -48,10 +39,11 @@ const defaultInstitutions: Institution[] = [
     lat: 10.5434,
     lng: 76.2798,
     location: 'Vellanikkara, Thrissur, Kerala 680656',
-    partnered: true
+    logoUrl: '',
+    isPartnered: true
   },
   {
-    id: 3,
+    id: '3',
     name: 'IISERT R&D Hub',
     website: 'iisertvm.ac.in',
     district: 'Thiruvananthapuram',
@@ -59,7 +51,8 @@ const defaultInstitutions: Institution[] = [
     lat: 8.5486,
     lng: 76.9038,
     location: 'Vithura, Thiruvananthapuram, Kerala 695551',
-    partnered: true
+    logoUrl: '',
+    isPartnered: true
   }
 ];
 

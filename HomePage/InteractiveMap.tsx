@@ -34,24 +34,14 @@ const createCustomIcon = (isActive: boolean) => {
   });
 };
 
-interface Institution {
-  id: number;
-  name: string;
-  website: string;
-  district: string;
-  techCount: number;
-  lat: number;
-  lng: number;
-  location?: string;
-  partnered?: boolean;
-}
+import { Institution } from '@/lib/pocketbase';
 
 interface InteractiveMapProps {
   onDistrictHover?: (district: string) => void;
   onDistrictLeave?: () => void;
-  onInstitutionHover?: (id: number | null) => void;
+  onInstitutionHover?: (id: string | null) => void;
   activeDistrict?: string | null;
-  activeInstitution?: number | null;
+  activeInstitution?: string | null;
   className?: string;
   isExpanded?: boolean;
   institutions: Institution[];
@@ -64,7 +54,7 @@ function MapController({
   isExpanded 
 }: { 
   activeDistrict?: string | null, 
-  activeInstitution?: number | null, 
+  activeInstitution?: string | null, 
   institutions: Institution[], 
   isExpanded?: boolean 
 }) {
@@ -309,7 +299,7 @@ export default function InteractiveMap({
                       <span className="bg-[#daf1ff] text-[#1b60bb] px-2 py-0.5 rounded font-mono font-semibold">
                         {inst.techCount} Techs
                       </span>
-                      {inst.partnered && (
+                      {inst.isPartnered && (
                         <span className="bg-emerald-600 text-white px-2.5 py-0.5 rounded font-bold text-[9px] shadow-sm">
                           Partnered
                         </span>

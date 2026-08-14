@@ -6,35 +6,31 @@ import { ArrowRight, Play, CheckCircle2, Users, Lightbulb, TrendingUp } from 'lu
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
 import PastVisitedInstitutions from '../PastVisitedInstitutions';
+import { useRealTimeSync } from '@/hooks/useRealTimeSync';
+import { pb, mapPbDemoDay, DemoDayVideo, PastVisitedInstitution } from '@/lib/pocketbase';
 
-export default function DemoDayExposureVisits() {
-  const [videos, setVideos] = useState<{ id: string; title: string }[]>([]);
-  const [activeVideo, setActiveVideo] = useState<{ id: string; title: string } | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default function DemoDayExposureVisits({ 
+  initialVideos, 
+  initialPastVisitedInstitutions 
+}: { 
+  initialVideos: DemoDayVideo[];
+  initialPastVisitedInstitutions: PastVisitedInstitution[];
+}) {
+  const videos = useRealTimeSync<DemoDayVideo>(
+    'demo_days',
+    initialVideos,
+    (record) => mapPbDemoDay(record)
+  );
+
+  const [activeVideo, setActiveVideo] = useState<DemoDayVideo | null>(initialVideos[0] || null);
   const [hasScrolledIntoView, setHasScrolledIntoView] = useState(false);
   const playerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    async function loadVideos() {
-      try {
-        setLoading(true);
-        const res = await fetch('/api/demoday', { cache: 'no-store' });
-        if (!res.ok) throw new Error('Failed to fetch videos');
-        const data = await res.json();
-        if (data.videos && data.videos.length > 0) {
-          setVideos(data.videos);
-          setActiveVideo(data.videos[0]);
-        }
-      } catch (err) {
-        console.error('Error loading Demo Day videos:', err);
-        setError('Failed to load videos. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
+    if (videos.length > 0 && (!activeVideo || !videos.some(v => v.id === activeVideo.id))) {
+      setActiveVideo(videos[0]);
     }
-    loadVideos();
-  }, []);
+  }, [videos, activeVideo]);
 
 
 
@@ -124,16 +120,7 @@ export default function DemoDayExposureVisits() {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Main Player */}
             <div ref={playerRef} className="lg:w-2/3 w-full">
-              {loading ? (
-                <div className="w-full aspect-video rounded-3xl bg-slate-800 animate-pulse flex flex-col items-center justify-center text-white/50 font-poppins gap-3">
-                  <div className="w-12 h-12 rounded-full border-4 border-white/20 border-t-[#5cc4fe] animate-spin" />
-                  <span>Loading video player...</span>
-                </div>
-              ) : error ? (
-                <div className="w-full aspect-video rounded-3xl bg-slate-900/60 border border-red-500/20 flex items-center justify-center text-red-300 font-poppins px-6 text-center">
-                  {error}
-                </div>
-              ) : activeVideo ? (
+              {activeVideo ? (
                 <>
                   <motion.div 
                     key={activeVideo.id}
@@ -146,7 +133,7 @@ export default function DemoDayExposureVisits() {
                       <iframe
                         width="100%"
                         height="100%"
-                        src={`https://www.youtube.com/embed/${activeVideo.id}?autoplay=1&rel=0`}
+                        src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0`}
                         title={activeVideo.title}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
@@ -158,10 +145,9 @@ export default function DemoDayExposureVisits() {
                         onClick={() => setHasScrolledIntoView(true)}
                       >
                         <img 
-                          src={`https://img.youtube.com/vi/${activeVideo.id}/mqdefault.jpg`} 
+                          src={`https://img.youtube.com/vi/${activeVideo.youtubeId}/mqdefault.jpg`} 
                           alt={activeVideo.title}
                           loading="lazy"
-                          decoding="async"
                           className="absolute inset-0 w-full h-full object-cover opacity-50"
                         />
                         <div className="z-10 w-16 h-16 rounded-full bg-[#1b60bb] hover:bg-[#154a93] text-white flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 active:scale-95 duration-300">
@@ -181,11 +167,7 @@ export default function DemoDayExposureVisits() {
 
             {/* Playlist Grid */}
             <div className="lg:w-1/3 w-full max-h-[600px] overflow-y-auto pr-2 space-y-4 custom-scrollbar">
-              {loading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="w-full h-24 rounded-xl bg-white/5 border border-white/5 animate-pulse" />
-                ))
-              ) : videos.map((video) => (
+              {videos.map((video) => (
                 <button
                   key={video.id}
                   onClick={() => {
@@ -196,10 +178,9 @@ export default function DemoDayExposureVisits() {
                 >
                   <div className="relative w-32 aspect-video shrink-0 rounded-lg overflow-hidden bg-black/50">
                     <img 
-                      src={`https://img.youtube.com/vi/${video.id}/mqdefault.jpg`} 
+                      src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`} 
                       alt={video.title}
                       loading="lazy"
-                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                     {activeVideo?.id === video.id && (
@@ -267,7 +248,7 @@ export default function DemoDayExposureVisits() {
         </div>
       </section>
 
-      <PastVisitedInstitutions />
+      <PastVisitedInstitutions initialInstitutions={initialPastVisitedInstitutions} />
 
       <Footer />
       

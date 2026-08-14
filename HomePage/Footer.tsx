@@ -34,24 +34,24 @@ export default function Footer() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, ease: easePremium }}
-            className="col-span-12 md:col-span-5 flex flex-col gap-6"
+            className="col-span-12 md:col-span-4 flex flex-col gap-6"
           >
             {/* Logos */}
             <div className="flex items-center gap-3">
               <Image
                 src="/images/ksum-logo.svg"
                 alt="Kerala Startup Mission Logo"
-                width={180}
-                height={60}
-                className="h-12 md:h-14 w-auto object-contain brightness-0 invert"
+                width={140}
+                height={40}
+                className="h-9 md:h-11 w-auto object-contain brightness-0 invert"
               />
-              <div className="w-px h-12 md:h-14 bg-[#eff9ff]/20"></div>
+              <div className="w-px h-9 md:h-11 bg-[#eff9ff]/20"></div>
               <Image
                 src="/images/rink-logo.svg"
                 alt="Research Innovation Network Kerala Logo"
-                width={210}
-                height={60}
-                className="h-12 md:h-14 w-auto object-contain brightness-0 invert"
+                width={160}
+                height={40}
+                className="h-9 md:h-11 w-auto object-contain brightness-0 invert"
               />
             </div>
 
@@ -134,7 +134,7 @@ export default function Footer() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, ease: easePremium, delay: 0.2 }}
-            className="col-span-4 sm:col-span-4 md:col-span-2"
+            className="col-span-4 sm:col-span-4 md:col-span-3"
           >
             <h4 className="font-helios text-sm font-bold text-[#eff9ff] uppercase tracking-wider mb-4">
               Connect
@@ -169,7 +169,7 @@ export default function Footer() {
           >
             <button
               onClick={scrollToTop}
-              className="group w-12 h-12 bg-[#eff9ff] text-[#1b4f8d] rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg cursor-pointer"
+              className="group w-12 h-12 bg-[#eff9ff] text-[#1b4f8d] rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg cursor-pointer shrink-0"
             >
               <ArrowUp className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
             </button>

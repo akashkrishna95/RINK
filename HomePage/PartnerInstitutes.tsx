@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
-import institutionLogos from '@/data/institutions_mapped.json';
+import institutionLogosBaseline from '@/data/institutions_mapped.json';
 import { getProxiedImageUrl } from '@/lib/utils';
+import { useRealTimeSync } from '@/hooks/useRealTimeSync';
+import { pb, mapPbInstitution, Institution } from '@/lib/pocketbase';
 
 interface Institute {
   id: string;
@@ -13,7 +15,7 @@ interface Institute {
   logoUrl: string;
 }
 
-const mockInstitutes: Institute[] = institutionLogos
+const mockInstitutes: Institute[] = institutionLogosBaseline
   .filter(inst => inst.partnered)
   .map(inst => ({
     id: String(inst.id),
@@ -21,12 +23,32 @@ const mockInstitutes: Institute[] = institutionLogos
     logoUrl: inst.logo_url
   }));
 
-export default function PartnerInstitutes({ initialInstitutes }: { initialInstitutes?: Institute[] }) {
+export default function PartnerInstitutes({ initialInstitutions }: { initialInstitutions?: Institution[] }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  
-  const activeInstitutes = initialInstitutes && initialInstitutes.length > 0 
-    ? initialInstitutes 
-    : mockInstitutes;
+
+  const institutions = useRealTimeSync<Institution>(
+    'all_institutions',
+    initialInstitutions || [],
+    mapPbInstitution
+  );
+
+  const activeInstitutes: Institute[] = institutions.length > 0
+    ? institutions
+        .filter(inst => inst.isPartnered)
+        .map(inst => ({
+          id: inst.id,
+          name: inst.name,
+          logoUrl: inst.logoUrl
+        }))
+    : (initialInstitutions && initialInstitutions.length > 0
+        ? initialInstitutions
+            .filter(inst => inst.isPartnered)
+            .map(inst => ({
+              id: inst.id,
+              name: inst.name,
+              logoUrl: inst.logoUrl
+            }))
+        : mockInstitutes);
 
   // 18 items = exactly 6 rows on mobile (3 cols) OR 3 rows on desktop (6 cols)
   const INITIAL_VISIBLE_COUNT = 18; 
@@ -40,7 +62,7 @@ export default function PartnerInstitutes({ initialInstitutes }: { initialInstit
   return (
     <section className="w-full py-16 px-4 md:px-12 bg-white">
       <div className="max-w-[1400px] mx-auto">
-        {/* Header - Increased H1 Size */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -66,7 +88,6 @@ export default function PartnerInstitutes({ initialInstitutes }: { initialInstit
                   duration: 0.3, 
                   delay: (index % INITIAL_VISIBLE_COUNT) * 0.02 
                 }}
-                /* Premium styling: No borders, no hover, clean drop shadow tinted with brand color */
                 className="flex items-center justify-center bg-white rounded-xl p-3 md:p-6 aspect-[4/3] shadow-[0_4px_20px_-4px_rgba(27,96,187,0.08)]"
                 title={institute.name}
               >
@@ -76,7 +97,7 @@ export default function PartnerInstitutes({ initialInstitutes }: { initialInstit
                     alt={institute.name}
                     fill
                     className="object-contain"
-                    sizes="(max-width: 768px) 33vw, (max-width: 1200px) 25vw, 16vw"
+                    sizes="(max-w-768px) 33vw, (max-w-1200px) 25vw, 16vw"
                   />
                 </div>
               </motion.div>

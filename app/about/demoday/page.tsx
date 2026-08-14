@@ -1,7 +1,42 @@
-'use client';
+import DemoDayExposureVisitsClient from '@/HomePage/AboutRink/DemoDayExposureVisits';
+import { pb, mapPbDemoDay, mapPbPastVisitedInstitution } from '@/lib/pocketbase';
 
-import DemoDayExposureVisits from '@/HomePage/AboutRink/DemoDayExposureVisits';
+export const dynamic = 'force-dynamic';
 
-export default function Page() {
-  return <DemoDayExposureVisits />;
+async function getDemoDays() {
+  try {
+    const records = await pb.collection('demo_days').getFullList({
+      cache: 'no-store'
+    });
+    return records.map((record, index) => mapPbDemoDay(record, index)).filter(Boolean);
+  } catch (error) {
+    console.error('Failed to fetch demo days from PocketBase:', error);
+    return [];
+  }
+}
+
+async function getPastVisitedInstitutions() {
+  try {
+    const records = await pb.collection('past_visited_institutions').getFullList({
+      cache: 'no-store'
+    });
+    return records.map(mapPbPastVisitedInstitution);
+  } catch (error) {
+    console.error('Failed to fetch past visited institutions from PocketBase:', error);
+    return [];
+  }
+}
+
+export default async function Page() {
+  const [initialVideos, initialPastVisitedInstitutions] = await Promise.all([
+    getDemoDays(),
+    getPastVisitedInstitutions()
+  ]);
+
+  return (
+    <DemoDayExposureVisitsClient 
+      initialVideos={initialVideos as any[]} 
+      initialPastVisitedInstitutions={initialPastVisitedInstitutions} 
+    />
+  );
 }

@@ -16,14 +16,6 @@ export default async function Page() {
   const initialTechnologies = getFeaturedTechnologies();
   const institutions = await getInstitutions();
 
-  const partneredInstitutes = institutions
-    .filter(inst => inst.partnered)
-    .map(inst => ({
-      id: String(inst.id),
-      name: inst.name,
-      logoUrl: inst.logo_url
-    }));
-
   return (
     <main style={{ backgroundColor: '#F4F7FB' }}>
       <Navbar />
@@ -31,7 +23,7 @@ export default async function Page() {
       <InstitutionsGrid initialInstitutions={institutions} />
       <FeaturedTechnologies initialTechnologies={initialTechnologies} />
       <AboutRink />
-      <PartnerInstitutes initialInstitutes={partneredInstitutes} />
+      <PartnerInstitutes initialInstitutions={institutions} />
       <Footer />
     </main>
   );

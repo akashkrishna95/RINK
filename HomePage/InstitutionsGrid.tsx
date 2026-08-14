@@ -14,32 +14,41 @@ const InteractiveMap = dynamic(() => import('./InteractiveMap'), {
 
 import institutionLogosBaseline from '@/data/institutions_mapped.json';
 import { getProxiedImageUrl } from '@/lib/utils';
-
-export interface Institution {
-  id: number;
-  name: string;
-  location: string;
-  district: string;
-  website: string;
-  logo_url: string;
-  partnered: boolean;
-  lat: number;
-  lng: number;
-  techCount: number;
-}
+import { useRealTimeSync } from '@/hooks/useRealTimeSync';
+import { mapPbInstitution, Institution } from '@/lib/pocketbase';
 
 interface InstitutionsGridProps {
   initialInstitutions?: Institution[];
 }
 
 export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGridProps) {
-  const institutionLogos = initialInstitutions && initialInstitutions.length > 0 
-    ? initialInstitutions 
-    : institutionLogosBaseline;
+  const institutions = useRealTimeSync<Institution>(
+    'all_institutions',
+    initialInstitutions || [],
+    mapPbInstitution
+  );
+
+  const institutionLogos = institutions.length > 0 
+    ? institutions 
+    : (initialInstitutions && initialInstitutions.length > 0 
+        ? initialInstitutions 
+        : institutionLogosBaseline.map((inst: any) => ({
+            id: String(inst.id),
+            name: inst.name,
+            location: inst.location || '',
+            district: inst.district || '',
+            website: inst.website || '',
+            logoUrl: inst.logo_url || '',
+            isPartnered: !!inst.partnered,
+            lat: inst.lat,
+            lng: inst.lng,
+            techCount: inst.techCount || 0
+          }))
+      );
 
   const [activeDistrict, setActiveDistrict] = useState<string | null>(null);
-  const [activeInstitution, setActiveInstitution] = useState<number | null>(null);
-  const [isLocked, setIsLocked] = useState<number | null>(null);
+  const [activeInstitution, setActiveInstitution] = useState<string | null>(null);
+  const [isLocked, setIsLocked] = useState<string | null>(null);
   const [showMore, setShowMore] = useState(false);
   const [isMapExpanded, setIsMapExpanded] = useState(false);
   const [expandedDistricts, setExpandedDistricts] = useState<Record<string, boolean>>({});
@@ -109,7 +118,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
     resetInteractions();
   }, [isMapExpanded]);
 
-  const handleLogoHover = (id: number, district: string) => {
+  const handleLogoHover = (id: string, district: string) => {
     setActiveInstitution(id);
     setActiveDistrict(district);
   };
@@ -232,9 +241,9 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
 
                               {/* Institution Logo */}
                               <div className="relative w-full h-32 bg-white rounded-2xl border border-[#daf1ff] p-4 flex items-center justify-center overflow-hidden shadow-sm">
-                                  {inst.logo_url ? (
+                                  {inst.logoUrl ? (
                                     <Image
-                                      src={getProxiedImageUrl(inst.logo_url)}
+                                      src={getProxiedImageUrl(inst.logoUrl)}
                                       alt={inst.name}
                                       fill
                                       className="object-contain p-3"
@@ -382,10 +391,10 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                                             </div>
                                           </div>
                                           
-                                          {inst.logo_url && (
+                                          {inst.logoUrl && (
                                             <div className="h-10 w-10 shrink-0 rounded-lg border border-slate-100 bg-white flex items-center justify-center p-0.5 shadow-sm relative overflow-hidden">
                                               <Image
-                                                src={getProxiedImageUrl(inst.logo_url)}
+                                                src={getProxiedImageUrl(inst.logoUrl)}
                                                 alt={inst.name}
                                                 fill
                                                 className="object-contain p-0.5"
@@ -529,9 +538,9 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                         >
                            {/* Logo Image / Placeholder */}
                            <div className="h-12 w-12 md:h-16 md:w-16 rounded-full bg-white border border-slate-100 flex items-center justify-center p-1 shadow-sm relative overflow-hidden">
-                             {institution.logo_url ? (
+                             {institution.logoUrl ? (
                                <Image
-                                 src={getProxiedImageUrl(institution.logo_url)}
+                                 src={getProxiedImageUrl(institution.logoUrl)}
                                  alt={institution.name}
                                  fill
                                  className="object-contain p-1"

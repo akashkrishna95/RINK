@@ -6,6 +6,8 @@ import { ArrowRight, CheckCircle2, UserCheck, Search, Lightbulb, FileText, Trend
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
 import { getProxiedImageUrl } from '@/lib/utils';
+import { useRealTimeSync } from '@/hooks/useRealTimeSync';
+import { pb, mapPbStartup, Startup } from '@/lib/pocketbase';
 
 function AnimatedCounter({ end, suffix = "+" }: { end: number, suffix?: string }) {
   const [count, setCount] = useState(0);
@@ -35,10 +37,7 @@ function AnimatedCounter({ end, suffix = "+" }: { end: number, suffix?: string }
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
-interface Startup {
-  name: string;
-  logoUrl: string;
-}
+// Startup interface imported from '@/lib/pocketbase'
 
 function StartupCard({ startup, idx }: { startup: Startup; idx: number }) {
   const [imgError, setImgError] = useState(false);
@@ -74,26 +73,13 @@ function StartupCard({ startup, idx }: { startup: Startup; idx: number }) {
   );
 }
 
-export default function ResearchIncubationPrograms() {
-  const [startups, setStartups] = useState<Startup[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadStartups() {
-      try {
-        const res = await fetch('/api/researchpreneurship-startups');
-        const data = await res.json();
-        if (data.success && data.startups) {
-          setStartups(data.startups);
-        }
-      } catch (err) {
-        console.error('Failed to load startups:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadStartups();
-  }, []);
+export default function ResearchIncubationPrograms({ initialStartups }: { initialStartups: Startup[] }) {
+  const startups = useRealTimeSync<Startup>(
+    'startups',
+    initialStartups || [],
+    mapPbStartup
+  );
+  const loading = false;
 
   return (
     <main className="min-h-screen bg-[#F4F7FB] overflow-x-hidden">

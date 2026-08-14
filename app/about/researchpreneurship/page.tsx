@@ -1,7 +1,21 @@
-'use client';
+import ResearchIncubationProgramsClient from '@/HomePage/AboutRink/ResearchIncubationPrograms';
+import { pb, mapPbStartup } from '@/lib/pocketbase';
 
-import ResearchIncubationPrograms from '@/HomePage/AboutRink/ResearchIncubationPrograms';
+export const dynamic = 'force-dynamic';
 
-export default function Page() {
-  return <ResearchIncubationPrograms />;
+async function getStartups() {
+  try {
+    const records = await pb.collection('startups').getFullList({
+      cache: 'no-store'
+    });
+    return records.map(mapPbStartup);
+  } catch (error) {
+    console.error('Failed to fetch startups from PocketBase:', error);
+    return [];
+  }
+}
+
+export default async function Page() {
+  const initialStartups = await getStartups();
+  return <ResearchIncubationProgramsClient initialStartups={initialStartups} />;
 }
