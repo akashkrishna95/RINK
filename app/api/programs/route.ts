@@ -15,37 +15,55 @@ export interface SheetProgram {
   event_gallery: string;
 }
 
-function parseCSVLine(line: string): string[] {
-  const result: string[] = [];
-  let current = '';
+function parseCSV(csvText: string): Record<string, string>[] {
+  const rows: string[][] = [];
+  let currentRow: string[] = [];
+  let currentField = '';
   let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
+
+  for (let i = 0; i < csvText.length; i++) {
+    const char = csvText[i];
+    const nextChar = csvText[i + 1];
+
     if (char === '"') {
-      if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
-      else { inQuotes = !inQuotes; }
+      if (inQuotes && nextChar === '"') {
+        currentField += '"';
+        i++; // skip next quote
+      } else {
+        inQuotes = !inQuotes;
+      }
     } else if (char === ',' && !inQuotes) {
-      result.push(current);
-      current = '';
+      currentRow.push(currentField);
+      currentField = '';
+    } else if ((char === '\r' || char === '\n') && !inQuotes) {
+      if (char === '\r' && nextChar === '\n') {
+        i++;
+      }
+      currentRow.push(currentField);
+      rows.push(currentRow);
+      currentRow = [];
+      currentField = '';
     } else {
-      current += char;
+      currentField += char;
     }
   }
-  result.push(current);
-  return result;
-}
+  if (currentRow.length > 0 || currentField !== '') {
+    currentRow.push(currentField);
+    rows.push(currentRow);
+  }
 
-function parseCSV(csvText: string): Record<string, string>[] {
-  const lines = csvText.split('\n').filter(l => l.trim());
-  if (lines.length < 2) return [];
-  const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase().replace(/\s+/g, '_'));
-  return lines.slice(1).map(line => {
-    const values = parseCSVLine(line);
-    const row: Record<string, string> = {};
-    headers.forEach((h, i) => { row[h] = (values[i] ?? '').trim(); });
-    return row;
-  }).filter(row => {
-    const title = row['program_name'] || row['program'] || row['event_name'] || '';
+  if (rows.length < 2) return [];
+
+  const headers = rows[0].map(h => h.trim().toLowerCase().replace(/\s+/g, '_'));
+  
+  return rows.slice(1).map(rowValues => {
+    const rowObj: Record<string, string> = {};
+    headers.forEach((h, i) => {
+      rowObj[h] = (rowValues[i] ?? '').trim();
+    });
+    return rowObj;
+  }).filter(rowObj => {
+    const title = rowObj['program_name'] || rowObj['program'] || rowObj['event_name'] || '';
     return title.trim() !== '';
   });
 }
