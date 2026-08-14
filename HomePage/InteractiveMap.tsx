@@ -219,6 +219,7 @@ export default function InteractiveMap({
       </div>
 
       <MapContainer 
+        key={isExpanded ? 'expanded' : 'collapsed'}
         center={center} 
         zoom={6.5} 
         scrollWheelZoom={false}
