@@ -47,6 +47,7 @@ export const metadata: Metadata = {
   title: 'RINK - Research Innovation Network Kerala',
   description: 'Connecting Innovation to Impact. Aligning India\'s top research institutions, market-ready IP, and Researchpreneurship.',
   generator: 'v0.app',
+  metadataBase: new URL('https://rink.startupmission.in'),
   icons: {
     icon: [
       {
@@ -55,6 +56,18 @@ export const metadata: Metadata = {
       },
     ],
     apple: '/images/favicon.png',
+  },
+  openGraph: {
+    title: 'RINK - Research Innovation Network Kerala',
+    description: 'Connecting Innovation to Impact. Aligning India\'s top research institutions, market-ready IP, and Researchpreneurship.',
+    images: ['/images/rink-3d-logo.webp'],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'RINK - Research Innovation Network Kerala',
+    description: 'Connecting Innovation to Impact. Aligning India\'s top research institutions, market-ready IP, and Researchpreneurship.',
+    images: ['/images/rink-3d-logo.webp'],
   },
 }
 
