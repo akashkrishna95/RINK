@@ -1,3 +1,4 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\programs\page.tsx
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { pb, mapPbProgram } from '@/lib/pocketbase';

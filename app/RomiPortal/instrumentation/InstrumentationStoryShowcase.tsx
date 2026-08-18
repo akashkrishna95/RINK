@@ -5,8 +5,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Wrench, Search, MapPin, School, Phone, Mail, ArrowUpRight, ArrowUp, 
+import {
+  Wrench, Search, MapPin, School, Phone, Mail, ArrowUpRight, ArrowUp,
   Check, Layers, ExternalLink, RefreshCw, Play, Pause, RotateCw, Sparkles, User, Lightbulb, Compass, Filter, X
 } from 'lucide-react';
 import Link from 'next/link';
@@ -43,7 +43,7 @@ function ensureLeaflet(): Promise<any> {
 // Typing Text component with pulsing blinking cursor indicator
 function TypingText({ text, speed = 25, onComplete }: { text: string; speed?: number; onComplete?: () => void }) {
   const [displayedText, setDisplayedText] = useState('');
-  
+
   useEffect(() => {
     setDisplayedText('');
   }, [text]);
@@ -53,16 +53,16 @@ function TypingText({ text, speed = 25, onComplete }: { text: string; speed?: nu
     if (displayedText.length > 0 && !text.startsWith(displayedText)) {
       return;
     }
-    
+
     if (displayedText.length >= text.length) {
       if (onComplete) onComplete();
       return;
     }
-    
+
     const timeout = setTimeout(() => {
       setDisplayedText(text.slice(0, displayedText.length + 1));
     }, speed);
-    
+
     return () => clearTimeout(timeout);
   }, [displayedText, text, speed, onComplete]);
 
@@ -284,11 +284,11 @@ export default function InstrumentationStoryShowcase() {
   useEffect(() => {
     return () => {
       if (mapRefDesktop.current) {
-        try { mapRefDesktop.current.remove(); } catch(e){}
+        try { mapRefDesktop.current.remove(); } catch (e) { }
         mapRefDesktop.current = null;
       }
       if (mapRefMobile.current) {
-        try { mapRefMobile.current.remove(); } catch(e){}
+        try { mapRefMobile.current.remove(); } catch (e) { }
         mapRefMobile.current = null;
       }
     };
@@ -305,7 +305,7 @@ export default function InstrumentationStoryShowcase() {
       if (isMobile) {
         // Destroy Desktop map if switching to mobile to conserve phone RAM
         if (mapRefDesktop.current) {
-          try { mapRefDesktop.current.remove(); } catch(e){}
+          try { mapRefDesktop.current.remove(); } catch (e) { }
           mapRefDesktop.current = null;
           layerRefDesktop.current = null;
           mapInitRefDesktop.current = false;
@@ -313,7 +313,7 @@ export default function InstrumentationStoryShowcase() {
 
         // Destroy existing mobile map instance first before recreating it on the new DOM container
         if (mapRefMobile.current) {
-          try { mapRefMobile.current.remove(); } catch(e){}
+          try { mapRefMobile.current.remove(); } catch (e) { }
           mapRefMobile.current = null;
           layerRefMobile.current = null;
           mapInitRefMobile.current = false;
@@ -323,8 +323,8 @@ export default function InstrumentationStoryShowcase() {
         if (mapDivRefMobile.current && !mapInitRefMobile.current) {
           mapInitRefMobile.current = true;
           try {
-            const mapM = L.map(mapDivRefMobile.current, { 
-              zoomControl: false, 
+            const mapM = L.map(mapDivRefMobile.current, {
+              zoomControl: false,
               attributionControl: false,
               dragging: false,
               scrollWheelZoom: false,
@@ -333,7 +333,7 @@ export default function InstrumentationStoryShowcase() {
               touchZoom: false,
               keyboard: false
             }).setView([10.15, 76.45], 7.2);
-            
+
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(mapM);
             mapRefMobile.current = mapM;
             layerRefMobile.current = L.layerGroup().addTo(mapM);
@@ -343,14 +343,14 @@ export default function InstrumentationStoryShowcase() {
             setTimeout(() => {
               mapM.invalidateSize();
             }, 100);
-          } catch(e) {
+          } catch (e) {
             mapInitRefMobile.current = false;
           }
         }
       } else {
         // Destroy Mobile map if switching to desktop
         if (mapRefMobile.current) {
-          try { mapRefMobile.current.remove(); } catch(e){}
+          try { mapRefMobile.current.remove(); } catch (e) { }
           mapRefMobile.current = null;
           layerRefMobile.current = null;
           mapInitRefMobile.current = false;
@@ -360,8 +360,8 @@ export default function InstrumentationStoryShowcase() {
         if (mapDivRefDesktop.current && !mapInitRefDesktop.current) {
           mapInitRefDesktop.current = true;
           try {
-            const mapD = L.map(mapDivRefDesktop.current, { 
-              zoomControl: false, 
+            const mapD = L.map(mapDivRefDesktop.current, {
+              zoomControl: false,
               attributionControl: false,
               dragging: false,
               scrollWheelZoom: false,
@@ -370,7 +370,7 @@ export default function InstrumentationStoryShowcase() {
               touchZoom: false,
               keyboard: false
             }).setView([10.15, 76.45], 7.2);
-            
+
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(mapD);
             mapRefDesktop.current = mapD;
             layerRefDesktop.current = L.layerGroup().addTo(mapD);
@@ -379,12 +379,12 @@ export default function InstrumentationStoryShowcase() {
             setTimeout(() => {
               mapD.invalidateSize();
             }, 100);
-          } catch(e) {
+          } catch (e) {
             mapInitRefDesktop.current = false;
           }
         }
       }
-    }).catch(() => {});
+    }).catch(() => { });
 
     return () => { cancelled = true; };
   }, [isMobile, animationPhase, activeStep]); // Re-sync pins when showing-content turns active
@@ -538,10 +538,9 @@ export default function InstrumentationStoryShowcase() {
     if (!isMobile) return null;
     return (
       <div
-        id="mobile-map-card" 
-        className={`block lg:hidden w-[calc(100%+44px)] -ml-[44px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-2 flex flex-col justify-between shadow-sm relative overflow-hidden my-3 transition-all duration-400 ${
-          animationPhase === 'showing-content' ? 'opacity-100 max-h-[600px]' : 'opacity-0 max-h-0 overflow-hidden pointer-events-none !my-0 !p-0 !border-0'
-        }`}
+        id="mobile-map-card"
+        className={`block lg:hidden w-[calc(100%+44px)] -ml-[44px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-2 flex flex-col justify-between shadow-sm relative overflow-hidden my-3 transition-all duration-400 ${animationPhase === 'showing-content' ? 'opacity-100 max-h-[600px]' : 'opacity-0 max-h-0 overflow-hidden pointer-events-none !my-0 !p-0 !border-0'
+          }`}
       >
         <div className="flex items-center justify-between pb-2 border-b border-gray-150 dark:border-zinc-800 mb-2 px-1">
           <div className="flex items-center gap-2">
@@ -605,7 +604,7 @@ export default function InstrumentationStoryShowcase() {
 
   return (
     <section className="py-16 px-2 sm:px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center font-sans">
-      
+
       {/* SECTION HEADER & HOOK */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -617,7 +616,7 @@ export default function InstrumentationStoryShowcase() {
         <h1 className="text-center text-[24px] xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-helios text-gray-900 dark:text-zinc-100 mb-4 tracking-tight leading-tight">
           &quot;Find the machine, <span className="text-[#1b60bb] dark:text-[#7dd3fc]">not the manual.&quot;</span>
         </h1>
-        
+
         <p className="text-gray-600 dark:text-zinc-300 font-montserrat text-xs sm:text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
           Kerala&apos;s research institutions are full of equipment most people never hear about until they need it — and by then it&apos;s too late to go hunting. Romi turns that hunt into a two-minute conversation.
         </p>
@@ -647,11 +646,10 @@ export default function InstrumentationStoryShowcase() {
                   setActiveStep(step.id);
                   setIsPlaying(false);
                 }}
-                className={`p-3 rounded-xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden ${
-                  isActive
-                    ? 'bg-[#F1EFEB] dark:bg-[#1a1a1c] border-[#c8c2b0] dark:border-zinc-700 shadow-[inset_3px_3px_6px_rgba(135,130,110,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.95)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.75),inset_-3px_-3px_6px_rgba(255,255,255,0.04)]'
-                    : 'bg-[#F1EFEB] dark:bg-zinc-950/40 border-gray-200/60 dark:border-zinc-800/80 shadow-[inset_1.5px_1.5px_3px_rgba(165,160,135,0.25),inset_-1.5px_-1.5px_3px_rgba(255,255,255,0.85)] dark:shadow-[inset_1.5px_1.5px_3px_rgba(0,0,0,0.55),inset_-1px_-1px_2px_rgba(255,255,255,0.02)] hover:bg-[#ebe9e1] dark:hover:bg-zinc-800/40 hover:shadow-[inset_1px_1px_3.5px_rgba(135,130,110,0.35)]'
-                }`}
+                className={`p-3 rounded-xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden ${isActive
+                  ? 'bg-[#F1EFEB] dark:bg-[#1a1a1c] border-[#c8c2b0] dark:border-zinc-700 shadow-[inset_3px_3px_6px_rgba(135,130,110,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.95)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.75),inset_-3px_-3px_6px_rgba(255,255,255,0.04)]'
+                  : 'bg-[#F1EFEB] dark:bg-zinc-950/40 border-gray-200/60 dark:border-zinc-800/80 shadow-[inset_1.5px_1.5px_3px_rgba(165,160,135,0.25),inset_-1.5px_-1.5px_3px_rgba(255,255,255,0.85)] dark:shadow-[inset_1.5px_1.5px_3px_rgba(0,0,0,0.55),inset_-1px_-1px_2px_rgba(255,255,255,0.02)] hover:bg-[#ebe9e1] dark:hover:bg-zinc-800/40 hover:shadow-[inset_1px_1px_3.5px_rgba(135,130,110,0.35)]'
+                  }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <span className={`text-[9px] lg:text-[11px] font-mono font-bold px-1.5 lg:px-2 py-0.5 lg:py-1 rounded ${isActive ? 'bg-[#1b60bb] text-white' : 'bg-gray-100 dark:bg-zinc-800 text-gray-500'}`}>
@@ -669,13 +667,13 @@ export default function InstrumentationStoryShowcase() {
 
       {/* SKEUOMORPHIC SIDE-BY-SIDE CONVERSATIONAL WORKSPACE */}
       <div ref={containerRef} className="w-full bg-[#F7F5F1] dark:bg-zinc-900/60 border border-[#e5e1d5] dark:border-zinc-800/85 rounded-[32px] p-2.5 sm:p-4 md:p-6 shadow-xl relative overflow-hidden backdrop-blur-xl">
-        
+
         {/* WORKSPACE GRID: CONVERSATION AREA (LEFT) + LIVE FACILITY MAP (RIGHT) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch min-h-[580px]">
-          
+
           {/* LEFT 7 COLS: SKEUOMORPHIC CHAT AREA */}
           <div className="lg:col-span-7 bg-white/95 dark:bg-zinc-900/40 border border-slate-200/90 dark:border-zinc-800/60 rounded-2xl p-3 sm:p-5 flex flex-col justify-between shadow-[0_12px_32px_-8px_rgba(0,0,0,0.08),0_2px_8px_-2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] relative">
-            
+
             {/* CHAT HEADER BAR */}
             <div className="flex items-center justify-between pb-3 border-b border-gray-150 dark:border-zinc-800 mb-3">
               <div className="flex items-center gap-2">
@@ -690,14 +688,14 @@ export default function InstrumentationStoryShowcase() {
 
             {/* MESSAGES STREAM AREA */}
             <div id="chat-scroll-container" ref={chatScrollRef} className="flex-1 overflow-y-auto space-y-4 pr-1 max-h-[460px] scrollbar-thin font-sans">
-              
+
               {/* USER MESSAGE BUBBLE WITH TYPING EFFECT */}
               <div className="flex gap-2 justify-end items-start font-sans">
                 <div className="bg-[#1b60bb] text-white p-3.5 rounded-3xl rounded-tr-xs text-xs font-sans font-bold shadow-md">
                   {animationPhase === 'user-typing' ? (
-                    <TypingText 
-                      text={activeStep === 0 ? "FTIR" : "Fourier Transform Infrared Spectrometer"} 
-                      speed={activeStep === 0 ? 40 : 20} 
+                    <TypingText
+                      text={activeStep === 0 ? "FTIR" : "Fourier Transform Infrared Spectrometer"}
+                      speed={activeStep === 0 ? 40 : 20}
                     />
                   ) : (
                     <span>{activeStep === 0 ? "FTIR" : "Fourier Transform Infrared Spectrometer"}</span>
@@ -715,7 +713,7 @@ export default function InstrumentationStoryShowcase() {
                   <div className="flex gap-3 items-start font-sans">
                     <img src="/romi-avatar.webp" alt="Romi" className="w-8 h-8 object-contain shrink-0" />
                     <div className="flex-1 text-xs font-sans space-y-3 min-w-0">
-                      
+
                       {animationPhase === 'ai-typing' ? (
                         <div className="bg-gray-50 dark:bg-zinc-800 p-3 rounded-2xl rounded-tl-xs shadow-sm max-w-md text-gray-800 dark:text-zinc-200 font-semibold leading-relaxed">
                           <TypingText text="Is this what you're referring to by 'FTIR'? Pick one:" speed={18} />
@@ -724,11 +722,11 @@ export default function InstrumentationStoryShowcase() {
                         // Phase: showing-content (renders full disambiguation content with sequential fade-in animations)
                         <>
                           {/* View Map Button (8 pins) */}
-                          <motion.div 
+                          <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3 }}
-                            id="facility-map-badge" 
+                            id="facility-map-badge"
                             className="bg-blue-50 dark:bg-blue-950/40 text-[#1b60bb] dark:text-blue-400 border border-blue-200/60 dark:border-blue-900/40 px-3.5 py-1.5 rounded-full font-bold inline-flex items-center gap-1.5 text-[11px] shadow-2xs"
                           >
                             <MapPin size={12} /> View Facility Map (8 pins) <ArrowUpRight size={12} />
@@ -736,7 +734,7 @@ export default function InstrumentationStoryShowcase() {
 
                           {renderMobileMapCard()}
 
-                          <motion.p 
+                          <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.3 }}
@@ -759,11 +757,10 @@ export default function InstrumentationStoryShowcase() {
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.3, delay: idx * 0.1 }}
                                 id={idx === 0 ? "disambig-option-0" : undefined}
-                                className={`p-2.5 rounded-xl border text-left transition-all duration-200 cursor-pointer ${
-                                  idx === 0
-                                    ? 'bg-blue-50/80 dark:bg-blue-950/60 border-blue-300 dark:border-blue-700 text-[#1b60bb] dark:text-blue-300 font-bold shadow-xs'
-                                    : 'bg-gray-50 dark:bg-zinc-800 border-gray-200 dark:border-zinc-700 hover:border-[#1b60bb] text-gray-700 dark:text-zinc-300'
-                                }`}
+                                className={`p-2.5 rounded-xl border text-left transition-all duration-200 cursor-pointer ${idx === 0
+                                  ? 'bg-blue-50/80 dark:bg-blue-950/60 border-blue-300 dark:border-blue-700 text-[#1b60bb] dark:text-blue-300 font-bold shadow-xs'
+                                  : 'bg-gray-50 dark:bg-zinc-800 border-gray-200 dark:border-zinc-700 hover:border-[#1b60bb] text-gray-700 dark:text-zinc-300'
+                                  }`}
                               >
                                 <span>↪ {option}</span>
                               </motion.div>
@@ -780,7 +777,7 @@ export default function InstrumentationStoryShowcase() {
                   <div className="flex gap-3 items-start font-sans">
                     <img src="/romi-avatar.webp" alt="Romi" className="w-8 h-8 object-contain shrink-0" />
                     <div className="flex-1 text-xs font-sans space-y-3 min-w-0">
-                      
+
                       {animationPhase === 'ai-typing' ? (
                         <div className="bg-gray-50 dark:bg-zinc-800 p-3 rounded-2xl rounded-tl-xs shadow-sm max-w-lg text-gray-800 dark:text-zinc-200 font-semibold leading-relaxed">
                           <TypingText text="Found 6 x Fourier Transform Infrared Spectrometer across 5 district(s) in Kerala. Locations are pinned on the map — click a card to spotlight it, double-click to open its full information page." speed={12} />
@@ -789,11 +786,11 @@ export default function InstrumentationStoryShowcase() {
                         // Phase: showing-content (renders full result content with progressive fade-in cards)
                         <>
                           {/* View Map Button (6 pins) */}
-                          <motion.div 
+                          <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3 }}
-                            id="facility-map-badge" 
+                            id="facility-map-badge"
                             className="bg-blue-50 dark:bg-blue-950/40 text-[#1b60bb] dark:text-blue-400 border border-blue-200/60 dark:border-blue-900/40 px-3.5 py-1.5 rounded-full font-bold inline-flex items-center gap-1.5 text-[11px] shadow-2xs"
                           >
                             <MapPin size={12} /> View Facility Map (6 pins) <ArrowUpRight size={12} />
@@ -801,7 +798,7 @@ export default function InstrumentationStoryShowcase() {
 
                           {renderMobileMapCard()}
 
-                          <motion.p 
+                          <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.3 }}
@@ -853,9 +850,9 @@ export default function InstrumentationStoryShowcase() {
 
                           {/* QUICK ACTION OPTIONS */}
                           {(activeStep === 2 || activeStep === 3) && (
-                            <motion.div 
-                              initial={{ opacity: 0 }} 
-                              animate={{ opacity: 1 }} 
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
                               className="flex flex-col gap-1.5 pt-3 border-t border-gray-150 dark:border-zinc-800 space-y-1"
                             >
                               <span className="text-[10px] sm:text-xs font-bold text-[#1b60bb] hover:underline cursor-default flex items-center gap-1">
@@ -883,7 +880,7 @@ export default function InstrumentationStoryShowcase() {
           {/* DESKTOP-ONLY RIGHT 5 COLS: LIVE FACILITY MAP PANEL */}
           {!isMobile && (
             <div className="lg:col-span-5 hidden lg:flex flex-col justify-between bg-white/95 dark:bg-zinc-900/40 border border-slate-200/90 dark:border-zinc-800/60 rounded-2xl p-3 shadow-[0_12px_32px_-8px_rgba(0,0,0,0.08),0_2px_8px_-2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] relative overflow-hidden">
-              
+
               {/* MAP HEADER */}
               <div className="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-zinc-800 mb-2">
                 <div className="flex items-center gap-2">

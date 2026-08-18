@@ -1,3 +1,4 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\contact\page.tsx
 'use client';
 
 import { motion } from 'framer-motion';
@@ -12,7 +13,7 @@ export default function ContactPage() {
 
       <section className="pt-32 pb-24 px-4 md:px-8 max-w-[1400px] mx-auto w-full flex-grow">
         <div className="mb-16 text-center max-w-2xl mx-auto">
-          <h1 
+          <h1
             className="font-helios text-5xl md:text-6xl lg:text-7xl font-bold text-[#1b60bb] mb-6"
             style={{ fontFamily: "var(--font-helios), sans-serif" }}
           >
@@ -59,7 +60,7 @@ export default function ContactPage() {
                 <Phone size={20} className="text-[#1b60bb]" />
               </div>
               <div className="min-w-0 flex-1">
-                <h4 
+                <h4
                   className="font-helios text-sm sm:text-base font-bold text-slate-800 mb-0.5"
                   style={{ fontFamily: "var(--font-helios), sans-serif" }}
                 >
@@ -90,16 +91,16 @@ export default function ContactPage() {
                 <div className="w-12 h-12 rounded-full bg-[#F4F7FB] flex items-center justify-center shrink-0 border border-white/40 shadow-[inset_2px_2px_5px_#c8d0e7,_inset_-2px_-2px_5px_#ffffff] mb-3">
                   <MapPin size={20} className="text-[#1b60bb]" />
                 </div>
-                <h4 
+                <h4
                   className="font-helios text-sm sm:text-base font-bold text-slate-800 mb-1.5"
                   style={{ fontFamily: "var(--font-helios), sans-serif" }}
                 >
                   Visit Us
                 </h4>
-                <a 
-                  href="https://maps.google.com/?q=Kerala+Startup+Mission+Technopark+Campus+Trivandrum" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href="https://maps.google.com/?q=Kerala+Startup+Mission+Technopark+Campus+Trivandrum"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-[#1b60bb] hover:underline transition-colors text-[10px] xs:text-xs sm:text-sm font-medium text-slate-600 space-y-0.5 w-full overflow-hidden"
                 >
                   <span className="block truncate">Kerala Startup Mission</span>
@@ -119,7 +120,7 @@ export default function ContactPage() {
                 <div className="w-12 h-12 rounded-full bg-[#F4F7FB] flex items-center justify-center shrink-0 border border-white/40 shadow-[inset_2px_2px_5px_#c8d0e7,_inset_-2px_-2px_5px_#ffffff] mb-3">
                   <Mail size={20} className="text-[#1b60bb]" />
                 </div>
-                <h4 
+                <h4
                   className="font-helios text-sm sm:text-base font-bold text-slate-800 mb-1.5"
                   style={{ fontFamily: "var(--font-helios), sans-serif" }}
                 >
@@ -128,9 +129,6 @@ export default function ContactPage() {
                 <div className="flex flex-col gap-1 w-full text-[10px] xs:text-xs sm:text-sm font-medium text-[#1b60bb] overflow-hidden">
                   <a href="mailto:rink@startupmission.in" className="underline decoration-[#1b60bb]/45 underline-offset-4 hover:decoration-[#1b60bb] hover:text-[#1872dd] transition-[color,text-decoration-color] duration-200 truncate block">
                     rink@startupmission.in
-                  </a>
-                  <a href="mailto:info@startupmission.in" className="underline decoration-[#1b60bb]/45 underline-offset-4 hover:decoration-[#1b60bb] hover:text-[#1872dd] transition-[color,text-decoration-color] duration-200 truncate block">
-                    info@startupmission.in
                   </a>
                 </div>
               </motion.div>

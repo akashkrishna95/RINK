@@ -1,4 +1,4 @@
-//ABout RINK
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\AboutRink.tsx
 
 'use client';
 

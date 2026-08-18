@@ -1,3 +1,4 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\Navbar.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -71,7 +72,7 @@ export default function Navbar() {
     { href: '/RomiPortal', label: 'ROMI AI' },
     { href: 'https://rink-ksum.vercel.app/', label: 'Technologies' },
     { href: 'https://rink-ui.vercel.app/', label: 'Instrumentation' },
-    { href: '/grants', label: 'Grants' },
+    { href: '/funds', label: 'Funds' },
     { href: '/programs', label: 'Programs' },
     { href: '/contact', label: 'Contact Us' },
   ];
@@ -168,7 +169,7 @@ export default function Navbar() {
             {/* Navigation Links */}
             <nav className="flex flex-col w-full">
               {navLinks.map((link) => (
-                 <Link
+                <Link
                   key={link.label}
                   href={link.href}
                   target={link.href.startsWith('http') ? '_blank' : undefined}

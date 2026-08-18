@@ -40,7 +40,7 @@ A centralized ecosystem page routing users to specific programs:
 - **Research Incubation Programs**
 - **Demo Day & Exposure Visits** (Includes an integrated inline YouTube video player for startup pitches)
 - **IPR Support**
-- **Research & Development Grants**
+- **Research & Development Funds**
 
 ### 4. Event Management (`/events`)
 - A categorized gallery (Upcoming vs. Past) of all RINK events.

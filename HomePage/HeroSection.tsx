@@ -1,3 +1,4 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\HeroSection.tsx
 'use client';
 
 import Link from 'next/link';
@@ -11,22 +12,32 @@ export default function HeroSection() {
 
       {/* Hero Banner */}
       <motion.div layoutId="romi-hero-container" className="relative w-full h-[520px] sm:h-[500px] md:h-[500px] rounded-[20px] overflow-hidden mb-4 group shadow-lg md:mt-4">
-        {/* Background Image with Gradient Overlay */}
+        {/* PC and Tablet Background Image */}
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center hidden md:block"
           style={{
-            backgroundImage: "url('/images/home-hero-bg.webp')",
+            backgroundImage: "url('/rink-pc-bg.png')",
           }}
         >
-          {/* Gradient overlay to match the deep blue/cyan design */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/90 via-[#011a38]/60 to-[#1b60bb]/60"></div>
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/90 to-[#1b60bb]/0"></div>
         </div>
 
+        {/* Mobile Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center block md:hidden"
+          style={{
+            backgroundImage: "url('/rink-phone-bg.png')",
+          }}
+        >
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/90 to-[#1b60bb]/0"></div>
+        </div>
 
         {/* Hero Content */}
         <div className="relative h-full flex flex-col justify-center px-6 sm:px-8 md:px-12 z-10 max-w-3xl">
           <h1 className="font-helios font-normal text-3xl sm:text-4xl md:text-5xl lg:text-[54px] text-white leading-[1.15] md:leading-[1.1] mb-3 md:mb-4 tracking-tight">
-            Connecting Innovation to <span className="text-[#51B3F9]">Impact.</span>
+            Translating <span className="text-[#51B3F9]">Innovations,</span> Transforming <span className="text-[#51B3F9]">Economy.</span>
           </h1>
           <p className="text-white/95 text-base sm:text-lg md:text-xl leading-relaxed max-w-xl">
             Aligning{' '}

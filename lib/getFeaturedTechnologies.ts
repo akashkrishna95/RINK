@@ -1,3 +1,4 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\lib\getFeaturedTechnologies.ts
 import technologiesData from '@/data/technologies.json';
 import { normalizeIPStatus, isFeaturedTechnology } from '@/lib/utils';
 

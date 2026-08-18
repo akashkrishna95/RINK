@@ -19,9 +19,9 @@ interface RomiBarChartProps {
   heightClass?: string;
 }
 
-export default function RomiBarChart({ 
-  title = "Market Size Estimation (YoY Growth)", 
-  subtitle = "Projected valuation in USD", 
+export default function RomiBarChart({
+  title = "Market Size Estimation (YoY Growth)",
+  subtitle = "Projected valuation in USD",
   data = [
     { label: '2024', value: 150, displayValue: '$150B', color: 'bg-blue-100' },
     { label: '2025', value: 220, displayValue: '$220B', color: 'bg-blue-200' },
@@ -54,8 +54,8 @@ export default function RomiBarChart({
         {data.map((item, i) => {
           const percentage = (item.value / maxValue) * 100;
           return (
-            <div 
-              key={i} 
+            <div
+              key={i}
               className="flex flex-col items-center flex-1 min-w-0 relative group cursor-pointer"
               onMouseEnter={() => setHoveredIndex(i)}
               onMouseLeave={() => setHoveredIndex(null)}
@@ -63,10 +63,10 @@ export default function RomiBarChart({
               {/* Tooltip */}
               <motion.div
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ 
-                  opacity: hoveredIndex === i ? 1 : 0, 
+                animate={{
+                  opacity: hoveredIndex === i ? 1 : 0,
                   y: hoveredIndex === i ? -45 : -35,
-                  scale: hoveredIndex === i ? 1 : 0.95 
+                  scale: hoveredIndex === i ? 1 : 0.95
                 }}
                 transition={{ duration: 0.15 }}
                 className="pointer-events-none absolute left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-zinc-800 text-white text-[9px] sm:text-[10px] px-1.5 py-0.5 sm:px-2 sm:py-1 rounded shadow-lg whitespace-nowrap z-30 font-montserrat font-medium"

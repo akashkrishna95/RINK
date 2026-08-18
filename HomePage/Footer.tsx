@@ -1,3 +1,4 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\Footer.tsx
 'use client';
 
 import { useRef } from 'react';
@@ -28,7 +29,7 @@ export default function Footer() {
       {/* Main Footer Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8 py-20 lg:py-28 pb-8">
         <div className="grid grid-cols-12 gap-8 lg:gap-12">
-          
+
           {/* Column 1: LOGOS & CONTACT */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -60,7 +61,7 @@ export default function Footer() {
               <p className="font-avenir text-[#eff9ff]/70 text-sm leading-relaxed max-w-sm">
                 Kerala Startup Mission, G3B, Thejaswini, Technopark Campus Kariyavattom, Trivandrum, Kerala 695581
               </p>
-              
+
               <div className="space-y-2">
                 <a href="tel:08047180470" className="group flex items-center gap-2 font-avenir text-[#eff9ff]/70 hover:text-[#eff9ff] transition-colors text-sm lg:text-base w-fit">
                   <Phone className="w-4 h-4 shrink-0" />
@@ -108,7 +109,7 @@ export default function Footer() {
                 { label: 'Technologies', href: 'https://rink-ksum.vercel.app/' },
                 { label: 'Instrumentation', href: 'https://instruments.startupmission.in/' },
                 { label: 'Researchpreneurship', href: '/about/researchpreneurship' },
-                { label: 'Grants', href: '/grants' },
+                { label: 'Funds', href: '/funds' },
                 { label: 'Programs', href: '/programs' },
                 { label: 'Contact', href: '/about#contact' }
               ].map((link) => (
@@ -177,8 +178,8 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <motion.div 
-          className="my-12 lg:my-16 h-px bg-[#eff9ff]/20" 
+        <motion.div
+          className="my-12 lg:my-16 h-px bg-[#eff9ff]/20"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}

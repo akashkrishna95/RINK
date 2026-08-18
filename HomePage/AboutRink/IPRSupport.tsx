@@ -1,7 +1,8 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\AboutRink\IPRSupport.tsx
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle2, FileBadge, Search, Users, Lightbulb } from 'lucide-react';
+import { ArrowRight, CheckCircle2, FileBadge, Search, Users } from 'lucide-react';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
 
@@ -12,11 +13,11 @@ export default function IPRSupport() {
 
       {/* Hero Section */}
       <section className="relative w-full h-[450px] flex items-center justify-center overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/images/iprsupport/hero.jpg')" }}
+          style={{ backgroundImage: "url('/images/iprsupport/hero.png')" }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/85 to-[#1b60bb]/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/85 to-[#1b60bb]/35"></div>
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
@@ -40,9 +41,9 @@ export default function IPRSupport() {
         <div className="bg-white rounded-[2rem] p-5 md:p-12 shadow-xl border border-blue-50 relative overflow-hidden">
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-50 to-transparent rounded-bl-full opacity-50 -z-0"></div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10 items-center">
-            
+
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -52,9 +53,9 @@ export default function IPRSupport() {
             >
               <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-6">Safeguarding Your Innovations</h2>
               <p className="text-slate-600 font-poppins text-xs sm:text-sm md:text-base leading-relaxed mb-8">
-                RINK, through its partner institutions, offers comprehensive IPR-related support for innovators. We help you navigate the complexities of intellectual property to ensure your breakthrough ideas are protected and ready for commercialization.
+                  RINK, through its partner institutions, offers the following IPR-related support for innovators to protect, manage, and commercialize their intellectual property:
               </p>
-              
+
               <div className="space-y-6 mb-10">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100">
@@ -66,16 +67,6 @@ export default function IPRSupport() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100">
-                    <Search className="text-[#1b60bb]" size={24} />
-                  </div>
-                  <div>
-                    <h3 className="font-helios font-bold text-slate-800 text-lg sm:text-xl mb-1">Free Searches</h3>
-                    <p className="text-slate-500 font-poppins text-xs sm:text-sm md:text-base">Comprehensive patent and trademark searches to validate your ideas.</p>
-                  </div>
-                </div>
-                
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100">
                     <Users className="text-[#1b60bb]" size={24} />
@@ -108,31 +99,20 @@ export default function IPRSupport() {
               className="relative"
             >
               <div className="relative aspect-[4/3] md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-                <img 
-                  src="/images/iprsupport/gavel.jpg"
+                <img
+                  src="/images/iprsupport/ipr_card.png"
                   alt="IPR Support"
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#011a38]/90 via-[#011a38]/20 to-transparent flex flex-col justify-end p-8">
-                  <Lightbulb size={40} className="text-[#5cc4fe] mb-4" />
-                  <h3 className="font-helios text-xl sm:text-2xl font-bold text-white mb-2">Secure Your Future</h3>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#011a38]/90 via-[#011a38]/50 to-transparent flex flex-col justify-end p-8">
+                   <h3 className="font-helios text-xl sm:text-2xl font-bold text-white mb-2">Secure Your Future</h3>
                   <p className="text-white/80 font-poppins text-xs sm:text-sm">Don't let your research go unprotected. Register your IP today.</p>
                 </div>
               </div>
-              
-              {/* Floating Badge */}
-              <div className="absolute -top-6 right-2 sm:-right-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-4 animate-bounce" style={{ animationDuration: '3s' }}>
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <CheckCircle2 className="text-green-600" size={20} />
-                </div>
-                <div>
-                  <p className="font-helios font-bold text-slate-800">100% Free</p>
-                  <p className="text-xs text-slate-500 font-poppins">Initial Search</p>
-                </div>
-              </div>
-            </motion.div>
+
+               </motion.div>
 
           </div>
         </div>

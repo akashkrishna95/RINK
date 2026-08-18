@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, GeoJSON, ZoomControl } 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect, useState } from 'react';
+import { getResolvedAddress } from '@/lib/getInstitutionAddress';
 
 const createCustomIcon = (isActive: boolean) => {
   const size = isActive ? 26 : 18;
@@ -47,16 +48,16 @@ interface InteractiveMapProps {
   institutions: Institution[];
 }
 
-function MapController({ 
-  activeDistrict, 
-  activeInstitution, 
-  institutions, 
-  isExpanded 
-}: { 
-  activeDistrict?: string | null, 
-  activeInstitution?: string | null, 
-  institutions: Institution[], 
-  isExpanded?: boolean 
+function MapController({
+  activeDistrict,
+  activeInstitution,
+  institutions,
+  isExpanded
+}: {
+  activeDistrict?: string | null,
+  activeInstitution?: string | null,
+  institutions: Institution[],
+  isExpanded?: boolean
 }) {
   const map = useMap();
   useEffect(() => {
@@ -105,7 +106,7 @@ function MapController({
       if (map.touchZoom) map.touchZoom.disable();
     }
   }, [isExpanded, map]);
-  
+
   useEffect(() => {
     const container = map.getContainer();
     if (!container) return;
@@ -125,13 +126,26 @@ function MapController({
   return null;
 }
 
-export default function InteractiveMap({ 
-  onDistrictHover, 
-  onDistrictLeave, 
+function ResolvedAddress({ lat, lng, fallback, enabled }: { lat: number; lng: number; fallback?: string; enabled: boolean }) {
+  const [address, setAddress] = useState<string | null>(fallback || null);
+  useEffect(() => {
+    if (fallback || !enabled) return;
+    let cancelled = false;
+    getResolvedAddress(lat, lng).then((addr) => { if (!cancelled && addr) setAddress(addr); });
+    return () => { cancelled = true; };
+  }, [lat, lng, fallback, enabled]);
+
+  if (!address) return <span className="text-slate-400 italic">Resolving address…</span>;
+  return <>{address}</>;
+}
+
+export default function InteractiveMap({
+  onDistrictHover,
+  onDistrictLeave,
   onInstitutionHover,
-  activeDistrict, 
+  activeDistrict,
   activeInstitution,
-  className = '', 
+  className = '',
   isExpanded = false,
   institutions
 }: InteractiveMapProps) {
@@ -161,7 +175,7 @@ export default function InteractiveMap({
 
   // Center of Kerala roughly
   const center: [number, number] = [10.5, 76.3];
-  
+
   return (
     <div className={`w-full h-full relative z-10 ${className}`}>
       <style>{`
@@ -190,38 +204,36 @@ export default function InteractiveMap({
           color: #1b60bb !important;
         }
       `}</style>
-      
+
       {/* Floating Layer Toggle */}
-      <div 
+      <div
         onClick={(e) => e.stopPropagation()}
         className="absolute top-4 left-4 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-lg border border-[#daf1ff] p-1 flex gap-1"
       >
-        <button 
+        <button
           onClick={() => setMapType('default')}
-          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 active:scale-95 ${
-            mapType === 'default' 
-              ? 'bg-[#1b60bb] text-white shadow-sm' 
-              : 'text-slate-600 hover:bg-[#eff9ff] hover:text-[#1b60bb]'
-          }`}
+          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 active:scale-95 ${mapType === 'default'
+            ? 'bg-[#1b60bb] text-white shadow-sm'
+            : 'text-slate-600 hover:bg-[#eff9ff] hover:text-[#1b60bb]'
+            }`}
         >
           Default
         </button>
-        <button 
+        <button
           onClick={() => setMapType('satellite')}
-          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 active:scale-95 ${
-            mapType === 'satellite' 
-              ? 'bg-[#1b60bb] text-white shadow-sm' 
-              : 'text-slate-600 hover:bg-[#eff9ff] hover:text-[#1b60bb]'
-          }`}
+          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 active:scale-95 ${mapType === 'satellite'
+            ? 'bg-[#1b60bb] text-white shadow-sm'
+            : 'text-slate-600 hover:bg-[#eff9ff] hover:text-[#1b60bb]'
+            }`}
         >
           Satellite
         </button>
       </div>
 
-      <MapContainer 
+      <MapContainer
         key={isExpanded ? 'expanded' : 'collapsed'}
-        center={center} 
-        zoom={6.5} 
+        center={center}
+        zoom={6.5}
         scrollWheelZoom={false}
         dragging={false}
         touchZoom={false}
@@ -242,9 +254,9 @@ export default function InteractiveMap({
         />
         {/* District boundaries (thin outlines) */}
         {districtsGeoJSON && (
-          <GeoJSON 
+          <GeoJSON
             key={`kerala-districts-${mapType}`}
-            data={districtsGeoJSON} 
+            data={districtsGeoJSON}
             style={{
               color: mapType === 'satellite' ? '#5cc4fe' : '#1b60bb',
               weight: 0.8,
@@ -255,9 +267,9 @@ export default function InteractiveMap({
         )}
         {/* Outer State boundary (thick border) */}
         {stateGeoJSON && (
-          <GeoJSON 
+          <GeoJSON
             key={`kerala-state-border-${mapType}`}
-            data={stateGeoJSON} 
+            data={stateGeoJSON}
             style={{
               color: mapType === 'satellite' ? '#bde7ff' : '#1b60bb',
               weight: 2.5,
@@ -268,9 +280,9 @@ export default function InteractiveMap({
         {institutions.map((inst) => {
           const isActive = activeInstitution === inst.id || (activeDistrict === inst.district && !activeInstitution);
           return (
-            <Marker 
-              key={inst.id} 
-              position={[inst.lat, inst.lng]} 
+            <Marker
+              key={inst.id}
+              position={[inst.lat, inst.lng]}
               icon={createCustomIcon(isActive)}
               eventHandlers={{
                 click: () => {
@@ -284,14 +296,14 @@ export default function InteractiveMap({
               {isExpanded && (
                 <Popup className="custom-popup">
                   <div className="p-1 min-w-[220px] max-w-[280px] flex flex-col gap-2 text-[#153156]">
-                    <div 
+                    <div
                       className="font-bold text-sm leading-snug text-[#1b60bb]"
                       style={{ fontFamily: "var(--font-helios), sans-serif" }}
                     >
                       {inst.name}
                     </div>
                     <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px]">
-                      <span 
+                      <span
                         className="text-[#1b4f8d] font-semibold bg-[#eff9ff] px-2 py-0.5 rounded"
                         style={{ fontFamily: "var(--font-helios), sans-serif" }}
                       >
@@ -306,21 +318,21 @@ export default function InteractiveMap({
                         </span>
                       )}
                     </div>
-                                        
-                    {inst.location && (
-                      <div className="text-[11px] text-slate-600 font-sans mt-0.5 leading-relaxed">
-                        <span className="font-semibold text-[#1b4f8d]">Address: </span>
-                        {inst.location}
-                      </div>
-                    )}
+
+                    <div className="text-[11px] text-slate-600 font-sans mt-0.5 leading-relaxed">
+                      <span className="font-semibold text-[#1b4f8d]">Address: </span>
+                      {inst.location ? inst.location : (
+                        <ResolvedAddress lat={inst.lat} lng={inst.lng} enabled={activeInstitution === inst.id} />
+                      )}
+                    </div>
 
                     {inst.website && (
                       <div className="text-[11px] text-slate-600 font-sans mt-0.5">
                         <span className="font-semibold text-[#1b4f8d]">Website: </span>
-                        <a 
+                        <a
                           href={inst.website.startsWith('http') ? inst.website : `https://${inst.website}`}
-                          target="_blank" 
-                          rel="noopener noreferrer" 
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="text-[#1b60bb] hover:underline hover:text-[#1872dd] font-semibold"
                         >
                           {inst.website.replace(/^https?:\/\/(www\.)?/, '')}
@@ -328,10 +340,10 @@ export default function InteractiveMap({
                       </div>
                     )}
 
-                    <a 
-                      href={`https://www.google.com/maps/search/?api=1&query=${inst.lat},${inst.lng}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${inst.lat},${inst.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="mt-2 text-center text-xs font-semibold bg-[#1b60bb] hover:bg-[#1872dd] py-2 rounded-lg transition-colors flex items-center justify-center gap-1 shadow-sm font-sans"
                       style={{ color: '#eff9ff' }}
                     >
@@ -349,7 +361,7 @@ export default function InteractiveMap({
         })}
         <MapController activeDistrict={activeDistrict} activeInstitution={activeInstitution} institutions={institutions} isExpanded={isExpanded} />
       </MapContainer>
-      
+
       {/* Overlay to prevent map drag/zoom interactions when not expanded, simulating currentundo.com's clickable image feel */}
       {!isExpanded && (
         <div className="absolute inset-0 z-[400] cursor-pointer" />

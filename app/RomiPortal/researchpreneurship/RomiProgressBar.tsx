@@ -74,7 +74,7 @@ const renderSubProgressBar = (status: 'complete' | 'active' | 'pending', current
   const barColor = status === 'complete' ? 'bg-green-500 dark:bg-green-400' : status === 'active' ? 'bg-blue-500 dark:bg-blue-400' : 'bg-gray-200 dark:bg-zinc-800';
   return (
     <div className="w-full h-1 bg-gray-100 dark:bg-zinc-800/80 rounded-full overflow-hidden my-1.5 border border-gray-200/10">
-      <div 
+      <div
         className={`h-full ${barColor} rounded-full transition-all duration-500`}
         style={{ width: `${percent}%` }}
       />
@@ -99,9 +99,9 @@ export default function RomiProgressBar({
   const completedCount = stages.filter(s => s.status === 'complete').length;
   const activeIndex = stages.findIndex(s => s.status === 'active');
   const totalCount = stages.length;
-  
-  const calculatedProgress = totalCount > 0 
-    ? Math.round(((completedCount + (activeIndex !== -1 && completedCount > 0 ? 0.5 : 0)) / totalCount) * 100) 
+
+  const calculatedProgress = totalCount > 0
+    ? Math.round(((completedCount + (activeIndex !== -1 && completedCount > 0 ? 0.5 : 0)) / totalCount) * 100)
     : 0;
 
   const dynamicProgress = overallProgressPercent !== undefined ? overallProgressPercent : calculatedProgress;
@@ -136,7 +136,7 @@ export default function RomiProgressBar({
 
       {/* Main Bar */}
       <div className="relative h-3.5 bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden my-3 border border-gray-200 dark:border-zinc-700">
-        <motion.div 
+        <motion.div
           className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 to-[#1b60bb] rounded-full shadow-inner"
           initial={{ width: 0 }}
           animate={{ width: `${dynamicProgress}%` }}
@@ -153,13 +153,12 @@ export default function RomiProgressBar({
           const StageIcon = getStageIcon(i);
           const miniDesc = getStageDescription(stage.name, i, stage.desc);
           return (
-            <div 
-              key={i} 
-              className={`shrink-0 min-w-[175px] max-w-[220px] p-3.5 rounded-2xl border transition-all duration-300 ${
-                stage.status === 'complete' ? 'bg-green-50/50 dark:bg-green-950/20 border-green-400 dark:border-green-600/60 text-green-900 dark:text-green-300' :
+            <div
+              key={i}
+              className={`shrink-0 min-w-[175px] max-w-[220px] p-3.5 rounded-2xl border transition-all duration-300 ${stage.status === 'complete' ? 'bg-green-50/50 dark:bg-green-950/20 border-green-400 dark:border-green-600/60 text-green-900 dark:text-green-300' :
                 stage.status === 'active' ? 'bg-blue-50/50 dark:bg-blue-950/20 border-blue-400 dark:border-blue-500/60 text-[#1b60bb] dark:text-blue-300 shadow-sm' :
-                'bg-gray-50/50 dark:bg-zinc-950/40 border-gray-200/80 dark:border-zinc-800 text-gray-400 dark:text-zinc-500'
-              }`}
+                  'bg-gray-50/50 dark:bg-zinc-950/40 border-gray-200/80 dark:border-zinc-800 text-gray-400 dark:text-zinc-500'
+                }`}
             >
               <div className="flex items-center gap-2 mb-1 min-w-0">
                 {stage.number !== undefined && (
@@ -167,8 +166,8 @@ export default function RomiProgressBar({
                 )}
                 <StageIcon size={14} className={
                   stage.status === 'complete' ? 'text-green-600 dark:text-green-400 shrink-0' :
-                  stage.status === 'active' ? 'text-[#1b60bb] dark:text-blue-400 shrink-0 animate-pulse' :
-                  'text-gray-400 dark:text-zinc-500 shrink-0'
+                    stage.status === 'active' ? 'text-[#1b60bb] dark:text-blue-400 shrink-0 animate-pulse' :
+                      'text-gray-400 dark:text-zinc-500 shrink-0'
                 } />
                 <span className="font-helios text-xs font-bold whitespace-nowrap truncate">{stage.name}</span>
                 {(stage.questions_total || 0) > 0 && (
@@ -200,21 +199,20 @@ export default function RomiProgressBar({
                 }}
                 type="button"
                 onClick={() => setSelectedStage(i)}
-                className={`flex items-center justify-center p-2 rounded-xl border transition-all shrink-0 cursor-pointer ${
-                  isSelected 
-                    ? 'bg-blue-100/50 dark:bg-blue-950/40 border-blue-400 ring-2 ring-blue-400/20' 
-                    : stage.status === 'complete' 
-                    ? 'bg-green-50/20 dark:bg-green-950/10 border-green-200 dark:border-green-900/30' 
+                className={`flex items-center justify-center p-2 rounded-xl border transition-all shrink-0 cursor-pointer ${isSelected
+                  ? 'bg-blue-100/50 dark:bg-blue-950/40 border-blue-400 ring-2 ring-blue-400/20'
+                  : stage.status === 'complete'
+                    ? 'bg-green-50/20 dark:bg-green-950/10 border-green-200 dark:border-green-900/30'
                     : stage.status === 'active'
-                    ? 'bg-blue-50/20 dark:bg-blue-950/10 border-blue-100 dark:border-blue-900/20'
-                    : 'bg-gray-50/30 dark:bg-zinc-950/20 border-gray-150 dark:border-zinc-800'
-                }`}
+                      ? 'bg-blue-50/20 dark:bg-blue-950/10 border-blue-100 dark:border-blue-900/20'
+                      : 'bg-gray-50/30 dark:bg-zinc-950/20 border-gray-150 dark:border-zinc-800'
+                  }`}
                 title={stage.name}
               >
                 <StageIcon size={16} className={
                   stage.status === 'complete' ? 'text-green-600 dark:text-green-400' :
-                  stage.status === 'active' ? 'text-[#1b60bb] dark:text-blue-400 animate-pulse' :
-                  'text-gray-400 dark:text-zinc-500'
+                    stage.status === 'active' ? 'text-[#1b60bb] dark:text-blue-400 animate-pulse' :
+                      'text-gray-400 dark:text-zinc-500'
                 } />
               </button>
             );

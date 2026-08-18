@@ -26,7 +26,7 @@ export default function ResearchpreneurshipSection({ setHasEntered }: Researchpr
   }, [totalSteps]);
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
@@ -35,7 +35,7 @@ export default function ResearchpreneurshipSection({ setHasEntered }: Researchpr
     >
       <div className="bg-white/70 backdrop-blur-xl rounded-[32px] p-6 sm:p-10 lg:p-14 relative overflow-hidden border border-slate-200/60 shadow-[10px_10px_30px_#e2e8f0,-10px_-10px_30px_#ffffff]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          
+
           {/* L: Copy & IP Zero Leakage */}
           <div className="lg:col-span-5 flex flex-col items-start text-left">
             <div className="bg-purple-50/80 px-4 py-2 rounded-xl mb-6 flex items-center gap-2.5 border border-purple-200/50 shadow-sm">
@@ -43,13 +43,13 @@ export default function ResearchpreneurshipSection({ setHasEntered }: Researchpr
               <span className="text-xs font-bold tracking-wider text-purple-800 uppercase font-helios">03 &bull; Scale</span>
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold font-helios text-slate-900 leading-tight mb-5">
-              Turn a rough idea into a <br/>
+              Turn a rough idea into a <br />
               <span className="text-purple-600">real concept note.</span>
             </h2>
             <p className="text-slate-700 font-montserrat text-sm sm:text-base leading-relaxed mb-8 font-medium">
               Skip the blank documents. Have a guided conversation with Romi, and let it generate a complete, formatted application ready for KSUM incubation.
             </p>
-            
+
             {/* HIGHLIGHT: Zero IP Leakage */}
             <div className="w-full p-6 rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 text-white relative overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.2)] border border-slate-700">
               <div className="absolute top-0 right-0 p-4 opacity-10"><ShieldCheck size={100} /></div>
@@ -68,7 +68,7 @@ export default function ResearchpreneurshipSection({ setHasEntered }: Researchpr
           {/* R: Texting Onboarding Flow */}
           <div className="lg:col-span-7 w-full">
             <div className="bg-slate-50/90 rounded-[28px] border border-slate-300 shadow-[inset_0_2px_10px_rgba(0,0,0,0.02),0_15px_35px_rgba(147,51,234,0.08)] flex flex-col overflow-hidden h-[500px]">
-              
+
               {/* Onboarding Header & Progress Bar */}
               <div className="bg-white px-6 pt-5 pb-4 border-b border-slate-200 z-10 shadow-sm">
                 <div className="flex justify-between items-center mb-4">
@@ -83,7 +83,7 @@ export default function ResearchpreneurshipSection({ setHasEntered }: Researchpr
                 <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden flex gap-1">
                   {[...Array(totalSteps)].map((_, i) => (
                     <div key={i} className="flex-1 h-full rounded-full bg-slate-200 overflow-hidden relative">
-                      <motion.div 
+                      <motion.div
                         className="absolute inset-0 bg-purple-600"
                         initial={{ width: i < sec3Step ? '100%' : '0%' }}
                         animate={{ width: i <= sec3Step ? '100%' : '0%' }}
@@ -97,7 +97,7 @@ export default function ResearchpreneurshipSection({ setHasEntered }: Researchpr
               {/* Texting Flow Content */}
               <div className="flex-1 p-5 overflow-y-auto relative bg-[#f9fafc] flex flex-col justify-center">
                 <AnimatePresence mode="wait">
-                  
+
                   {sec3Step === 0 && (
                     <motion.div key="step0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex flex-col gap-4 w-full">
                       <div className="self-start max-w-[85%] bg-white border border-slate-200 p-4 rounded-2xl rounded-tl-sm shadow-sm">
@@ -153,8 +153,8 @@ export default function ResearchpreneurshipSection({ setHasEntered }: Researchpr
                         <h3 className="font-bold text-xl text-slate-900 font-helios mb-2">Synthesis Complete</h3>
                         <p className="text-sm text-slate-600 font-medium font-montserrat max-w-xs mx-auto">Your KSUM incubation concept note has been generated and formatted perfectly.</p>
                       </div>
-                      
-                      <motion.button 
+
+                      <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setHasEntered(true)}

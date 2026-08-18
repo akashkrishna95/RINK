@@ -1,3 +1,5 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\privacy\terms\page.tsx
+
 'use client';
 
 import Image from 'next/image';
@@ -11,15 +13,15 @@ export default function TermsPage() {
     <main className="min-h-screen bg-[#F4F7FB] relative overflow-hidden flex flex-col justify-between">
       <section className="pt-16 pb-24 px-4 md:px-8 max-w-[1400px] mx-auto w-full flex-grow flex flex-col gap-10">
         {/* Logos and Page Header Card */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="bg-gradient-to-br from-[#fbfcfe] to-[#eaeff7] p-8 rounded-[2rem] border border-white/60 shadow-[8px_8px_20px_#c8d0e7,_-8px_-8px_20px_#ffffff] text-center flex flex-col items-center gap-6"
         >
           {/* KSUM and RINK logos side-by-side - Clickable to Home Hero */}
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="flex items-center gap-4 sm:gap-6 md:gap-8 justify-center bg-white/40 py-4 px-8 rounded-2xl border border-white/50 shadow-[inset_2px_2px_5px_#c8d0e7,_inset_-2px_-2px_5px_#ffffff] hover:bg-white/60 transition-all duration-300 cursor-pointer"
             title="Go to Home"
           >
@@ -114,7 +116,7 @@ export default function TermsPage() {
 
           {/* Back Link */}
           <div className="mt-12 pt-6 border-t border-slate-100 flex justify-end">
-            <Link 
+            <Link
               href="/"
               className="font-helios text-sm font-bold text-[#1b60bb] hover:underline flex items-center gap-1"
             >

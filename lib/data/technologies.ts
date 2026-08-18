@@ -1,3 +1,4 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\lib\data\technologies.ts
 export interface Technology {
   id: string;
   name: string;

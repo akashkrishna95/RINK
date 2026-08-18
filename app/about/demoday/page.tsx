@@ -1,3 +1,4 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\about\demoday\page.tsx
 import DemoDayExposureVisitsClient from '@/HomePage/AboutRink/DemoDayExposureVisits';
 import { pb, mapPbDemoDay, mapPbPastVisitedInstitution } from '@/lib/pocketbase';
 

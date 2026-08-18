@@ -33,14 +33,14 @@ function stripMarkdownLinks(text: string): string {
   return text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
 }
 
-function ProgramCard({ 
-  program, 
-  idx, 
+function ProgramCard({
+  program,
+  idx,
   onClick,
-  onShare 
-}: { 
-  program: Program; 
-  idx: number; 
+  onShare
+}: {
+  program: Program;
+  idx: number;
   onClick: (p: Program) => void;
   onShare: (p: Program) => void;
 }) {
@@ -66,7 +66,7 @@ function ProgramCard({
 
   const proxiedUrl = getProxiedImageUrl(program.posterLink);
   const driveMatch = program.posterLink ? (
-    program.posterLink.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
+    program.posterLink.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
     program.posterLink.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
     program.posterLink.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
     program.posterLink.match(/[?&]docid=([a-zA-Z0-9_-]+)/)
@@ -74,8 +74,8 @@ function ProgramCard({
   const directUrl = driveMatch && driveMatch[1]
     ? `https://lh3.googleusercontent.com/d/${driveMatch[1]}=s600`
     : (program.posterLink && program.posterLink.includes('googleusercontent.com') && !program.posterLink.includes('=s')
-        ? `${program.posterLink}=s600`
-        : program.posterLink);
+      ? `${program.posterLink}=s600`
+      : program.posterLink);
 
   const handleImageError = () => {
     if (!useDirectUrl) {
@@ -381,7 +381,7 @@ export default function ProgramsClient({ initialPrograms }: { initialPrograms: P
   const handleCardClick = useCallback((p: Program) => {
     setSelectedProgram(p);
     setSelectedProgramImgError(false);
-    
+
     // Update URL query parameters without reloading the page
     const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?id=${p.id}`;
     window.history.pushState({ path: newUrl }, '', newUrl);
@@ -430,8 +430,8 @@ export default function ProgramsClient({ initialPrograms }: { initialPrograms: P
       <Navbar />
 
       <section className="relative w-full h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/programs/hero.jpg')" }}>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/85 to-[#1b60bb]/80" />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/programs/hero.png')" }}>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/85 to-[#1b60bb]/40" />
         </div>
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -524,19 +524,19 @@ export default function ProgramsClient({ initialPrograms }: { initialPrograms: P
               <div className="relative w-full md:w-[45%] aspect-[4/5] md:aspect-auto md:h-full bg-slate-100 overflow-hidden shrink-0">
                 {selectedProgram.posterLink && !selectedProgramImgError ? (
                   <Image
-                    src={selectedProgramUseDirect 
+                    src={selectedProgramUseDirect
                       ? (() => {
-                          const driveMatch = selectedProgram.posterLink.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
-                                             selectedProgram.posterLink.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
-                                             selectedProgram.posterLink.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
-                                             selectedProgram.posterLink.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
-                          if (driveMatch && driveMatch[1]) {
-                            return `https://lh3.googleusercontent.com/d/${driveMatch[1]}=s800`;
-                          }
-                          return selectedProgram.posterLink.includes('googleusercontent.com') && !selectedProgram.posterLink.includes('=s')
-                            ? `${selectedProgram.posterLink}=s800`
-                            : selectedProgram.posterLink;
-                        })()
+                        const driveMatch = selectedProgram.posterLink.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
+                          selectedProgram.posterLink.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+                          selectedProgram.posterLink.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
+                          selectedProgram.posterLink.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
+                        if (driveMatch && driveMatch[1]) {
+                          return `https://lh3.googleusercontent.com/d/${driveMatch[1]}=s800`;
+                        }
+                        return selectedProgram.posterLink.includes('googleusercontent.com') && !selectedProgram.posterLink.includes('=s')
+                          ? `${selectedProgram.posterLink}=s800`
+                          : selectedProgram.posterLink;
+                      })()
                       : getProxiedImageUrl(selectedProgram.posterLink)
                     }
                     alt={selectedProgram.title}
@@ -627,11 +627,11 @@ export default function ProgramsClient({ initialPrograms }: { initialPrograms: P
 
                 <div className="flex-shrink-0 pt-2 md:pt-3 border-t border-slate-100 flex items-center gap-2.5">
                   <div className="relative shrink-0">
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleShare(selectedProgram);
-                      }} 
+                      }}
                       className="py-2.5 md:py-3.5 px-4 bg-white border border-[#1b60bb]/20 hover:border-[#1b60bb] text-[#1b60bb] rounded-xl font-helios font-bold text-xs md:text-sm text-center transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
                       title="Copy share link"
                     >
@@ -697,11 +697,11 @@ export default function ProgramsClient({ initialPrograms }: { initialPrograms: P
                 ) : (
                   <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 md:gap-6 space-y-4 md:space-y-6 w-full">
                     {galleryImages.map((imgUrl, i) => (
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }} 
-                        animate={{ opacity: 1, scale: 1 }} 
-                        transition={{ delay: Math.min(i * 0.04, 0.5) }} 
-                        key={i} 
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: Math.min(i * 0.04, 0.5) }}
+                        key={i}
                         onClick={() => setActiveImageIndex(i)}
                         className="break-inside-avoid group relative rounded-2xl overflow-hidden bg-white/5 cursor-zoom-in"
                       >
@@ -729,7 +729,7 @@ export default function ProgramsClient({ initialPrograms }: { initialPrograms: P
               className="fixed inset-0 bg-[#00050e]/95 backdrop-blur-md z-[200]"
             />
             <div className="fixed inset-0 z-[201] flex flex-col items-center justify-center p-4 md:p-8 select-none">
-              
+
               {/* Close Button */}
               <button
                 onClick={() => setActiveImageIndex(null)}
@@ -741,7 +741,7 @@ export default function ProgramsClient({ initialPrograms }: { initialPrograms: P
 
               {/* Lightbox Wrapper */}
               <div className="relative w-full max-w-5xl h-[70vh] sm:h-[80vh] flex items-center justify-center">
-                
+
                 {/* Previous Button */}
                 <button
                   onClick={(e) => {

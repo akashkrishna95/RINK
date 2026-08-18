@@ -1,3 +1,5 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\AboutRink\ResearchDevelopmentGrant.tsx
+
 'use client';
 
 import { motion } from 'framer-motion';
@@ -12,11 +14,11 @@ export default function ResearchDevelopmentGrant() {
 
       {/* Hero Section */}
       <section className="relative w-full h-[450px] flex items-center justify-center overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/images/randd/hero.jpg')" }}
+          style={{ backgroundImage: "url('/images/randd/hero.png')" }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/85 to-[#1b60bb]/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/85 to-[#1b60bb]/35"></div>
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
@@ -38,7 +40,7 @@ export default function ResearchDevelopmentGrant() {
       {/* Details Section */}
       <section className="py-20 px-4 md:px-8 max-w-[1200px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -49,11 +51,11 @@ export default function ResearchDevelopmentGrant() {
             {/* Main Image Grid */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4 translate-y-4 sm:translate-y-8">
-                <img src="/images/randd/lab.jpg" alt="Lab" loading="lazy" decoding="async" className="w-full h-32 sm:h-48 object-cover rounded-2xl shadow-lg" />
-                <img src="/images/randd/hardware.jpg" alt="Hardware" loading="lazy" decoding="async" className="w-full h-44 sm:h-64 object-cover rounded-2xl shadow-lg" />
+                <img src="/images/funds/randd_grant.png" alt="Lab" loading="lazy" decoding="async" className="w-full h-32 sm:h-48 object-cover rounded-2xl shadow-lg" />
+                <img src="/images/randd/chemicals.jpg" alt="Hardware" loading="lazy" decoding="async" className="w-full h-44 sm:h-64 object-cover rounded-2xl shadow-lg" />
               </div>
               <div className="space-y-4">
-                <img src="/images/randd/circuit.jpg" alt="Circuit" loading="lazy" decoding="async" className="w-full h-44 sm:h-64 object-cover rounded-2xl shadow-lg" />
+                <img src="/images/randd/chips.jpg" alt="Circuit" loading="lazy" decoding="async" className="w-full h-44 sm:h-64 object-cover rounded-2xl shadow-lg" />
                 <div className="bg-[#1b60bb] p-4 sm:p-6 rounded-2xl shadow-lg h-32 sm:h-48 flex flex-col justify-center items-center text-center text-white">
                   <Rocket className="mb-2 sm:mb-3 text-[#5cc4fe] w-8 h-8 sm:w-10 sm:h-10" />
                   <h3 className="font-helios font-bold text-base sm:text-xl">Scale Faster</h3>

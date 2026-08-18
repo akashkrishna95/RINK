@@ -1,3 +1,5 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\PremiumLoader.tsx
+
 'use client';
 
 import { motion } from 'framer-motion';

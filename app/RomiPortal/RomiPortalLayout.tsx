@@ -1164,8 +1164,8 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                         <div
                           key={session.id}
                           className={`group flex items-center justify-between rounded-2xl px-3 py-2.5 transition-all cursor-pointer ${isActive
-                              ? 'bg-[#D6D3C8] dark:bg-[#161618] border border-[#c4c1b5]/70 dark:border-black/50 shadow-[inset_2.5px_2.5px_5px_rgba(0,0,0,0.18),inset_-2.5px_-2.5px_5px_rgba(255,255,255,0.7)] dark:shadow-[inset_2.5px_2.5px_6px_rgba(0,0,0,0.85),inset_-1.5px_-1.5px_4px_rgba(255,255,255,0.06)] text-gray-900 dark:text-white font-normal'
-                              : 'hover:bg-[#d8d5cb]/50 dark:hover:bg-zinc-800/40 text-gray-700 dark:text-zinc-300 font-normal hover:shadow-[inset_1px_1px_3px_rgba(0,0,0,0.08),inset_-1px_-1px_3px_rgba(255,255,255,0.4)] dark:hover:shadow-[inset_1px_1px_3px_rgba(0,0,0,0.5)]'
+                            ? 'bg-[#D6D3C8] dark:bg-[#161618] border border-[#c4c1b5]/70 dark:border-black/50 shadow-[inset_2.5px_2.5px_5px_rgba(0,0,0,0.18),inset_-2.5px_-2.5px_5px_rgba(255,255,255,0.7)] dark:shadow-[inset_2.5px_2.5px_6px_rgba(0,0,0,0.85),inset_-1.5px_-1.5px_4px_rgba(255,255,255,0.06)] text-gray-900 dark:text-white font-normal'
+                            : 'hover:bg-[#d8d5cb]/50 dark:hover:bg-zinc-800/40 text-gray-700 dark:text-zinc-300 font-normal hover:shadow-[inset_1px_1px_3px_rgba(0,0,0,0.08),inset_-1px_-1px_3px_rgba(255,255,255,0.4)] dark:hover:shadow-[inset_1px_1px_3px_rgba(0,0,0,0.5)]'
                             }`}
                           onClick={() => {
                             if (!isEditing) handleSelectSession(session.id);
@@ -1551,8 +1551,8 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                   <div className="shrink-0 flex items-start justify-center">
                     {msg.role === 'user' ? (
                       <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm border ${msg.role === 'user'
-                          ? 'bg-gray-200 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-600 dark:text-gray-300'
-                          : 'bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 overflow-hidden'
+                        ? 'bg-gray-200 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-600 dark:text-gray-300'
+                        : 'bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 overflow-hidden'
                         }`}>
                         <User size={14} />
                       </div>
@@ -2130,8 +2130,8 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                                 setShowModeDropdown(false);
                               }}
                               className={`w-full text-left px-3 py-2.5 text-xs rounded-xl transition-all font-medium font-sans flex items-center gap-2.5 ${mode === option.id
-                                  ? 'bg-black dark:bg-white text-white dark:text-black font-semibold shadow-sm'
-                                  : 'text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800/60'
+                                ? 'bg-black dark:bg-white text-white dark:text-black font-semibold shadow-sm'
+                                : 'text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800/60'
                                 }`}
                             >
                               <span className={mode === option.id ? 'text-white dark:text-black' : 'text-gray-400 dark:text-zinc-500'}>
@@ -2159,11 +2159,10 @@ export default function RomiPortalLayout({ query, onReset, activeMode = "whole w
                     style={{ minHeight: '52px', maxHeight: '200px' }}
                   />
                   {mode === 'researchpreneurship' && (
-                    <div className={`absolute bottom-[-18px] right-2 text-[10px] font-mono font-semibold select-none ${
-                      inputVal.length >= 2000 ? 'text-red-500' :
+                    <div className={`absolute bottom-[-18px] right-2 text-[10px] font-mono font-semibold select-none ${inputVal.length >= 2000 ? 'text-red-500' :
                       inputVal.length >= 1800 ? 'text-amber-500' :
-                      'text-gray-400 dark:text-zinc-500'
-                    }`}>
+                        'text-gray-400 dark:text-zinc-500'
+                      }`}>
                       {inputVal.length}/2000
                     </div>
                   )}

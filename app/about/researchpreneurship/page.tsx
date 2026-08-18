@@ -1,3 +1,4 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\about\researchpreneurship\page.tsx
 import ResearchIncubationProgramsClient from '@/HomePage/AboutRink/ResearchIncubationPrograms';
 import { pb, mapPbStartup } from '@/lib/pocketbase';
 

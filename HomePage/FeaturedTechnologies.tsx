@@ -1,9 +1,10 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\FeaturedTechnologies.tsx
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
-import TechnologyCard from './technologies/TechnologyCard';
+import TechnologyCard from './TechnologyCard';
 import { normalizeIPStatus, isFeaturedTechnology } from '@/lib/utils';
 
 interface Technology {

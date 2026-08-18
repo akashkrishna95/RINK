@@ -14,7 +14,7 @@ export default function TechnologiesSection({ setHasEntered }: TechnologiesSecti
   const [sec1Mode, setSec1Mode] = useState<'chat' | 'compare' | 'market'>('chat');
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
@@ -23,7 +23,7 @@ export default function TechnologiesSection({ setHasEntered }: TechnologiesSecti
     >
       <div className="bg-white/70 backdrop-blur-xl rounded-[32px] p-6 sm:p-10 lg:p-14 relative overflow-hidden border border-slate-200/60 shadow-[10px_10px_30px_#e2e8f0,-10px_-10px_30px_#ffffff]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          
+
           {/* L: Copy */}
           <div className="lg:col-span-5 flex flex-col items-start text-left">
             <div className="bg-blue-50/80 px-4 py-2 rounded-xl mb-6 flex items-center gap-2.5 border border-blue-200/50 shadow-sm">
@@ -31,13 +31,13 @@ export default function TechnologiesSection({ setHasEntered }: TechnologiesSecti
               <span className="text-xs font-bold tracking-wider text-blue-800 uppercase font-helios">01 &bull; Discover</span>
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold font-helios text-slate-900 leading-tight mb-5">
-              Ask like a person, <br/>
+              Ask like a person, <br />
               <span className="text-blue-600">not a search bar.</span>
             </h2>
             <p className="text-slate-700 font-montserrat text-sm sm:text-base leading-relaxed mb-8 font-medium">
               Translate plain language problems into verified, market-ready deep-tech solutions from Kerala's top institutions instantly.
             </p>
-            
+
             <div className="flex flex-col gap-4 w-full">
               <div className="bg-white p-4 rounded-2xl flex items-center gap-4 border border-slate-100 shadow-[4px_4px_10px_#f1f5f9,-4px_-4px_10px_#ffffff]">
                 <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 shrink-0"><Database size={20} /></div>
@@ -59,7 +59,7 @@ export default function TechnologiesSection({ setHasEntered }: TechnologiesSecti
           {/* R: Interactive Messaging App */}
           <div className="lg:col-span-7 w-full">
             <div className="bg-slate-50/90 rounded-[28px] border border-slate-300 shadow-[inset_0_2px_10px_rgba(0,0,0,0.02),0_15px_35px_rgba(27,96,187,0.08)] flex flex-col overflow-hidden h-[500px]">
-              
+
               {/* App Header */}
               <div className="bg-white px-3 sm:px-5 py-3 sm:py-4 border-b border-slate-200 flex flex-row flex-wrap justify-between items-center z-10 shadow-sm gap-2">
                 <div className="flex items-center gap-2 sm:gap-3">
@@ -99,7 +99,7 @@ export default function TechnologiesSection({ setHasEntered }: TechnologiesSecti
                             <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-200">TRL 8</span>
                           </div>
                           <p className="text-xs text-slate-600 font-medium mb-3">CTCRI & KAU Joint R&D • Patent: IN-PAT-2024-8891</p>
-                          
+
                           <div className="grid grid-cols-2 gap-2 mt-2">
                             <button onClick={() => setSec1Mode('compare')} className="w-full bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50 text-slate-700 hover:text-blue-700 py-2 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-sm">
                               <Layers size={14} /> Compare Specs
@@ -117,7 +117,7 @@ export default function TechnologiesSection({ setHasEntered }: TechnologiesSecti
                   {sec1Mode === 'compare' && (
                     <motion.div key="compare" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.2 }} className="w-full h-full flex flex-col">
                       <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex-1 flex flex-col">
-                        <h4 className="font-bold text-slate-900 font-helios mb-4 flex items-center gap-2"><Layers size={18} className="text-blue-600"/> Patent Specification Matrix</h4>
+                        <h4 className="font-bold text-slate-900 font-helios mb-4 flex items-center gap-2"><Layers size={18} className="text-blue-600" /> Patent Specification Matrix</h4>
                         <div className="flex flex-col gap-2 flex-1">
                           {[
                             { label: 'Yield Efficiency', val: '88.4% Recovery Rate' },
@@ -142,8 +142,8 @@ export default function TechnologiesSection({ setHasEntered }: TechnologiesSecti
                   {sec1Mode === 'market' && (
                     <motion.div key="market" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="w-full h-full flex flex-col">
                       <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex-1 flex flex-col">
-                        <h4 className="font-bold text-slate-900 font-helios mb-6 flex items-center gap-2"><TrendingUp size={18} className="text-emerald-600"/> Bio-Ethanol Market Sizing</h4>
-                        
+                        <h4 className="font-bold text-slate-900 font-helios mb-6 flex items-center gap-2"><TrendingUp size={18} className="text-emerald-600" /> Bio-Ethanol Market Sizing</h4>
+
                         {/* Simulated Chart */}
                         <div className="flex-1 flex items-end justify-around gap-2 px-4 pb-6 border-b border-slate-100 relative">
                           {/* Grid Lines */}
@@ -152,7 +152,7 @@ export default function TechnologiesSection({ setHasEntered }: TechnologiesSecti
                             <div className="w-full h-px bg-slate-100"></div>
                             <div className="w-full h-px bg-slate-100"></div>
                           </div>
-                          
+
                           {/* Bars */}
                           <div className="relative flex flex-col items-center gap-2 z-10 w-full max-w-[80px]">
                             <span className="text-[10px] font-bold text-slate-600 bg-white px-1 relative z-20">SOM</span>
@@ -177,7 +177,7 @@ export default function TechnologiesSection({ setHasEntered }: TechnologiesSecti
                   )}
                 </AnimatePresence>
               </div>
-              
+
               {/* Chat Input Area */}
               {sec1Mode === 'chat' && (
                 <div className="bg-white p-4 border-t border-slate-200">

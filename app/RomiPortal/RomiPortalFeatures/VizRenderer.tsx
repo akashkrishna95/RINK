@@ -43,24 +43,24 @@ function RomiMarketFunnel({ tam, sam, som }: {
           TAM / SAM / SOM Breakdown
         </h4>
       </div>
-      
+
       <div className="flex flex-col items-center w-full gap-2 sm:gap-2.5 mt-1 sm:mt-2">
         {/* SOM - Top of Pyramid */}
         <div className="w-[55%] sm:w-[50%] max-w-[200px] min-h-[36px] sm:h-12 py-1.5 px-2 bg-[#0060c0] text-white flex items-center justify-center font-bold text-[10px] sm:text-xs tracking-wider rounded-t-xl sm:rounded-t-2xl rounded-b-md shadow-sm transition-all hover:scale-[1.02] hover:brightness-105 select-none text-center truncate">
           SOM {som.label}
         </div>
-        
+
         {/* SAM - Middle of Pyramid */}
         <div className="w-[75%] sm:w-[70%] max-w-[270px] min-h-[36px] sm:h-12 py-1.5 px-2 bg-[#82c2ff] dark:bg-sky-900/60 text-[#004b93] dark:text-sky-200 flex items-center justify-center font-bold text-[10px] sm:text-xs tracking-wider rounded-lg sm:rounded-xl shadow-sm transition-all hover:scale-[1.02] hover:brightness-105 select-none text-center truncate">
           SAM {sam.label}
         </div>
-        
+
         {/* TAM - Bottom of Pyramid */}
         <div className="w-[95%] sm:w-[90%] max-w-[340px] min-h-[36px] sm:h-12 py-1.5 px-2 bg-gradient-to-b from-[#e6f4ff] to-[#d0ebff] dark:from-blue-950/40 dark:to-blue-900/30 text-[#0060c0] dark:text-blue-300 border border-blue-100/50 dark:border-blue-900/20 flex items-center justify-center font-bold text-[10px] sm:text-xs tracking-wider rounded-b-xl sm:rounded-b-2xl rounded-t-md shadow-sm transition-all hover:scale-[1.02] hover:brightness-105 select-none text-center truncate">
           TAM {tam.label}
         </div>
       </div>
-      
+
       <span className="text-[9px] sm:text-[10px] text-gray-400 dark:text-zinc-500 font-montserrat mt-4 sm:mt-5 text-center">
         Estimates from live web sources — verify via linked references
       </span>
@@ -116,7 +116,7 @@ export function parseRomiVisuals(text: string): { cleanText: string; charts: Rea
               }))} />);
           break;
         }
-      
+
         case 'GAUGE':
           charts.push(<RomiGauge key={key} title={cfg.title} percent={Number(cfg.percent) || 0} caption={cfg.caption} />);
           break;
@@ -159,7 +159,7 @@ export function extractSourcesFromText(text: string): any[] {
     const cleanOrg = (org || '').trim();
     const cleanTitle = (title || '').trim();
     const cleanYear = (year || '').trim();
-    
+
     sources.push({
       url: cleanUrl,
       domain: cleanOrg || getHostName(cleanUrl),
@@ -195,12 +195,12 @@ export function SourceChip({ source, labelText }: { source: any; labelText?: str
   return (
     <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger asChild>
-        <span 
+        <span
           onMouseEnter={() => setIsOpen(true)}
           onMouseLeave={() => setIsOpen(false)}
           className="inline-flex items-center gap-1 bg-gray-150 hover:bg-gray-250 dark:bg-zinc-800/80 dark:hover:bg-zinc-700 text-gray-700 dark:text-zinc-350 text-[11px] font-bold px-1.5 py-0.5 rounded-md mx-0.5 cursor-pointer select-none transition-colors border border-gray-200 dark:border-zinc-700 align-middle active:scale-95"
         >
-          <img 
+          <img
             src={`https://www.google.com/s2/favicons?domain=${source.domain}&sz=32`}
             alt=""
             className="w-3 h-3 rounded-xs pointer-events-none"
@@ -209,11 +209,11 @@ export function SourceChip({ source, labelText }: { source: any; labelText?: str
           {displayLabel}
         </span>
       </Popover.Trigger>
-      
+
       <Popover.Portal>
-        <Popover.Content 
-          side="top" 
-          align="center" 
+        <Popover.Content
+          side="top"
+          align="center"
           sideOffset={6}
           className="z-[9999] w-72 bg-white dark:bg-zinc-900 border border-gray-150 dark:border-zinc-800 rounded-xl p-3.5 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-200 font-sans"
           onMouseEnter={() => setIsOpen(true)}
@@ -226,9 +226,9 @@ export function SourceChip({ source, labelText }: { source: any; labelText?: str
             <p className="text-[11px] text-gray-600 dark:text-zinc-400 leading-relaxed max-h-20 overflow-y-auto">
               {source.snippet}
             </p>
-            <a 
-              href={source.url} 
-              target="_blank" 
+            <a
+              href={source.url}
+              target="_blank"
               rel="noopener noreferrer"
               className="text-[10px] font-semibold text-blue-500 dark:text-[#7dd3fc] hover:underline mt-1 self-start flex items-center gap-0.5"
             >
@@ -303,7 +303,7 @@ export function MarketPyramid({ tam, sam, som }: { tam: string; sam: string; som
 export function SourceAnchor({ href, children, sources }: any) {
   const textStr = String(children?.[0] ?? children ?? '');
   const isSourceChip = textStr.startsWith('SRC_CHIP:') || textStr === '🔗';
-  
+
   if (isSourceChip) {
     const rawLabel = textStr.startsWith('SRC_CHIP:') ? textStr.replace(/^SRC_CHIP:/, '') : 'source';
     const parts = rawLabel.split('|');
@@ -317,7 +317,7 @@ export function SourceAnchor({ href, children, sources }: any) {
 
     // Construct the final source object for the tooltip
     const sourceObj = matchingSource ? { ...matchingSource } : { url: href };
-    
+
     // Dynamically populate fields if missing or override with parsed parameters
     sourceObj.domain = (sourceObj.domain || org || getHostName(href)).replace(/^SRC_CHIP:/, '').trim();
     sourceObj.title = (sourceObj.title || pubTitle || sourceObj.domain).replace(/^SRC_CHIP:/, '').trim();
@@ -330,7 +330,7 @@ export function SourceAnchor({ href, children, sources }: any) {
         sourceObj.snippet = `Published: ${year}`;
       }
     }
-    
+
     return <SourceChip source={sourceObj} labelText={labelText} />;
   }
 
@@ -340,13 +340,13 @@ export function SourceAnchor({ href, children, sources }: any) {
   if (isUrl) {
     const domain = getHostName(href);
     return (
-      <a 
-        href={href} 
-        target="_blank" 
+      <a
+        href={href}
+        target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1.5 bg-[#eff9ff] hover:bg-[#dbeffd] dark:bg-sky-950/30 dark:hover:bg-sky-900/40 text-[#1b60bb] dark:text-[#7dd3fc] text-[11px] font-bold px-3 py-1 rounded-full mx-0.5 cursor-pointer select-none transition-colors border border-blue-200/50 dark:border-blue-800/30 align-middle active:scale-95 no-underline shadow-xs"
       >
-        <img 
+        <img
           src={`https://www.google.com/s2/favicons?domain=${domain}&sz=32`}
           alt=""
           className="w-3.5 h-3.5 rounded-xs pointer-events-none shrink-0"
@@ -356,7 +356,7 @@ export function SourceAnchor({ href, children, sources }: any) {
       </a>
     );
   }
-  
+
   return (
     <a href={href} target="_blank" rel="noopener noreferrer"
       className="text-[#1b60bb] dark:text-[#7dd3fc] font-semibold underline underline-offset-2 hover:text-[#14498f] dark:hover:text-sky-200">

@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { pb, mapPbGrant } from '@/lib/pocketbase';
-import GrantsClient from './GrantsClient';
+import { pb, mapPbFund } from '@/lib/pocketbase';
+import FundsClient from './FundsClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,23 +19,23 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
   if (id) {
     try {
-      const record = await pb.collection('grants').getOne(id);
-      const title = record.grant_name || record.title || 'Grant Opportunity';
-      const description = record.description 
+      const record = await pb.collection('funds').getOne(id);
+      const title = record.fund_name || record.title || 'Fund Opportunity';
+      const description = record.description
         ? record.description.replace(/[#*_\n]/g, ' ').slice(0, 150) + '...'
-        : 'Explore this grant opportunity on RINK KSUM.';
+        : 'Explore this fund opportunity on RINK KSUM.';
       const posterLink = record.poster_link || '';
-      
-      const driveMatch = posterLink.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
-                         posterLink.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
-                         posterLink.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
-                         posterLink.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
+
+      const driveMatch = posterLink.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
+        posterLink.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+        posterLink.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
+        posterLink.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
       const imageUrl = driveMatch && driveMatch[1]
         ? `https://lh3.googleusercontent.com/d/${driveMatch[1]}`
         : (posterLink || defaultLogo);
 
       return {
-        title: `${title} | RINK Grants`,
+        title: `${title} | RINK Funds`,
         description,
         openGraph: {
           title,
@@ -51,35 +51,35 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
         }
       };
     } catch (e) {
-      console.error('Error generating metadata for grant:', e);
+      console.error('Error generating metadata for fund:', e);
     }
   }
 
   // Fallback default meta
   return {
-    title: 'RINK Grants - Research Innovation Network Kerala',
+    title: 'RINK Funds - Research Innovation Network Kerala',
     description: 'Research Innovation Network Kerala (RINK) is an initiative of Kerala Startup Mission (KSUM) that builds a bridge between research institutions and the startup ecosystem.',
     openGraph: {
-      title: 'RINK Grants - Research Innovation Network Kerala',
+      title: 'RINK Funds - Research Innovation Network Kerala',
       description: 'Research Innovation Network Kerala (RINK) is an initiative of Kerala Startup Mission (KSUM) that builds a bridge between research institutions and the startup ecosystem.',
       images: [defaultLogo],
     }
   };
 }
 
-async function getGrants() {
+async function getFunds() {
   try {
-    const records = await pb.collection('grants').getFullList({
+    const records = await pb.collection('funds').getFullList({
       cache: 'no-store'
     });
-    return records.map(mapPbGrant);
+    return records.map(mapPbFund);
   } catch (error) {
-    console.error('Failed to fetch grants from PocketBase:', error);
+    console.error('Failed to fetch Funds from PocketBase:', error);
     return [];
   }
 }
 
-export default async function GrantsPage() {
-  const initialGrants = await getGrants();
-  return <GrantsClient initialGrants={initialGrants} />;
+export default async function FundsPage() {
+  const initialFunds = await getFunds();
+  return <FundsClient initialFunds={initialFunds} />;
 }

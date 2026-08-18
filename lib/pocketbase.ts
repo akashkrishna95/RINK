@@ -1,3 +1,5 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\lib\pocketbase.ts
+
 import PocketBase from 'pocketbase';
 
 export const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8090');
@@ -86,7 +88,7 @@ export function mapPbDemoDay(record: any, index?: number): DemoDayVideo | null {
   };
 }
 
-export interface Grant {
+export interface Fund {
   id: string;
   title: string;
   lastDate: string;
@@ -95,16 +97,15 @@ export interface Grant {
   registrationLink: string;
 }
 
-export function mapPbGrant(record: any): Grant {
-  return {
-    id: record.id,
-    title: record.grant_name || record.title || '',
-    lastDate: record.last_date || '',
-    description: record.description || '',
-    posterLink: formatDriveImageUrl(record.poster_link || ''),
-    registrationLink: record.registration_link || '',
-  };
-}
+export const mapPbFund = (record: any): Fund => ({
+  id: record.id,
+  // Changed grant_name to fund_name here to match your database change
+  title: record.fund_name || record.title || '', 
+  description: record.description || '',
+  posterLink: record.poster_link || '',
+  lastDate: record.last_date || '',
+  registrationLink: record.registration_link || '',
+});
 
 export interface Program {
   id: string;

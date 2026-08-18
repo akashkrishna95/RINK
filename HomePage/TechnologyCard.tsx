@@ -1,3 +1,5 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\TechnologyCard.tsx
+
 'use client';
 
 import { ArrowUpRight, CircleCheckBig, Building2 } from 'lucide-react';

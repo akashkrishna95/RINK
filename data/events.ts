@@ -1,3 +1,4 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\data\events.ts
 export interface RinkEvent {
   id: string;
   title: string;

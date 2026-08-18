@@ -1,3 +1,5 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\AboutRink\DemoDayExposureVisits.tsx
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -9,10 +11,10 @@ import PastVisitedInstitutions from '../PastVisitedInstitutions';
 import { useRealTimeSync } from '@/hooks/useRealTimeSync';
 import { pb, mapPbDemoDay, DemoDayVideo, PastVisitedInstitution } from '@/lib/pocketbase';
 
-export default function DemoDayExposureVisits({ 
-  initialVideos, 
-  initialPastVisitedInstitutions 
-}: { 
+export default function DemoDayExposureVisits({
+  initialVideos,
+  initialPastVisitedInstitutions
+}: {
   initialVideos: DemoDayVideo[];
   initialPastVisitedInstitutions: PastVisitedInstitution[];
 }) {
@@ -40,11 +42,11 @@ export default function DemoDayExposureVisits({
 
       {/* Hero Section */}
       <section className="relative w-full h-[500px] flex items-center justify-center overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/images/demoday/hero.jpg')" }}
+          style={{ backgroundImage: "url('/images/demoday/hero.png')" }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/80 to-[#1b60bb]/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/80 to-[#1b60bb]/35"></div>
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
@@ -77,12 +79,12 @@ export default function DemoDayExposureVisits({
             <p className="text-slate-600 font-poppins text-xs sm:text-sm md:text-base leading-relaxed mb-6">
               Events to connect startups to R&D institutions. Research institutions showcase commercial ready technologies, while startups and entrepreneurs get the chance to interact with scientists, explore advanced labs, and identify opportunities for collaboration, co development, or technology transfer
             </p>
-                        
+
             <a href="/programs" className="inline-flex items-center gap-2 bg-[#1b60bb] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#154a93] transition-colors shadow-md hover:shadow-lg group text-xs sm:text-sm md:text-base">
               Join the Next Demo Day <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
             </a>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -116,13 +118,13 @@ export default function DemoDayExposureVisits({
             <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-[#5cc4fe] mb-4">Past Demo Days</h2>
             <p className="text-white/80 font-poppins max-w-2xl mx-auto text-xs sm:text-sm md:text-base">Watch highlights and pitches from our previous Demo Days.</p>
           </div>
-          
+
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Main Player */}
             <div ref={playerRef} className="lg:w-2/3 w-full">
               {activeVideo ? (
                 <>
-                  <motion.div 
+                  <motion.div
                     key={activeVideo.id}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -140,12 +142,12 @@ export default function DemoDayExposureVisits({
                         className="w-full h-full border-none"
                       ></iframe>
                     ) : (
-                      <div 
+                      <div
                         className="w-full h-full relative flex items-center justify-center bg-black/60 group cursor-pointer"
                         onClick={() => setHasScrolledIntoView(true)}
                       >
-                        <img 
-                          src={`https://img.youtube.com/vi/${activeVideo.youtubeId}/mqdefault.jpg`} 
+                        <img
+                          src={`https://img.youtube.com/vi/${activeVideo.youtubeId}/mqdefault.jpg`}
                           alt={activeVideo.title}
                           loading="lazy"
                           className="absolute inset-0 w-full h-full object-cover opacity-50"
@@ -177,8 +179,8 @@ export default function DemoDayExposureVisits({
                   className={`w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 text-left ${activeVideo?.id === video.id ? 'bg-[#1b60bb]/40 border border-[#5cc4fe]/50' : 'bg-white/5 border border-transparent hover:bg-white/10 hover:border-white/20'}`}
                 >
                   <div className="relative w-32 aspect-video shrink-0 rounded-lg overflow-hidden bg-black/50">
-                    <img 
-                      src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`} 
+                    <img
+                      src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`}
                       alt={video.title}
                       loading="lazy"
                       className="w-full h-full object-cover"
@@ -210,7 +212,7 @@ export default function DemoDayExposureVisits({
               transition={{ duration: 0.5 }}
               className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-lg"
             >
-              <img 
+              <img
                 src="/images/Exposure Visit.svg"
                 alt="Exposure Visit"
                 loading="lazy"
@@ -218,7 +220,7 @@ export default function DemoDayExposureVisits({
                 className="w-full h-full object-cover"
               />
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -230,7 +232,7 @@ export default function DemoDayExposureVisits({
               <p className="text-slate-600 font-poppins text-xs sm:text-sm md:text-base leading-relaxed mb-8">
                 Curated visits for entrepreneurs, startups, and innovators to leading research institutions and scientific facilities in Kerala.
               </p>
-              
+
               <ul className="space-y-4">
                 {[
                   "Interact directly with scientists and researchers",
@@ -251,9 +253,10 @@ export default function DemoDayExposureVisits({
       <PastVisitedInstitutions initialInstitutions={initialPastVisitedInstitutions} />
 
       <Footer />
-      
+
       {/* Custom Scrollbar for playlist */}
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }

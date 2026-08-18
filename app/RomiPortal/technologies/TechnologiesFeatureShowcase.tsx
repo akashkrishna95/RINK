@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Sparkles, Search, MessageSquare, BarChart3, ArrowRight, CheckCircle2, 
-  ShieldCheck, Database, Layers, ExternalLink, Zap, RefreshCw, Cpu, 
+import {
+  Sparkles, Search, MessageSquare, BarChart3, ArrowRight, CheckCircle2,
+  ShieldCheck, Database, Layers, ExternalLink, Zap, RefreshCw, Cpu,
   Check, ArrowUpRight, Scale, TrendingUp, BookOpen, Lightbulb, Users, Globe, Lock, Plus, ArrowUp, User, RotateCw,
   Play, Pause
 } from 'lucide-react';
@@ -14,7 +14,7 @@ export default function TechnologiesFeatureShowcase() {
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [flippedCardId, setFlippedCardId] = useState<number | null>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
-  
+
   // Sequential Animation Flags
   const [userText, setUserText] = useState<string>('');
   const [aiText, setAiText] = useState<string>('');
@@ -43,8 +43,8 @@ export default function TechnologiesFeatureShowcase() {
     return parts.map((part, index) => {
       if (part.startsWith('**') && part.endsWith('**')) {
         return (
-          <span 
-            key={index} 
+          <span
+            key={index}
             className={`${styleClass} px-1 py-0.5 rounded font-semibold`}
           >
             {part.slice(2, -2)}
@@ -86,7 +86,7 @@ export default function TechnologiesFeatureShowcase() {
 
     let userIdx = 0;
     let aiIdx = 0;
-    
+
     // Reset all flags on step change
     setUserText('');
     setAiText('');
@@ -133,7 +133,7 @@ export default function TechnologiesFeatureShowcase() {
                 // Phase 5: Reveal 5-Year Bar Graph after 500ms (for Step 2)
                 barGraphTimeout = setTimeout(() => {
                   setShowBarGraph(true);
-                  
+
                   // Let the visual animation finish before marking step as completed
                   const completionDelay = activeStep === 2 ? 1100 : 0;
                   completionTimeout = setTimeout(() => {
@@ -411,7 +411,7 @@ export default function TechnologiesFeatureShowcase() {
 
       {/* INTERACTIVE CHAT SHOWCASE WORKSPACE */}
       <div className="w-full bg-[#eae7dc]/40 dark:bg-zinc-900/60 border border-gray-200/80 dark:border-zinc-800 rounded-3xl p-2 sm:p-4 md:p-6 shadow-xl mb-14 overflow-hidden relative">
-        
+
         {/* TOP TAB CONTROLS (EXACTLY 3 SUBCARDS TOTAL) */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 mb-5">
           {steps.map((step, index) => {
@@ -424,13 +424,11 @@ export default function TechnologiesFeatureShowcase() {
                   setIsPlaying(false);
                   setActiveStep(step.id);
                 }}
-                className={`p-3 rounded-xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden ${
-                  index === 2 ? 'col-span-2 md:col-span-1' : 'col-span-1'
-                } ${
-                  isActive
+                className={`p-3 rounded-xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden ${index === 2 ? 'col-span-2 md:col-span-1' : 'col-span-1'
+                  } ${isActive
                     ? 'bg-[#F1EFEB] dark:bg-[#1a1a1c] border-[#c8c2b0] dark:border-zinc-700 shadow-[inset_3px_3px_6px_rgba(135,130,110,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.95)] dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.75),inset_-3px_-3px_6px_rgba(255,255,255,0.04)]'
                     : 'bg-[#F1EFEB] dark:bg-zinc-950/40 border-gray-200/60 dark:border-zinc-800/80 shadow-[inset_1.5px_1.5px_3px_rgba(165,160,135,0.25),inset_-1.5px_-1.5px_3px_rgba(255,255,255,0.85)] dark:shadow-[inset_1.5px_1.5px_3px_rgba(0,0,0,0.55),inset_-1px_-1px_2px_rgba(255,255,255,0.02)] hover:bg-[#ebe9e1] dark:hover:bg-zinc-800/40 hover:shadow-[inset_1px_1px_3.5px_rgba(135,130,110,0.35)]'
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <span className={`text-[9px] lg:text-[11px] font-mono font-bold px-1.5 lg:px-2 py-0.5 lg:py-1 rounded ${isActive ? 'bg-[#1b60bb] text-white' : 'bg-gray-100 dark:bg-zinc-800 text-gray-500'}`}>
@@ -447,7 +445,7 @@ export default function TechnologiesFeatureShowcase() {
 
         {/* CHAT WINDOW SIMULATION */}
         <div className="bg-white/90 dark:bg-zinc-950/90 border border-gray-200/80 dark:border-zinc-800 rounded-2xl p-2.5 sm:p-4 md:p-5 shadow-inner h-[550px] sm:h-[580px] md:h-[600px] flex flex-col justify-between relative backdrop-blur-md">
-          
+
           {/* HEADER BAR INSIDE CHAT */}
           <div className="flex flex-row flex-wrap items-center justify-between pb-2.5 border-b border-gray-100 dark:border-zinc-800/80 mb-3 gap-2">
             <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
@@ -463,7 +461,7 @@ export default function TechnologiesFeatureShowcase() {
 
           {/* CHAT MESSAGES STREAM */}
           <div ref={chatScrollRef} className="flex flex-col gap-3.5 flex-1 overflow-y-auto mb-3 pr-1">
-            
+
             {/* PHASE 1: USER MESSAGE BUBBLE */}
             <div className="flex gap-2 max-w-3xl ml-auto flex-row-reverse items-start">
               <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#1b60bb] text-white flex items-center justify-center shrink-0 shadow-xs">
@@ -491,7 +489,7 @@ export default function TechnologiesFeatureShowcase() {
               <div className={`flex gap-2.5 mr-auto items-start w-full ${activeStep === 0 ? 'max-w-3xl' : 'w-full'}`}>
                 <img src="/romi-avatar.webp" alt="Romi" className="w-7 h-7 sm:w-9 sm:h-9 object-contain shrink-0 mt-0.5" />
                 <div className="text-[11px] sm:text-xs text-gray-800 dark:text-zinc-200 flex-1 min-w-0 font-sans leading-relaxed w-full">
-                  
+
                   {/* Clean Text Stream */}
                   <div className="whitespace-pre-line mb-3 font-normal text-gray-800 dark:text-zinc-200 leading-relaxed text-[11px] sm:text-xs">
                     {aiText}
@@ -500,7 +498,7 @@ export default function TechnologiesFeatureShowcase() {
 
                   {/* PHASE 4: STEP 0 MINI CARDS (WITH EYE-CAPTURING KEYWORD HIGHLIGHTS) */}
                   {activeStep === 0 && showPyramid && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4 }}
@@ -509,9 +507,9 @@ export default function TechnologiesFeatureShowcase() {
                       {/* CARD 1 */}
                       <div className="border border-emerald-500/70 dark:border-emerald-400/60 bg-emerald-50/10 dark:bg-emerald-950/20 rounded-lg sm:rounded-2xl p-2 sm:p-3.5 shadow-xs flex flex-row gap-2 sm:gap-3.5 items-start relative group hover:shadow-md transition-all">
                         <div className="w-11 h-11 sm:w-20 sm:h-20 rounded-md sm:rounded-xl overflow-hidden shrink-0 bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700">
-                          <img 
-                            src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&auto=format&fit=crop&q=80" 
-                            alt="Liquid Jaggery Processing" 
+                          <img
+                            src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&auto=format&fit=crop&q=80"
+                            alt="Liquid Jaggery Processing"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
@@ -545,9 +543,9 @@ export default function TechnologiesFeatureShowcase() {
                       {/* CARD 2 */}
                       <div className="border border-emerald-500/70 dark:border-emerald-400/60 bg-emerald-50/10 dark:bg-emerald-950/20 rounded-lg sm:rounded-2xl p-2 sm:p-3.5 shadow-xs flex flex-row gap-2 sm:gap-3.5 items-start relative group hover:shadow-md transition-all">
                         <div className="w-11 h-11 sm:w-20 sm:h-20 rounded-md sm:rounded-xl overflow-hidden shrink-0 bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700">
-                          <img 
-                            src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=300&auto=format&fit=crop&q=80" 
-                            alt="Powder Jaggery Processing" 
+                          <img
+                            src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=300&auto=format&fit=crop&q=80"
+                            alt="Powder Jaggery Processing"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
@@ -583,7 +581,7 @@ export default function TechnologiesFeatureShowcase() {
                   {/* PHASE 4 & 5: STEP 2 LIVE MARKET INTELLIGENCE */}
                   {activeStep === 2 && (
                     <div className="mt-3 flex flex-col gap-4">
-                      
+
                       {/* MINI SOURCES CITATIONS BLOCK */}
                       {showPyramid && (
                         <motion.div
@@ -651,7 +649,7 @@ export default function TechnologiesFeatureShowcase() {
                             {/* Stacked Proportional Chart Blocks */}
                             <div className="relative w-full max-w-[180px] sm:max-w-[240px] flex flex-col items-center justify-end group cursor-pointer my-3">
                               {/* SOM */}
-                              <motion.div 
+                              <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.4, delay: 0.1 }}
@@ -661,7 +659,7 @@ export default function TechnologiesFeatureShowcase() {
                               </motion.div>
 
                               {/* SAM */}
-                              <motion.div 
+                              <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.4, delay: 0.2 }}
@@ -671,7 +669,7 @@ export default function TechnologiesFeatureShowcase() {
                               </motion.div>
 
                               {/* TAM */}
-                              <motion.div 
+                              <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.4, delay: 0.3 }}
@@ -698,10 +696,10 @@ export default function TechnologiesFeatureShowcase() {
 
                           <div className="w-full max-w-xl mx-auto flex flex-col gap-2">
                             <div className="h-44 sm:h-52 w-full flex items-end justify-between gap-1 sm:gap-4 px-1 sm:px-6">
-                              
+
                               {/* YEAR 1: 2022 */}
                               <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                                <motion.span 
+                                <motion.span
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
                                   transition={{ delay: 0.1 }}
@@ -709,17 +707,17 @@ export default function TechnologiesFeatureShowcase() {
                                 >
                                   $1.40B
                                 </motion.span>
-                                <motion.div 
+                                <motion.div
                                   initial={{ height: 0 }}
                                   animate={{ height: '70%' }}
                                   transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
-                                  className="w-full bg-[#68a3e5] dark:bg-blue-500 rounded-t-xl hover:brightness-110 shadow-xs" 
+                                  className="w-full bg-[#68a3e5] dark:bg-blue-500 rounded-t-xl hover:brightness-110 shadow-xs"
                                 />
                               </div>
 
                               {/* YEAR 2: 2023 */}
                               <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                                <motion.span 
+                                <motion.span
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
                                   transition={{ delay: 0.2 }}
@@ -727,17 +725,17 @@ export default function TechnologiesFeatureShowcase() {
                                 >
                                   $1.42B
                                 </motion.span>
-                                <motion.div 
+                                <motion.div
                                   initial={{ height: 0 }}
                                   animate={{ height: '76%' }}
                                   transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
-                                  className="w-full bg-[#5295ff] dark:bg-blue-500 rounded-t-xl hover:brightness-110 shadow-xs" 
+                                  className="w-full bg-[#5295ff] dark:bg-blue-500 rounded-t-xl hover:brightness-110 shadow-xs"
                                 />
                               </div>
 
                               {/* YEAR 3: 2024 */}
                               <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                                <motion.span 
+                                <motion.span
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
                                   transition={{ delay: 0.3 }}
@@ -745,17 +743,17 @@ export default function TechnologiesFeatureShowcase() {
                                 >
                                   $1.44B
                                 </motion.span>
-                                <motion.div 
+                                <motion.div
                                   initial={{ height: 0 }}
                                   animate={{ height: '82%' }}
                                   transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
-                                  className="w-full bg-[#3684ff] dark:bg-blue-600 rounded-t-xl hover:brightness-110 shadow-xs" 
+                                  className="w-full bg-[#3684ff] dark:bg-blue-600 rounded-t-xl hover:brightness-110 shadow-xs"
                                 />
                               </div>
 
                               {/* YEAR 4: 2025 */}
                               <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                                <motion.span 
+                                <motion.span
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
                                   transition={{ delay: 0.4 }}
@@ -763,17 +761,17 @@ export default function TechnologiesFeatureShowcase() {
                                 >
                                   $1.46B
                                 </motion.span>
-                                <motion.div 
+                                <motion.div
                                   initial={{ height: 0 }}
                                   animate={{ height: '89%' }}
                                   transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
-                                  className="w-full bg-[#1b60bb] dark:bg-blue-600 rounded-t-xl hover:brightness-110 shadow-xs" 
+                                  className="w-full bg-[#1b60bb] dark:bg-blue-600 rounded-t-xl hover:brightness-110 shadow-xs"
                                 />
                               </div>
 
                               {/* YEAR 5: 2026 */}
                               <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                                <motion.span 
+                                <motion.span
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
                                   transition={{ delay: 0.5 }}
@@ -781,11 +779,11 @@ export default function TechnologiesFeatureShowcase() {
                                 >
                                   $1.48B
                                 </motion.span>
-                                <motion.div 
+                                <motion.div
                                   initial={{ height: 0 }}
                                   animate={{ height: '96%' }}
                                   transition={{ duration: 0.6, delay: 0.5, ease: 'easeOut' }}
-                                  className="w-full bg-[#0052cc] dark:bg-blue-500 rounded-t-xl hover:brightness-110 shadow-md" 
+                                  className="w-full bg-[#0052cc] dark:bg-blue-500 rounded-t-xl hover:brightness-110 shadow-md"
                                 />
                               </div>
 
@@ -861,7 +859,7 @@ export default function TechnologiesFeatureShowcase() {
         </div>
 
         {/* DUAL-ROW GPU MARQUEE CAROUSEL CONTAINER (HARDWARE ACCELERATED 60FPS) */}
-        <div 
+        <div
           className={`flex flex-col gap-4 overflow-hidden py-2 relative gpu-marquee-container ${isPaused ? 'marquee-paused' : ''}`}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}

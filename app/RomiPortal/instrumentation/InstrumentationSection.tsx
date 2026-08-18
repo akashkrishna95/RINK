@@ -1,5 +1,4 @@
-// app\RomiPortal\instrumentation\InstrumentationSection.tsx
-
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\RomiPortal\instrumentation\InstrumentationSection.tsx
 'use client';
 
 import { motion } from 'framer-motion';
@@ -63,7 +62,7 @@ interface InstrumentationSectionProps {
 
 export default function InstrumentationSection({ setHasEntered, institutions = defaultInstitutions }: InstrumentationSectionProps) {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
@@ -72,11 +71,11 @@ export default function InstrumentationSection({ setHasEntered, institutions = d
     >
       <div className="bg-white/70 backdrop-blur-xl rounded-[32px] p-6 sm:p-10 lg:p-14 relative overflow-hidden border border-slate-200/60 shadow-[10px_10px_30px_#e2e8f0,-10px_-10px_30px_#ffffff]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          
+
           {/* L: Radar Map Container */}
           <div className="lg:col-span-7 order-2 lg:order-1 w-full">
             <div className="bg-slate-50 p-4 rounded-[32px] border border-slate-200 shadow-[inset_4px_4px_10px_#e2e8f0,inset_-4px_-4px_10px_#ffffff] h-[520px] flex flex-col relative">
-              
+
               <div className="flex justify-between items-center mb-4 px-2">
                 <div className="flex items-center gap-2">
                   <MapPin size={18} className="text-emerald-600" />
@@ -91,12 +90,12 @@ export default function InstrumentationSection({ setHasEntered, institutions = d
               <div className="flex-1 rounded-2xl overflow-hidden border border-slate-300 relative shadow-inner bg-slate-100">
                 {/* Decorative Scanline Overlay */}
                 <div className="absolute inset-0 pointer-events-none z-10 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.02)_50%)] bg-[length:100%_4px]"></div>
-                
-                <InteractiveMap 
-                  institutions={institutions} 
+
+                <InteractiveMap
+                  institutions={institutions}
                   className="w-full h-full z-0"
                 />
-                
+
                 {/* Overlay Info Card */}
                 <div className="absolute bottom-4 left-4 right-4 z-20 bg-white/90 backdrop-blur-md p-4 rounded-xl border border-white/50 shadow-lg flex justify-between items-center">
                   <div>
@@ -118,13 +117,13 @@ export default function InstrumentationSection({ setHasEntered, institutions = d
               <span className="text-xs font-bold tracking-wider text-emerald-800 uppercase font-helios">02 &bull; Analyze</span>
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold font-helios text-slate-900 leading-tight mb-5">
-              Find the machine, <br/>
+              Find the machine, <br />
               <span className="text-emerald-600">not the manual.</span>
             </h2>
             <p className="text-slate-700 font-montserrat text-sm sm:text-base leading-relaxed mb-8 font-medium">
               Locate high-grade equipment instantly. Romi maps industry acronyms (XRD, SEM) directly to physical hardware nodes across the state.
             </p>
-            
+
             <div className="grid grid-cols-1 gap-4 w-full">
               <div className="bg-white p-4 rounded-2xl flex items-center gap-4 border border-slate-100 shadow-sm hover:-translate-y-1 transition-transform">
                 <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0"><Globe size={20} /></div>

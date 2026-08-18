@@ -1,3 +1,5 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\PastVisitedInstitutions.tsx
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -49,7 +51,8 @@ export default function PastVisitedInstitutions({ initialInstitutions }: { initi
 
   return (
     <section className="w-full py-16 bg-[#F4F7FB] overflow-hidden border-t border-slate-200/50">
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes marquee-smooth {
           0% { transform: translate3d(0, 0, 0); }
           100% { transform: translate3d(-50%, 0, 0); }

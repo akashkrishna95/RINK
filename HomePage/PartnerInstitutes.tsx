@@ -1,3 +1,4 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\PartnerInstitutes.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -34,24 +35,24 @@ export default function PartnerInstitutes({ initialInstitutions }: { initialInst
 
   const activeInstitutes: Institute[] = institutions.length > 0
     ? institutions
+      .filter(inst => inst.isPartnered)
+      .map(inst => ({
+        id: inst.id,
+        name: inst.name,
+        logoUrl: inst.logoUrl
+      }))
+    : (initialInstitutions && initialInstitutions.length > 0
+      ? initialInstitutions
         .filter(inst => inst.isPartnered)
         .map(inst => ({
           id: inst.id,
           name: inst.name,
           logoUrl: inst.logoUrl
         }))
-    : (initialInstitutions && initialInstitutions.length > 0
-        ? initialInstitutions
-            .filter(inst => inst.isPartnered)
-            .map(inst => ({
-              id: inst.id,
-              name: inst.name,
-              logoUrl: inst.logoUrl
-            }))
-        : mockInstitutes);
+      : mockInstitutes);
 
   // 18 items = exactly 6 rows on mobile (3 cols) OR 3 rows on desktop (6 cols)
-  const INITIAL_VISIBLE_COUNT = 18; 
+  const INITIAL_VISIBLE_COUNT = 18;
 
   const visibleInstitutes = isExpanded
     ? activeInstitutes
@@ -84,9 +85,9 @@ export default function PartnerInstitutes({ initialInstitutions }: { initialInst
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ 
-                  duration: 0.3, 
-                  delay: (index % INITIAL_VISIBLE_COUNT) * 0.02 
+                transition={{
+                  duration: 0.3,
+                  delay: (index % INITIAL_VISIBLE_COUNT) * 0.02
                 }}
                 className="flex items-center justify-center bg-white rounded-xl p-3 md:p-6 aspect-[4/3] shadow-[0_4px_20px_-4px_rgba(27,96,187,0.08)]"
                 title={institute.name}

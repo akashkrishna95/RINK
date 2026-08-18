@@ -181,7 +181,7 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
       tileLayerRef.current = L.tileLayer(defaultUrl, { maxZoom: 18 }).addTo(map);
       layerRef.current = L.layerGroup().addTo(map);
       mapRef.current = map;
-      
+
       map.on('click', () => {
         setIsMaximized(true);
       });
@@ -190,7 +190,7 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
         map.invalidateSize();
       }, 200);
       renderMarkers(L, mapRef.current, layerRef.current, markersRef, locations);
-    }).catch(() => {});
+    }).catch(() => { });
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -236,7 +236,7 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
                 }).addTo(enlargedMapRef.current);
               }
             })
-            .catch(() => {});
+            .catch(() => { });
         }
 
         setTimeout(() => {
@@ -245,7 +245,7 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
 
         const locsToRender = selectedInstId ? combinedLocations.filter(l => l.id === selectedInstId) : combinedLocations;
         renderMarkers(L, enlargedMapRef.current, enlargedLayerRef.current, enlargedMarkersRef, locsToRender);
-      }).catch(() => {});
+      }).catch(() => { });
     }, 100);
     return () => { cancelled = true; clearTimeout(timer); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -405,7 +405,7 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
     });
 
     if (pts.length > 0 && targetMap) {
-      try { targetMap.fitBounds(pts, { padding: [30, 30], maxZoom: 11 }); } catch {}
+      try { targetMap.fitBounds(pts, { padding: [30, 30], maxZoom: 11 }); } catch { }
     }
   };
 
@@ -519,12 +519,12 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
       {/* FULLSCREEN ENLARGED MODAL VIEW (Matching UI of Images 2, 3, 4) */}
       {isMaximized && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-[99999] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 lg:p-8 font-sans animate-in fade-in duration-200">
-          
+
           <div className="relative w-full max-w-[1000px] h-[90vh] md:h-[85vh] max-h-[700px] bg-white rounded-[28px] overflow-hidden shadow-2xl flex flex-col-reverse md:flex-row ring-1 ring-[#1b60bb]/15">
-            
+
             {/* LEFT PANEL (Width ~360px - 400px) */}
             <div className="w-full md:w-[360px] lg:w-[400px] bg-white md:border-r border-t md:border-t-0 border-slate-100 flex flex-col h-1/2 md:h-full overflow-hidden p-5 sm:p-6 shrink-0 z-20">
-              
+
               {selectedInstrument ? (
                 /* --- IMAGE 4 DESIGN: INSTRUMENT DETAIL VIEW --- */
                 <div className="flex-1 flex flex-col space-y-4 animate-in fade-in duration-200 overflow-y-auto pr-1">
@@ -698,14 +698,12 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
                             <div className="flex items-center gap-2">
                               <ChevronDown
                                 size={14}
-                                className={`text-slate-400 group-hover:text-[#1b60bb] transition-transform duration-200 ${
-                                  isExpanded ? '' : '-rotate-90'
-                                }`}
+                                className={`text-slate-400 group-hover:text-[#1b60bb] transition-transform duration-200 ${isExpanded ? '' : '-rotate-90'
+                                  }`}
                               />
                               <h4
-                                className={`text-sm font-bold font-helios transition-colors ${
-                                  isExpanded ? 'text-[#1b60bb]' : 'text-slate-700 group-hover:text-[#1b60bb]'
-                                }`}
+                                className={`text-sm font-bold font-helios transition-colors ${isExpanded ? 'text-[#1b60bb]' : 'text-slate-700 group-hover:text-[#1b60bb]'
+                                  }`}
                               >
                                 {district}
                               </h4>
@@ -724,11 +722,10 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
                                   <div
                                     key={item.id}
                                     onClick={() => handleSelectInstrument(item.id)}
-                                    className={`p-3 rounded-xl border flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 ${
-                                      isSelected
-                                        ? 'bg-[#eff9ff] border-[#90daff] shadow-sm scale-[1.01]'
-                                        : 'bg-slate-50/75 border-slate-100 hover:border-[#bde7ff] hover:bg-slate-100/50'
-                                    }`}
+                                    className={`p-3 rounded-xl border flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 ${isSelected
+                                      ? 'bg-[#eff9ff] border-[#90daff] shadow-sm scale-[1.01]'
+                                      : 'bg-slate-50/75 border-slate-100 hover:border-[#bde7ff] hover:bg-slate-100/50'
+                                      }`}
                                   >
                                     <div className="flex-1 min-w-0">
                                       <div className={`font-helios font-semibold text-xs leading-tight ${isSelected ? 'text-[#1b60bb]' : 'text-slate-800'}`}>
@@ -764,7 +761,7 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
 
             {/* RIGHT PANEL (MAP VIEW) */}
             <div className="w-full md:flex-1 relative h-1/2 md:h-full bg-[#eff9ff]">
-              
+
               {/* TOP LEFT ZOOM CONTROLS (+ / -) */}
               <div className="absolute top-4 left-4 z-[1000] flex flex-col bg-white rounded-lg border border-slate-200 shadow-md overflow-hidden select-none">
                 <button
@@ -775,7 +772,7 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
                 >
                   <Plus size={16} />
                 </button>
-                 <button
+                <button
                   type="button"
                   onClick={() => enlargedMapRef.current?.zoomOut()}
                   className="p-2 hover:bg-slate-50 text-slate-700 font-bold flex items-center justify-center cursor-pointer"
@@ -790,22 +787,20 @@ export default function InstrumentMapPanel({ locations, selectedId: propSelected
                 <button
                   type="button"
                   onClick={() => setTileType('default')}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer ${
-                    tileType === 'default'
-                      ? 'bg-[#1b60bb] text-white shadow-sm'
-                      : 'text-slate-600 hover:bg-[#eff9ff] hover:text-[#1b60bb]'
-                  }`}
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer ${tileType === 'default'
+                    ? 'bg-[#1b60bb] text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-[#eff9ff] hover:text-[#1b60bb]'
+                    }`}
                 >
                   Default
                 </button>
                 <button
                   type="button"
                   onClick={() => setTileType('satellite')}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer ${
-                    tileType === 'satellite'
-                      ? 'bg-[#1b60bb] text-white shadow-sm'
-                      : 'text-slate-600 hover:bg-[#eff9ff] hover:text-[#1b60bb]'
-                  }`}
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer ${tileType === 'satellite'
+                    ? 'bg-[#1b60bb] text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-[#eff9ff] hover:text-[#1b60bb]'
+                    }`}
                 >
                   Satellite
                 </button>

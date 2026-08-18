@@ -99,7 +99,7 @@ export default function RomiPortalPage() {
     if (typeof window !== 'undefined') {
       const homeHero = new Image();
       homeHero.src = '/images/home-hero-bg.webp';
-      
+
       const techHero = new Image();
       techHero.src = '/images/tech-hero-bg.webp';
     }
@@ -194,7 +194,7 @@ export default function RomiPortalPage() {
   };
 
   return (
-    <main 
+    <main
       className={`bg-[#FDFDF9] dark:bg-zinc-950 relative font-sans flex flex-col ${hasEntered ? 'h-screen h-[100dvh] max-h-[100dvh] overflow-hidden' : 'min-h-screen'} transition-colors duration-300`}
       style={hasEntered ? {
         backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('/images/ROMI-PORTAL-BG.webp')",
@@ -277,12 +277,12 @@ export default function RomiPortalPage() {
                             disabled={true}
                             className="w-full bg-transparent border-none outline-none text-black placeholder:text-gray-400 text-[10px] min-[360px]:text-xs min-[400px]:text-sm sm:text-lg md:text-2xl font-sans font-medium px-1 md:px-4 pt-1 md:pt-2 pb-3 md:pb-6 cursor-not-allowed"
                             value={query}
-                            // onChange={(e) => setQuery(e.target.value)}
-                            // onKeyDown={(e) => {
-                            //   if (e.key === 'Enter') {
-                            //     handleSearch();
-                            //   }
-                            // }}
+                          // onChange={(e) => setQuery(e.target.value)}
+                          // onKeyDown={(e) => {
+                          //   if (e.key === 'Enter') {
+                          //     handleSearch();
+                          //   }
+                          // }}
                           />
                         </AnimatePresence>
                       </div>
@@ -296,7 +296,7 @@ export default function RomiPortalPage() {
                         >
                           <span className="text-lg leading-none">+</span>
                         </button>
-                        
+
                         <div className="bg-black text-white px-3.5 py-1.5 rounded-full text-xs font-semibold font-sans capitalize shadow-sm">
                           {activeTab === 'search' ? 'Explore' : activeTab}
                         </div>
@@ -463,7 +463,7 @@ export default function RomiPortalPage() {
 
                 <div className="py-24 px-4 md:px-8 max-w-7xl mx-auto w-full flex flex-col items-center">
                   <div className="text-center mb-16 w-full flex flex-col items-center">
-                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-helios text-gray-900 mb-4 text-center">
                       Tailored for Every Stakeholder
                     </h2>
                     <p className="text-gray-500 font-montserrat max-w-2xl mx-auto text-center">
@@ -577,10 +577,10 @@ export default function RomiPortalPage() {
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 className="flex-1 w-full bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-[0_25px_80px_-15px_rgba(0,0,0,0.2)] dark:shadow-none border border-gray-100 dark:border-zinc-800 flex flex-col mx-auto"
               >
-                <RomiPortalLayout 
-                  query={query} 
-                  activeMode={activeTab} 
-                  onReset={() => { setHasEntered(false); setQuery(''); }} 
+                <RomiPortalLayout
+                  query={query}
+                  activeMode={activeTab}
+                  onReset={() => { setHasEntered(false); setQuery(''); }}
                 />
               </motion.div>
             )}

@@ -1,3 +1,5 @@
+//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\AboutRink\ResearchIncubationPrograms.tsx
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -20,7 +22,7 @@ function AnimatedCounter({ end, suffix = "+" }: { end: number, suffix?: string }
       const duration = 2000;
       const stepTime = 33; // ~30fps for CPU efficiency on mobile
       const increment = end / (duration / stepTime);
-      
+
       const timer = setInterval(() => {
         start += increment;
         if (start >= end) {
@@ -88,15 +90,15 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
       {/* Hero Section */}
       <section className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] flex items-center justify-center overflow-hidden">
         {/* Background Image & Overlay */}
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/images/researchpreneurship/hero.jpg')" }}
+          style={{ backgroundImage: "url('/images/researchpreneurship/hero.png')" }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/80 to-[#1b60bb]/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#010101]/95 via-[#011a38]/80 to-[#1b60bb]/35"></div>
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto mt-12 sm:mt-16">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="font-helios font-black text-[36px] xs:text-[42px] sm:text-4xl md:text-5xl lg:text-6xl text-white mb-4 sm:mb-6 leading-tight"
@@ -104,7 +106,7 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
             <span className="block sm:inline whitespace-nowrap">Research <span className="text-[#5cc4fe]">Incubation</span></span>{' '}
             <span className="block sm:inline">Programs</span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -118,21 +120,21 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
       {/* Researchpreneurship Validation Program */}
       <section className="py-12 sm:py-20 px-4 md:px-8 max-w-[1400px] mx-auto">
         <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center bg-white rounded-3xl p-4 sm:p-8 md:p-12 shadow-sm border border-slate-100">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="relative w-full h-[220px] sm:h-[300px] md:h-[400px] rounded-2xl overflow-hidden shadow-lg"
           >
-            <div 
+            <div
               className="absolute inset-0 bg-cover bg-center hover:scale-105 transition-transform duration-700"
-              style={{ backgroundImage: "url('/images/72.jpg')" }}
+              style={{ backgroundImage: "url('/images/researchpreneurship/72.jpg')" }}
             ></div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -145,7 +147,7 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
             <h3 className="text-base sm:text-lg md:text-xl font-semibold text-slate-800 mb-4 sm:mb-6 font-poppins">
               A Virtual Research Idea Validation Programme
             </h3>
-            
+
             <p className="text-slate-600 leading-relaxed mb-4 text-xs sm:text-sm md:text-base">
               A virtual one-on-one programme designed to help researchers validate their ideas and explore their commercial potential. Through personalized sessions, participants receive expert guidance to validate their innovation and understand the next steps towards entrepreneurship.
             </p>
@@ -153,8 +155,8 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
               This programme also introduces researchers to the support ecosystem of Kerala Startup Mission (KSUM), including funding, incubation, and startup services.
             </p>
 
-            <a 
-              href="https://ksum.in/rinkregistration" 
+            <a
+              href="https://ksum.in/rinkregistration"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 bg-[#1b60bb] text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold hover:bg-[#154a93] transition-colors w-fit shadow-md hover:shadow-lg text-xs sm:text-sm md:text-base"
@@ -168,9 +170,9 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
       {/* Grid Features: Who Can Apply & What You'll Gain */}
       <section className="py-12 sm:py-20 px-4 md:px-8 max-w-[1400px] mx-auto">
         <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
-          
+
           {/* What You'll Gain */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -180,13 +182,13 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
               <TrendingUp className="text-[#1b60bb] w-7 h-7 sm:w-9 sm:h-9" />
               What You’ll Gain?
             </h2>
-            
+
             <div className="space-y-4 sm:space-y-6">
               {[
-                { icon: <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500"/>, text: "Personalized feedback on your research idea." },
-                { icon: <Search className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500"/>, text: "Clarity on commercialization and market fit." },
-                { icon: <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500"/>, text: "Awareness of KSUM support schemes (grants, incubation, IP support, etc.)." },
-                { icon: <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500"/>, text: "A structured roadmap for your startup journey." }
+                { icon: <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />, text: "Personalized feedback on your research idea." },
+                { icon: <Search className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />, text: "Clarity on commercialization and market fit." },
+                { icon: <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />, text: "Awareness of KSUM support schemes (Funds, incubation, IP support, etc.)." },
+                { icon: <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />, text: "A structured roadmap for your startup journey." }
               ].map((item, index) => (
                 <div key={index} className="flex items-start gap-3 sm:gap-4 group">
                   <div className="mt-1 bg-blue-50 p-2 sm:p-2.5 rounded-xl group-hover:bg-blue-100 transition-colors flex-shrink-0">
@@ -199,7 +201,7 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
           </motion.div>
 
           {/* Who Can Apply */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -207,12 +209,12 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
             className="bg-[#011a38] text-white rounded-3xl p-6 sm:p-8 md:p-12 shadow-xl relative overflow-hidden"
           >
             <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#1b60bb]/20 rounded-full blur-3xl"></div>
-            
+
             <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-10 relative z-10 flex items-center gap-3 sm:gap-4 text-[#5cc4fe]">
               <UserCheck className="text-[#5cc4fe] w-7 h-7 sm:w-9 sm:h-9" />
               Who Can Apply?
             </h2>
-            
+
             <div className="space-y-4 sm:space-y-6 relative z-10">
               {[
                 "Research scholars, faculty & Scientists",
@@ -229,8 +231,8 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
             </div>
 
             <div className="mt-8 sm:mt-12 relative z-10">
-              <a 
-                href="https://ksum.in/rinkregistration" 
+              <a
+                href="https://ksum.in/rinkregistration"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-block bg-white text-[#011a38] px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-bold hover:bg-[#eff9ff] transition-colors shadow-lg text-xs sm:text-sm md:text-base"
@@ -265,7 +267,7 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
                 { target: 15, label: 'Patents Filing Supported', icon: <Award className="w-8 h-8 sm:w-10 sm:h-10 text-[#5cc4fe] mb-2 sm:mb-4" /> },
                 { target: 10, label: 'Startups Created', icon: <Rocket className="w-8 h-8 sm:w-10 sm:h-10 text-[#5cc4fe] mb-2 sm:mb-4" /> }
               ].map((stat, idx) => (
-                <motion.div 
+                <motion.div
                   key={idx}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -293,22 +295,22 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
           <h2 className="font-helios text-3xl sm:text-4xl md:text-5xl font-bold text-[#1b60bb] mb-3 sm:mb-4">Completed Cohorts</h2>
           <p className="text-slate-600 font-poppins max-w-2xl mx-auto text-xs sm:text-sm md:text-base">Partnering with leading institutions to nurture deep-tech entrepreneurship.</p>
         </div>
-        
+
         <div className="space-y-12 sm:space-y-16">
           {/* MG University Cohort */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="grid lg:grid-cols-2 gap-6 sm:gap-10 items-center bg-white rounded-3xl p-4 sm:p-6 md:p-8 shadow-sm border border-slate-100 hover:shadow-lg transition-shadow"
           >
-            <div className="relative h-[200px] sm:h-[300px] md:h-[400px] w-full rounded-2xl overflow-hidden group">
-              <img 
-                src="https://rink.startupmission.in/img/0.jpg" 
+           <div className="relative h-[200px] sm:h-[300px] md:h-[400px] w-full rounded-2xl overflow-hidden group">
+              <img
+                src="/images/researchpreneurship/mg_uni.jpg"
                 alt="Research Incubation Programme"
                 loading="lazy"
                 decoding="async"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
             </div>
             <div>
@@ -324,7 +326,7 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
           </motion.div>
 
           {/* Sahrdaya College Cohort */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -340,13 +342,13 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
                 Kerala Startup Mission, in partnership with Sahrdaya College of Engineering and Technology, has successfully completed the 'Research Innovation Programme for Women Startups'. This sector-specific cohort was aimed at fostering research-driven entrepreneurship among women innovators. The program supported seven selected women researchers from the Biotechnology and Biomedical Engineering sectors who are solving real-world problems through cutting-edge research and technology.
               </p>
             </div>
-            <div className="relative h-[200px] sm:h-[300px] md:h-[400px] w-full rounded-2xl overflow-hidden group order-1 lg:order-2">
-              <img 
-                src="https://rink.startupmission.in/img/IMG-20241202-WA0011.jpg" 
-                alt="Women Startups Programme"
+            <div className="relative h-[200px] sm:h-[300px] md:h-[400px] w-full rounded-2xl overflow-hidden group">
+              <img
+                src="/images/researchpreneurship/sahrdaya.jpg"
+                alt="Research Incubation Programme"
                 loading="lazy"
                 decoding="async"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
             </div>
           </motion.div>
@@ -358,7 +360,7 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
         <section className="py-12 sm:py-20 bg-slate-50 border-y border-slate-200">
           <div className="max-w-[1200px] mx-auto px-4 md:px-8 text-center">
             <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-3 sm:mb-4">
-              Startups created from<br/>Research Innovation and Incubation Program
+              Startups created from<br />Research Innovation and Incubation Program
             </h2>
             <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-6 mt-6 sm:mt-12">
               {startups.map((startup, idx) => (
