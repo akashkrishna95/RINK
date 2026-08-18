@@ -42,8 +42,8 @@ A centralized ecosystem page routing users to specific programs:
 - **IPR Support**
 - **Research & Development Funds**
 
-### 4. Event Management (`/events`)
-- A categorized gallery (Upcoming vs. Past) of all RINK events.
+### 4. Event Management (`/programs`)
+- A categorized gallery (Upcoming vs. Past) of all RINK programs.
 - Highly interactive event cards that trigger detailed modals without navigating away from the page, ensuring user retention.
 
 ### 5. Global RINK Chatbot
