@@ -12,7 +12,6 @@ const InteractiveMap = dynamic(() => import('./InteractiveMap'), {
   ssr: false,
 });
 
-import institutionLogosBaseline from '@/data/institutions_mapped.json';
 import { getProxiedImageUrl } from '@/lib/utils';
 import { useRealTimeSync } from '@/hooks/useRealTimeSync';
 import { mapPbInstitution, Institution } from '@/lib/pocketbase';
@@ -30,21 +29,7 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
 
   const institutionLogos = institutions.length > 0
     ? institutions
-    : (initialInstitutions && initialInstitutions.length > 0
-      ? initialInstitutions
-      : institutionLogosBaseline.map((inst: any) => ({
-        id: String(inst.id),
-        name: inst.name,
-        location: inst.location || '',
-        district: inst.district || '',
-        website: inst.website || '',
-        logoUrl: inst.logo_url || '',
-        isPartnered: !!inst.partnered,
-        lat: inst.lat,
-        lng: inst.lng,
-        techCount: inst.techCount || 0
-      }))
-    );
+    : (initialInstitutions || []);
 
   const [activeDistrict, setActiveDistrict] = useState<string | null>(null);
   const [activeInstitution, setActiveInstitution] = useState<string | null>(null);

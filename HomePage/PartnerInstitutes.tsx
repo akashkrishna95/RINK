@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
-import institutionLogosBaseline from '@/data/institutions_mapped.json';
 import { getProxiedImageUrl } from '@/lib/utils';
 import { useRealTimeSync } from '@/hooks/useRealTimeSync';
 import { pb, mapPbInstitution, Institution } from '@/lib/pocketbase';
@@ -16,13 +15,6 @@ interface Institute {
   logoUrl: string;
 }
 
-const mockInstitutes: Institute[] = institutionLogosBaseline
-  .filter(inst => inst.partnered)
-  .map(inst => ({
-    id: String(inst.id),
-    name: inst.name,
-    logoUrl: inst.logo_url
-  }));
 
 export default function PartnerInstitutes({ initialInstitutions }: { initialInstitutions?: Institution[] }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -33,23 +25,13 @@ export default function PartnerInstitutes({ initialInstitutions }: { initialInst
     mapPbInstitution
   );
 
-  const activeInstitutes: Institute[] = institutions.length > 0
-    ? institutions
-      .filter(inst => inst.isPartnered)
-      .map(inst => ({
-        id: inst.id,
-        name: inst.name,
-        logoUrl: inst.logoUrl
-      }))
-    : (initialInstitutions && initialInstitutions.length > 0
-      ? initialInstitutions
-        .filter(inst => inst.isPartnered)
-        .map(inst => ({
-          id: inst.id,
-          name: inst.name,
-          logoUrl: inst.logoUrl
-        }))
-      : mockInstitutes);
+  const activeInstitutes: Institute[] = (institutions.length > 0 ? institutions : (initialInstitutions || []))
+    .filter(inst => inst.isPartnered)
+    .map(inst => ({
+      id: inst.id,
+      name: inst.name,
+      logoUrl: inst.logoUrl
+    }));
 
   // 18 items = exactly 6 rows on mobile (3 cols) OR 3 rows on desktop (6 cols)
   const INITIAL_VISIBLE_COUNT = 18;

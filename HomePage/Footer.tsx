@@ -1,4 +1,3 @@
-//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\Footer.tsx
 'use client';
 
 import { useRef } from 'react';
@@ -27,7 +26,8 @@ export default function Footer() {
       <div className="absolute top-0 left-0 right-0 h-[200px] bg-gradient-to-b from-[#eff9ff]/10 via-transparent to-transparent blur-[80px] pointer-events-none z-0" />
 
       {/* Main Footer Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8 py-20 lg:py-28 pb-8">
+      {/* REDUCED: Changed py-20 lg:py-28 pb-8 to pt-12 lg:pt-16 pb-8 */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8 pt-12 lg:pt-16 pb-8">
         <div className="grid grid-cols-12 gap-8 lg:gap-12">
 
           {/* Column 1: LOGOS & CONTACT */}
@@ -178,8 +178,9 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
+        {/* REDUCED: Changed my-12 lg:my-16 to my-8 lg:my-10 */}
         <motion.div
-          className="my-12 lg:my-16 h-px bg-[#eff9ff]/20"
+          className="my-8 lg:my-10 h-px bg-[#eff9ff]/20"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -219,8 +220,6 @@ export default function Footer() {
           </div>
         </motion.div>
       </div>
-
-
     </footer>
   );
 }
