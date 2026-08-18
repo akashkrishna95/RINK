@@ -1,11 +1,10 @@
 # RINK (Research Innovation Network Kerala) - Official Web Portal
 
-![RINK Banner](/public/images/rink-logo.png) 
-*(Note: Replace with actual project banner if available)*
+![RINK Banner](/public/images/rink-logo.svg) 
 
-Welcome to the official repository for the **Research Innovation Network Kerala (RINK)** web portal. This platform is designed by the Kerala Startup Mission (KSUM) to bridge the gap between breakthrough laboratory research and commercial enterprise, empowering the research fraternity to build and scale deep-tech ventures.
+The official repository for the **Research Innovation Network Kerala (RINK)** web portal. This platform is designed by the Kerala Startup Mission (KSUM) to bridge the gap between breakthrough laboratory research and commercial enterprise, empowering the research fraternity to build and scale deep-tech ventures.
 
-## 🚀 Overview
+## Overview
 
 The RINK web portal is a highly optimized, visually stunning Next.js application that serves as the central hub for researchers, innovators, investors, and partner institutions. The platform blends a premium, modern "deep-tech" aesthetic with subtle Indian artistic elements, delivering a world-class user experience across all devices.
 
@@ -15,15 +14,16 @@ The RINK web portal is a highly optimized, visually stunning Next.js application
 - **Interactive UI:** Utilizes fluid, physics-based micro-animations for elements like the 3D Kerala Institutions Map, Filter Drawers, and Video Players.
 - **Global Accessibility:** Fully responsive, mobile-first design ensuring flawless usability on smartphones, tablets, and high-resolution desktop monitors.
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Core Framework:** [Next.js 14+](https://nextjs.org/) (App Router) & [React](https://reactjs.org/)
 - **Language:** [TypeScript](https://www.typescriptlang.org/) for strict type safety
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/) for utility-first styling and custom thematic configurations
 - **Animations:** [Framer Motion](https://www.framer.com/motion/) (Configured strictly with `once: true` viewport triggers for memory conservation)
 - **Icons:** [Lucide React](https://lucide.dev/)
+- **Database:** [Pocketbase](https://pocketbase.io/)
 
-## 🌟 Core Features & Modules
+## Core Features & Modules
 
 ### 1. Interactive Home & Institutions Grid
 - Features a dynamic, interactive 3D map of Kerala.
@@ -49,14 +49,14 @@ A centralized ecosystem page routing users to specific programs:
 ### 5. Global RINK Chatbot
 - A sleek, floating chatbot component integrated globally across the application layout, ready to assist users with navigation and inquiries.
 
-## ⚡ Performance Optimizations
+## Performance Optimizations
 
 Special care was taken to ensure the web application performs flawlessly on mobile devices common in the Indian market (e.g., standard 4GB/6GB RAM smartphones):
 1. **No Scroll-Hijacking:** Relies entirely on the native OS scrolling mechanism for zero-latency scrolling.
 2. **Animation Garbage Collection:** All entrance animations are detached from memory once they appear on-screen, preventing memory leaks during long browsing sessions.
 3. **SVG & CSS Rendering:** Complex backgrounds (like the Hero section's geometric Indian pattern) are rendered via lightweight inline SVGs rather than heavy PNGs or auto-playing videos, saving vast amounts of bandwidth and CPU.
 
-## 💻 Running Locally
+## Running Locally
 
 To run this project on your local machine:
 
