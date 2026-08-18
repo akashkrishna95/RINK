@@ -2,7 +2,7 @@
 // PURPOSE: Fetch and parse dynamic instruments data from process.env.PUBLIC_INSTRUMENTS_JSON_URL
 // Maps each instrument card to latitude & longitude coordinates, contact information, district, and Google Maps links.
 
-import baselineInstitutions from '@/data/institutions_mapped.json';
+import { pb, mapPbInstitution } from './pocketbase';
 
 export interface InstrumentItem {
   id: string;
@@ -62,6 +62,29 @@ function getDirectDriveUrl(url: string): string {
   return url;
 }
 
+// Replaces the old static institutions_mapped.json import: fetches the
+// same name/lat/lng shape directly from PocketBase (all_institutions),
+// cached once per session, used only as the secondary coordinate lookup
+// when an instrument's institution_id doesn't resolve via instMap below.
+let cachedBaselineInstitutionsPromise: Promise<{ name: string; lat: number; lng: number }[]> | null = null;
+
+async function getBaselineInstitutions(): Promise<{ name: string; lat: number; lng: number }[]> {
+  if (cachedBaselineInstitutionsPromise) return cachedBaselineInstitutionsPromise;
+  cachedBaselineInstitutionsPromise = pb
+    .collection('all_institutions')
+    .getFullList()
+    .then((records) => records.map((r) => {
+      const inst = mapPbInstitution(r);
+      return { name: inst.name, lat: inst.lat, lng: inst.lng };
+    }))
+    .catch((err) => {
+      console.error('[INSTRUMENTS-JSON] failed to load institutions for coordinate matching:', err);
+      cachedBaselineInstitutionsPromise = null; // allow retry on next call instead of caching a failure
+      return [];
+    });
+  return cachedBaselineInstitutionsPromise;
+}
+
 let cachedInstrumentsPromise: Promise<InstrumentItem[]> | null = null;
 let cachedInstrumentsData: InstrumentItem[] | null = null;
 
@@ -73,9 +96,10 @@ export async function fetchInstrumentsJson(): Promise<InstrumentItem[]> {
 
   cachedInstrumentsPromise = (async () => {
     try {
-      const res = await fetch(instrumentsUrl, {
-        next: { revalidate: 3600 }
-      });
+      const [res, baselineInstitutions] = await Promise.all([
+        fetch(instrumentsUrl, { next: { revalidate: 3600 } }),
+        getBaselineInstitutions(),
+      ]);
       if (!res.ok) throw new Error(`HTTP error ${res.status}`);
       const json = await res.json();
       const rawItems: any[] = json.main_data || json.data || (Array.isArray(json) ? json : []);
