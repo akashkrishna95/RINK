@@ -43,7 +43,6 @@ const config: Config = {
         poppins: ['var(--font-poppins)', 'system-ui', 'sans-serif'],
         barlow: ['var(--font-barlow)', 'system-ui', 'sans-serif'],
         gotham: ['var(--font-gotham)', 'system-ui', 'sans-serif'],
-        'plus-jakarta': ['var(--font-plus-jakarta)', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         '4xl': '2rem',

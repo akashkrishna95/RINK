@@ -121,7 +121,13 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
   const visibleLogos = showMore ? institutionLogos : institutionLogos.slice(0, 15);
 
   return (
-    <div className="w-full py-8 md:py-16 px-4 md:px-8 bg-[#eff9ff] min-h-screen font-sans relative overflow-hidden">
+    <div 
+      className="w-full py-8 md:py-16 px-4 md:px-8 bg-[#eff9ff] min-h-screen font-sans relative overflow-hidden"
+      style={{
+        contentVisibility: 'auto',
+        containIntrinsicSize: '800px',
+      }}
+    >
       <div className="max-w-[1400px] mx-auto">
 
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 lg:items-stretch">

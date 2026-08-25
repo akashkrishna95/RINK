@@ -27,7 +27,7 @@ export default function PageLoader() {
         <motion.div
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 1.5, repeat: Infinity }}
-          className="text-[#1b60bb] font-gotham text-sm md:text-base font-semibold"
+          className="text-[#1b60bb] font-barlow text-sm md:text-base font-semibold"
         >
           Loading...
         </motion.div>

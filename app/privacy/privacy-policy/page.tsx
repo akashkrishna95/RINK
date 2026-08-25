@@ -122,6 +122,15 @@ export default function PrivacyPolicyPage() {
                 </p>
               </div>
             </div>
+
+            <div>
+              <h2 className="font-helios text-2xl font-bold text-slate-800 mb-4 border-b border-slate-100 pb-2">
+                5. Local Browser Caching & Service Workers
+              </h2>
+              <p>
+                To provide a faster and more responsive experience, this website uses browser caching mechanisms, including Service Workers and Cache Storage. These tools temporarily save and serve static resources (such as JavaScript files, style sheets, and web fonts) and images (such as banners and Google-hosted partner logos) directly from your device. No user-identifiable tracking information or personal data is collected, monitored, or transmitted via these caching mechanisms.
+              </p>
+            </div>
           </div>
 
           {/* Back Link */}

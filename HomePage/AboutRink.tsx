@@ -22,7 +22,13 @@ export default function AboutRink() {
   };
 
   return (
-    <div className="relative w-full bg-[#eff9ff] py-20 overflow-hidden">
+    <div 
+      className="relative w-full bg-[#eff9ff] py-20 overflow-hidden"
+      style={{
+        contentVisibility: 'auto',
+        containIntrinsicSize: '650px',
+      }}
+    >
 
       {/* Main Content Wrapper (With Padding) */}
       <div className="relative max-w-7xl mx-auto px-8 z-10">

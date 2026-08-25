@@ -11,10 +11,8 @@
   --font-helios: var(--font-bricolage);
   --font-clash: var(--font-bricolage);
   --font-clash-medium: var(--font-bricolage);
-  --font-gotham: var(--font-gotham);
   --font-poppins: var(--font-barlow);
   --font-barlow: var(--font-barlow);
-  --font-plus-jakarta: var(--font-bricolage);
   --font-mono: 'Menlo', 'Courier New', monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -436,4 +434,12 @@ p.leading-relaxed:not(.text-xs):not(.text-\[10px\]):not(.text-\[9px\]):not(.text
   p.leading-relaxed:not(.text-xs):not(.text-\[10px\]):not(.text-\[9px\]):not(.text-lg):not(.text-xl) {
     font-size: 16px !important;
   }
+}
+
+/* GPU Acceleration for hardware-accelerated animations on mobile/low-end devices */
+.gpu {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
 }

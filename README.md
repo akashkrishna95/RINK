@@ -1,101 +1,119 @@
-# RINK (Research Innovation Network Kerala) - Official Web Portal
+# ✦ RINK (Research Innovation Network Kerala) - Official Web Portal ✦
 
-![RINK Banner](/public/images/rink-logo.svg) 
+[![Build Status](https://img.shields.io/badge/Build-Passing-1b60bb?style=flat-square)](#)
+[![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=flat-square&logo=next.js)](#)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?style=flat-square&logo=typescript)](#)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8?style=flat-square&logo=tailwind-css)](#)
 
-The official repository for the **Research Innovation Network Kerala (RINK)** web portal. This platform is designed by the Kerala Startup Mission (KSUM) to bridge the gap between breakthrough laboratory research and commercial enterprise, empowering the research fraternity to build and scale deep-tech ventures.
+The official repository for the **Research Innovation Network Kerala (RINK)** web portal. This platform is designed by the **Kerala Startup Mission (KSUM)** to bridge the gap between breakthrough laboratory research and commercial enterprise, empowering the research fraternity to build and scale deep-tech ventures.
 
-## Overview
+---
 
-The RINK web portal is a highly optimized, visually stunning Next.js application that serves as the central hub for researchers, innovators, investors, and partner institutions. The platform blends a premium, modern "deep-tech" aesthetic with subtle Indian artistic elements, delivering a world-class user experience across all devices.
+## 🚀 Overview
 
-### Key Highlights
-- **Premium Aesthetics:** Features a sleek dark/light corporate theme with glassmorphism, bespoke gradients, and subtle geometric patterns inspired by traditional Indian art (e.g., Kolam/Mandala line-art).
-- **High Performance:** Heavily optimized for smooth 60fps performance on budget 4GB and 6GB RAM mobile devices. Memory-efficient intersection observers prevent animation-induced lag.
-- **Interactive UI:** Utilizes fluid, physics-based micro-animations for elements like the 3D Kerala Institutions Map, Filter Drawers, and Video Players.
-- **Global Accessibility:** Fully responsive, mobile-first design ensuring flawless usability on smartphones, tablets, and high-resolution desktop monitors.
+The RINK web portal is a highly optimized, visually stunning Next.js application that serves as the central hub for researchers, innovators, investors, and partner institutions. It combines a premium, corporate aesthetic with top-tier technical performance, designed to look state-of-the-art while running butter-smooth on all devices, including budget smartphones with 4GB of RAM.
 
-## Technology Stack
+---
 
-- **Core Framework:** [Next.js 14+](https://nextjs.org/) (App Router) & [React](https://reactjs.org/)
-- **Language:** [TypeScript](https://www.typescriptlang.org/) for strict type safety
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/) for utility-first styling and custom thematic configurations
-- **Animations:** [Framer Motion](https://www.framer.com/motion/) (Configured strictly with `once: true` viewport triggers for memory conservation)
-- **Icons:** [Lucide React](https://lucide.dev/)
-- **Database:** [Pocketbase](https://pocketbase.io/)
+## 🎨 Visual Identity & Theme
 
-## Core Features & Modules
+The website is styled using a modern, pristine **Light Corporate Theme** modeled after `rink.startupmission.in`:
+*   **Color Palette**: Sleek white backgrounds, slate grays (`text-slate-800`, `text-slate-600`), and official brand blues (`#1b60bb` and `#153156`).
+*   **Typography**: Clean, optimized typography utilizing only two Google Fonts:
+    *   **Barlow**: Used for body descriptions, metadata, and clean sans-serif text layout.
+    *   **Bricolage Grotesque** (`font-helios` / `font-clash`): A premium, snug-tracking font used for page headings and section titles.
+*   **Redesigned Footer**: Completely rebuilt to match the official light model:
+    *   Full-color brand logos (no filters or inversion).
+    *   Structured Address with a bold campus header (*G3B, Thejaswini, Technopark Campus*).
+    *   *For more details* dedicated contact block header.
+    *   Tactile Back-to-Top scroll button featuring a light blue circle that inverts to dark blue with a white arrow on hover.
+    *   Balanced mobile layout ensuring Navigate, Connect, and Scroll columns center perfectly.
 
-### 1. Interactive Home & Institutions Grid
-- Features a dynamic, interactive 3D map of Kerala.
-- Hovering over district nodes dynamically reveals localized institution data.
-- Smooth accordion-style "See More" expansion using Framer Motion's `layout` engine (eliminating clunky scrollbars).
+---
 
-### 2. Deep-Tech Technologies Hub (`/technologies`)
-- A comprehensive directory of breakthrough technologies ready for commercialization.
-- **Smart Filtering:** Includes a mobile-responsive filter drawer to sort technologies by sector, TRL (Technology Readiness Level), and institution.
-- **Premium Modals:** Detailed technology cards that expand into full-screen, frosted-glass modals presenting research details, images, and patent statuses.
+## ⚙️ Core Performance Features
 
-### 3. The RINK Initiatives Hub (`/about`)
-A centralized ecosystem page routing users to specific programs:
-- **Research Incubation Programs**
-- **Demo Day & Exposure Visits** (Includes an integrated inline YouTube video player for startup pitches)
-- **IPR Support**
-- **Research & Development Funds**
+The site has been heavily optimized for maximum speed, responsiveness, and zero-latency interactions:
 
-### 4. Event Management (`/programs`)
-- A categorized gallery (Upcoming vs. Past) of all RINK programs.
-- Highly interactive event cards that trigger detailed modals without navigating away from the page, ensuring user retention.
+### 1. GPU Hardware Acceleration
+All interactive elements (buttons, links, and cards) leverage CSS 3D transforms (`translate3d(0,0,0)`) to offload rendering onto the GPU. This eliminates any screen stutter during hover animations.
 
-### 5. Global RINK Chatbot
-- A sleek, floating chatbot component integrated globally across the application layout, ready to assist users with navigation and inquiries.
+### 2. Text Rendering Stabilization (Anti-Aliasing Fix)
+All links in the header navigation and footer utilize a hardware-accelerated composite layer. This prevents the browser from switching between subpixel and grayscale text antialiasing during transitions, eliminating any text boldness changes or flickering.
 
-## Performance Optimizations
+### 3. Deferred Offscreen Rendering (`content-visibility: auto`)
+All heavy page modules (the Interactive Map grid, Partner Logos carousel, and Technology/Program listings) use `content-visibility: auto` along with a height fallback (`contain-intrinsic-size`). The browser skips rendering these sections until they are about to scroll into view, resulting in extremely fast initial paint speeds and low RAM usage.
 
-Special care was taken to ensure the web application performs flawlessly on mobile devices common in the Indian market (e.g., standard 4GB/6GB RAM smartphones):
-1. **No Scroll-Hijacking:** Relies entirely on the native OS scrolling mechanism for zero-latency scrolling.
-2. **Animation Garbage Collection:** All entrance animations are detached from memory once they appear on-screen, preventing memory leaks during long browsing sessions.
-3. **SVG & CSS Rendering:** Complex backgrounds (like the Hero section's geometric Indian pattern) are rendered via lightweight inline SVGs rather than heavy PNGs or auto-playing videos, saving vast amounts of bandwidth and CPU.
+### 4. Advanced Service Worker Caching (`sw.js`)
+A customized service worker handles network requests in the background:
+*   **Pre-caching**: Automatically caches all critical layout assets (backgrounds, logos, banners).
+*   **Image Caching**: Dynamically caches Google Drive images (`googleusercontent.com`) and static assets using a **Stale-While-Revalidate** pattern.
+*   **Speed**: Delivers instant loading on return visits.
 
-## Running Locally
+### 5. Skeleton UI Loading Screens
+All data-heavy routes (such as `/programs` and `/funds`) use pulsing skeleton loaders during SSR streaming to provide visual loading indicators and completely eliminate layout shifts.
 
-To run this project on your local machine:
+### 6. Local Network Warning Suppression
+Client-side subscriptions to PocketBase real-time events check the origin before connecting. If the website is loaded from a public domain but configured with a local database endpoint, the SSE subscription is bypassed, completely preventing the browser's *"Local Network Access"* warning prompt.
 
-1. **Clone the repository**
-   ```bash
-   git clone [repository-url]
-   cd "RINK KSUM Website"
-   ```
+---
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
+## 🛠️ Technology Stack
 
-3. **Run the development server**
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
+*   **Core Framework**: [Next.js 16 (Turbopack)](https://nextjs.org/) (App Router)
+*   **Language**: [TypeScript](https://www.typescriptlang.org/) for strict static typing
+*   **Styling**: [Tailwind CSS](https://tailwindcss.com/) & Vanilla CSS
+*   **Animations**: [Framer Motion](https://www.framer.com/motion/) (Optimized with `once: true` viewport limits)
+*   **Maps**: [React Leaflet](https://react-leaflet.js.org/) (Mobile optimized with instant views; desktop maps animate via `flyTo`)
+*   **Icons**: [Lucide React](https://lucide.dev/)
+*   **Database**: [Pocketbase](https://pocketbase.io/)
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-## 📁 Project Structure (Key Directories)
+## 📁 Key Directories
 
 ```
-├── app/                  # Next.js App Router pages (Home, About, Events, etc.)
-├── components/           # Reusable UI components (Navbar, Modals, Cards, Chatbot)
-│   └── technologies/     # Dedicated components for the Technologies Hub
-├── data/                 # Static data sets (Events, Institutions, Sectors)
-├── public/               # Static assets (Images, Icons)
-└── tailwind.config.ts    # Custom theme colors, fonts, and animation variables
+├── app/                  # Next.js pages (Home, About, Funds, Programs, Privacy)
+│   ├── funds/loading.tsx # Funds page skeleton UI loader
+│   └── programs/loading.tsx # Programs page skeleton UI loader
+├── HomePage/             # Core Homepage components
+│   ├── Navbar.tsx        # Hardware-accelerated header navigation
+│   ├── Footer.tsx        # Redesigned light theme footer
+│   ├── InteractiveMap.tsx# Kerala Leaflet map component
+│   └── TechnologyCard.tsx# Optimized GPU-accelerated card component
+├── public/               # Static assets & service worker
+│   └── sw.js             # Service worker cache script
+├── hooks/                # Custom React hooks (Real-time PocketBase sync)
+└── tailwind.config.ts    # Custom configurations and font mappings
 ```
 
-## 🤝 Design Philosophy
+---
 
-The overarching design philosophy for the RINK portal is **"Where Traditional Heritage Meets Deep Tech."** It avoids chaotic "vibecoded" aesthetics in favor of a clean, highly corporate, yet culturally resonant premium style, positioning Kerala Startup Mission at the forefront of global research innovation.
+## 🚀 Running Locally
+
+To launch this project on your local machine:
+
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/akashkrishna95/RINK.git
+    cd RINK
+    ```
+
+2.  **Install dependencies**
+    ```bash
+    pnpm install
+    # or
+    npm install
+    ```
+
+3.  **Start the development server**
+    ```bash
+    pnpm dev
+    # or
+    npm run dev
+    ```
+
+4.  **Open the application**: Visit [http://localhost:3000](http://localhost:3000) with your browser.
 
 ---
 *Developed with precision for the Kerala Startup Mission.*

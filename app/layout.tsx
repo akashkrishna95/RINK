@@ -1,8 +1,6 @@
-// C:\Users\Akash Krishna\Downloads\RINK KSUM Website\app\layout.tsx
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Barlow, Plus_Jakarta_Sans, Bricolage_Grotesque } from 'next/font/google'
-import localFont from 'next/font/local'
+import { Barlow, Bricolage_Grotesque } from 'next/font/google'
 import NextTopLoader from 'nextjs-toploader'
 // import RomiRedirectWidget from '@/HomePage/RomiAI/RomiRedirectWidget'
 import Script from 'next/script'
@@ -14,24 +12,6 @@ const barlow = Barlow({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   style: ['normal', 'italic'],
-  display: 'swap',
-})
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: '--font-plus-jakarta',
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-})
-
-const gotham = localFont({
-  src: [
-    {
-      path: '../public/fonts/Gotham_Regular.otf',
-      weight: '400',
-      style: 'normal',
-    },
-  ],
-  variable: '--font-gotham',
   display: 'swap',
 })
 
@@ -85,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${barlow.variable} ${plusJakartaSans.variable} ${gotham.variable} ${bricolageGrotesque.variable}`}>
+    <html lang="en" className={`${barlow.variable} ${bricolageGrotesque.variable}`}>
       <body className="font-poppins antialiased" style={{ backgroundColor: '#F4F7FB' }}>
         <NextTopLoader color="#1b60bb" showSpinner={false} height={3} />
         
@@ -108,6 +88,18 @@ export default function RootLayout({
                 e.preventDefault();
               }
             }, true);
+          `}
+        </Script>
+        {/* Service worker registration for caching images and content */}
+        <Script id="register-sw" strategy="afterInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                  .then((reg) => console.log('[Service Worker] Registered with scope:', reg.scope))
+                  .catch((err) => console.error('[Service Worker] Registration failed:', err));
+              });
+            }
           `}
         </Script>
       </body>

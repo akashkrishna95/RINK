@@ -252,7 +252,13 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
       {/* Main Container Gradient */}
       <div 
         className="bg-gradient-to-b from-[#36a8fb] via-[#1b60bb] to-[#153156] relative pt-[140px] md:pt-[180px] pb-[100px] md:pb-[140px] overflow-hidden flex flex-col justify-center"
-        style={{ border: 'none', borderWidth: 0, boxShadow: 'none' }}
+        style={{ 
+          border: 'none', 
+          borderWidth: 0, 
+          boxShadow: 'none',
+          contentVisibility: 'auto',
+          containIntrinsicSize: '600px'
+        }}
       >
 
         {/* Top Inverted Curve Mask with Title */}

@@ -43,7 +43,13 @@ export default function PartnerInstitutes({ initialInstitutions }: { initialInst
   const hasMore = activeInstitutes.length > INITIAL_VISIBLE_COUNT;
 
   return (
-    <section className="w-full py-16 px-4 md:px-12 bg-white">
+    <section 
+      className="w-full py-16 px-4 md:px-12 bg-white"
+      style={{
+        contentVisibility: 'auto',
+        containIntrinsicSize: '400px',
+      }}
+    >
       <div className="max-w-[1400px] mx-auto">
         {/* Header */}
         <motion.div

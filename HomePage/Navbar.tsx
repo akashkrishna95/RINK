@@ -129,7 +129,7 @@ export default function Navbar() {
                 target={link.href.startsWith('http') ? '_blank' : undefined}
                 rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                 onClick={(e) => handleLinkClick(e, link.href)}
-                className="relative font-plus-jakarta text-[17px] font-medium text-[#1b60bb] hover:text-[#0f3a6d] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1b60bb] rounded-sm px-1 py-1.5 group"
+                className="relative font-helios text-[17px] font-medium text-[#1b60bb] hover:text-[#0f3a6d] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1b60bb] rounded-sm px-1 py-1.5 group gpu"
               >
                 {link.label}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#1b60bb] group-hover:w-full transition-all duration-300" />
@@ -142,7 +142,7 @@ export default function Navbar() {
             <Link
               href="/RomiPortal"
               onClick={(e) => handleLinkClick(e, '/RomiPortal')}
-              className="font-plus-jakarta text-xs min-[360px]:text-sm min-[400px]:text-[15px] font-medium text-[#1b60bb] hover:text-[#0f3a6d] transition-colors focus:outline-none py-1.5 whitespace-nowrap"
+              className="font-helios text-xs min-[360px]:text-sm min-[400px]:text-[15px] font-medium text-[#1b60bb] hover:text-[#0f3a6d] transition-colors focus:outline-none py-1.5 whitespace-nowrap"
             >
               ROMI AI
             </Link>
@@ -178,7 +178,7 @@ export default function Navbar() {
                     handleLinkClick(e, link.href);
                     setIsMobileMenuOpen(false);
                   }}
-                  className="flex items-center justify-between px-6 py-5 border-b border-gray-100 font-plus-jakarta font-medium text-base text-[#1b60bb] hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                  className="flex items-center justify-between px-6 py-5 border-b border-gray-100 font-helios font-medium text-base text-[#1b60bb] hover:bg-gray-50 active:bg-gray-100 transition-colors"
                 >
                   {link.label}
                   <ChevronRight size={18} className="text-[#1b60bb]/40" />
@@ -188,7 +188,7 @@ export default function Navbar() {
 
             {/* Contact & Support Section */}
             <div className="px-6 py-8 bg-gray-50 mt-auto">
-              <h3 className="font-plus-jakarta text-xs font-bold tracking-wider uppercase text-gray-500 mb-6">
+              <h3 className="font-helios text-xs font-bold tracking-wider uppercase text-gray-500 mb-6">
                 Connect & Support
               </h3>
 
@@ -196,16 +196,16 @@ export default function Navbar() {
                 <a href="mailto:rink@startupmission.in" className="flex items-center gap-4 text-[#1b60bb] hover:text-[#113a70] transition-colors group">
                   <Mail className="w-5 h-5 text-gray-400 group-hover:text-[#1b60bb] transition-colors" />
                   <div className="flex flex-col">
-                    <span className="font-plus-jakarta text-xs text-gray-500 font-medium">Email</span>
-                    <span className="font-plus-jakarta font-medium text-[15px]">rink@startupmission.in</span>
+                    <span className="font-helios text-xs text-gray-500 font-medium">Email</span>
+                    <span className="font-helios font-medium text-[15px]">rink@startupmission.in</span>
                   </div>
                 </a>
 
                 <a href="https://in.linkedin.com/company/research-innovation-network-kerala/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-[#1b60bb] hover:text-[#113a70] transition-colors group">
                   <LinkedinIcon className="w-5 h-5 text-gray-400 group-hover:text-[#1b60bb] transition-colors" />
                   <div className="flex flex-col">
-                    <span className="font-plus-jakarta text-xs text-gray-500 font-medium">Social</span>
-                    <span className="font-plus-jakarta font-medium text-[15px]">LinkedIn Profile</span>
+                    <span className="font-helios text-xs text-gray-500 font-medium">Social</span>
+                    <span className="font-helios font-medium text-[15px]">LinkedIn Profile</span>
                   </div>
                 </a>
 
@@ -213,12 +213,12 @@ export default function Navbar() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <a href="tel:08047180470" className="flex flex-col text-[#1b60bb] hover:text-[#113a70] transition-colors">
-                    <span className="font-plus-jakarta text-xs text-gray-500 font-medium mb-1">Office 1</span>
-                    <span className="font-plus-jakarta font-medium text-sm">08047180470</span>
+                    <span className="font-helios text-xs text-gray-500 font-medium mb-1">Office 1</span>
+                    <span className="font-helios font-medium text-sm">08047180470</span>
                   </a>
                   <a href="tel:04712700270" className="flex flex-col text-[#1b60bb] hover:text-[#113a70] transition-colors">
-                    <span className="font-plus-jakarta text-xs text-gray-500 font-medium mb-1">Office 2</span>
-                    <span className="font-plus-jakarta font-medium text-sm">0471-2700270</span>
+                    <span className="font-helios text-xs text-gray-500 font-medium mb-1">Office 2</span>
+                    <span className="font-helios font-medium text-sm">0471-2700270</span>
                   </a>
                 </div>
               </div>
