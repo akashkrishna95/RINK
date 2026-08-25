@@ -47,6 +47,11 @@ export default function Navbar() {
   }, [pathname]);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (typeof window !== 'undefined' && !href.startsWith('http')) {
+      const cleanPath = href.split('#')[0];
+      sessionStorage.removeItem(`activeSection_${cleanPath}`);
+    }
+
     if (href === '/') {
       if (pathname === '/') {
         e.preventDefault();

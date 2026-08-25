@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Barlow, Bricolage_Grotesque } from 'next/font/google'
 import NextTopLoader from 'nextjs-toploader'
+import ScrollRestoration from '@/components/ScrollRestoration'
 // import RomiRedirectWidget from '@/HomePage/RomiAI/RomiRedirectWidget'
 import Script from 'next/script'
 
@@ -68,6 +69,7 @@ export default function RootLayout({
     <html lang="en" className={`${barlow.variable} ${bricolageGrotesque.variable}`}>
       <body className="font-poppins antialiased" style={{ backgroundColor: '#F4F7FB' }}>
         <NextTopLoader color="#1b60bb" showSpinner={false} height={3} />
+        <ScrollRestoration />
         
         {children}
         

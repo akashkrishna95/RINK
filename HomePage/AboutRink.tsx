@@ -1,13 +1,17 @@
-//C:\Users\Akash Krishna\Downloads\RINK KSUM Website\HomePage\AboutRink.tsx
-
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ArrowDownRight, ArrowUpRight, TrendingUp, UsersRound, FileBadge, Coins } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function AboutRink() {
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const featureCards = [
     { title: 'Research Incubation Programs', icon: TrendingUp, href: '/about/researchpreneurship' },
     { title: 'Demo Day & Exposure Visits', icon: UsersRound, href: '/about/demoday' },
@@ -21,8 +25,40 @@ export default function AboutRink() {
     hover: { x: 3, y: -3, transition: { duration: 0.2, ease: "easeOut" } }
   };
 
+  if (!isMounted) {
+    return (
+      <div 
+        id="about-rink"
+        data-section
+        className="relative w-full bg-[#eff9ff] py-20 overflow-hidden animate-pulse"
+        style={{
+          contentVisibility: 'auto',
+          containIntrinsicSize: '650px',
+        }}
+      >
+        <div className="relative max-w-7xl mx-auto px-8 z-10">
+          <div className="flex justify-between items-center mb-8 lg:mb-10">
+            <div className="w-12 h-12 md:w-20 md:h-20 bg-slate-200 rounded-full" />
+            <div className="h-12 bg-slate-200 rounded w-1/4" />
+          </div>
+          {/* 4 Cards Skeleton */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-12">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-32 bg-slate-200 rounded-2xl w-full" />
+            ))}
+          </div>
+          {/* Marquee Skeleton */}
+          <div className="w-full h-10 bg-slate-200 rounded-lg mt-16" />
+        </div>
+      </div>
+    );
+  }
+
+
   return (
     <div 
+      id="about-rink"
+      data-section
       className="relative w-full bg-[#eff9ff] py-20 overflow-hidden"
       style={{
         contentVisibility: 'auto',
@@ -147,22 +183,12 @@ export default function AboutRink() {
       </div>
 
       {/* Bottom Infinite Marquee - Full Width Edge-to-Edge */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="relative z-10 w-full mt-16 py-5 overflow-hidden flex whitespace-nowrap"
-      >
-        <motion.div
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ ease: "linear", duration: 15, repeat: Infinity }}
-          className="flex text-[#1b60bb] font-helios text-base md:text-lg font-medium tracking-widest uppercase w-max"
-        >
+      <div className="relative z-10 w-full mt-16 py-5 overflow-hidden flex whitespace-nowrap">
+        <div className="animate-marquee-custom text-[#1b60bb] font-helios text-base md:text-lg font-medium tracking-widest uppercase">
           <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK</span>
           <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK</span>
-          <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK</span>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 }

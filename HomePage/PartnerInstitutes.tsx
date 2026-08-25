@@ -18,6 +18,10 @@ interface Institute {
 
 export default function PartnerInstitutes({ initialInstitutions }: { initialInstitutions?: Institution[] }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const institutions = useRealTimeSync<Institution>(
     'all_institutions',
@@ -42,8 +46,35 @@ export default function PartnerInstitutes({ initialInstitutions }: { initialInst
 
   const hasMore = activeInstitutes.length > INITIAL_VISIBLE_COUNT;
 
+  if (!isMounted) {
+    return (
+      <section 
+        id="partners"
+        data-section
+        className="w-full py-16 px-4 md:px-12 bg-white animate-pulse"
+        style={{
+          contentVisibility: 'auto',
+          containIntrinsicSize: '400px',
+        }}
+      >
+        <div className="max-w-[1400px] mx-auto">
+          {/* Header Skeleton */}
+          <div className="h-12 bg-slate-200 rounded w-1/4 mb-10" />
+          {/* Logo Grid Skeleton */}
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6">
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className="bg-slate-100 rounded-xl aspect-[4/3] w-full" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section 
+      id="partners"
+      data-section
       className="w-full py-16 px-4 md:px-12 bg-white"
       style={{
         contentVisibility: 'auto',

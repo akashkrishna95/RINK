@@ -442,4 +442,20 @@ p.leading-relaxed:not(.text-xs):not(.text-\[10px\]):not(.text-\[9px\]):not(.text
   backface-visibility: hidden;
   perspective: 1000px;
   will-change: transform;
+}
+
+/* Highly optimized GPU-accelerated CSS marquee scroll animation (0% JS, 0% CPU reflow) */
+@keyframes marquee-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.animate-marquee-custom {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 15s linear infinite;
+  will-change: transform;
 }

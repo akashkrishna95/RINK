@@ -22,6 +22,44 @@ interface FeaturedTechnologiesProps {
   initialTechnologies?: Technology[];
 }
 
+const TechnologyCardSkeleton = () => (
+  <div className="w-full h-full bg-white rounded-2xl overflow-hidden flex flex-col relative border border-gray-100 shadow-[0_8px_16px_-3px_rgba(0,0,0,0.08)] animate-pulse">
+    {/* Image Container Skeleton */}
+    <div className="p-2 md:p-2.5">
+      <div className="relative h-[140px] sm:h-[150px] md:h-[180px] w-full bg-slate-200 rounded-xl" />
+    </div>
+    {/* Content Skeleton */}
+    <div className="flex-1 p-3 sm:p-4 md:p-5 flex flex-col bg-white">
+      {/* Real Title: 2 lines min-height */}
+      <div className="space-y-1.5 mb-2 min-h-[2.2rem] sm:min-h-[2.5rem]">
+        <div className="h-4 bg-slate-200 rounded w-11/12" />
+        <div className="h-4 bg-slate-200 rounded w-2/3" />
+      </div>
+
+      {/* Institution Label Skeleton */}
+      <div className="bg-slate-50 rounded-lg p-2.5 mb-3 flex items-center gap-2">
+        <div className="w-3 h-3 rounded bg-slate-200 shrink-0" />
+        <div className="h-3 bg-slate-200 rounded w-1/2" />
+      </div>
+
+      {/* Short Description Skeleton (2 lines) */}
+      <div className="space-y-1.5 mb-3 flex-1">
+        <div className="h-3 bg-slate-100 rounded w-full" />
+        <div className="h-3 bg-slate-100 rounded w-5/6" />
+      </div>
+
+      {/* Footer Section Skeleton */}
+      <div className="mt-auto flex items-end justify-between gap-2 border-t border-gray-100 pt-3">
+        <div className="flex flex-col gap-1 w-1/3">
+          <div className="h-2.5 bg-slate-100 rounded w-1/2" />
+          <div className="h-3.5 bg-slate-200 rounded w-full" />
+        </div>
+        <div className="h-8 bg-slate-200 rounded-lg w-[100px]" />
+      </div>
+    </div>
+  </div>
+);
+
 export default function FeaturedTechnologies({ initialTechnologies = [] }: FeaturedTechnologiesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInteracting = useRef(false);
@@ -190,6 +228,25 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
     const container = containerRef.current;
     if (!container) return;
 
+    // Detect if we are on a mobile/tablet or touch device to disable auto-scroll reflow loops.
+    // This saves 100% CPU cycles on mobile phones and ensures butter-smooth page scrolling!
+    const isMobileDevice = typeof window !== 'undefined' && (window.innerWidth < 1024 || 'ontouchstart' in window);
+    
+    if (isMobileDevice) {
+      let scrollWidth = container.scrollWidth;
+      container.scrollLeft = scrollWidth / 3;
+
+      const handleResize = () => {
+        if (container) {
+          container.scrollLeft = container.scrollWidth / 3;
+        }
+      };
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+
     // Cache scrollWidth to prevent layouts thrashing reflows inside requestAnimationFrame loop
     let scrollWidth = container.scrollWidth;
 
@@ -244,10 +301,45 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
     };
   }, [isMounted, extendedTechnologies.length]);
 
-  if (!isMounted) return null;
+  if (!isMounted) {
+    return (
+      <div id="technologies" data-section className="w-full relative">
+        <div 
+          className="bg-gradient-to-b from-[#36a8fb] via-[#1b60bb] to-[#153156] relative pt-[140px] md:pt-[180px] pb-[100px] md:pb-[140px] overflow-hidden flex flex-col justify-center"
+          style={{ 
+            border: 'none', 
+            borderWidth: 0, 
+            boxShadow: 'none',
+            contentVisibility: 'auto',
+            containIntrinsicSize: '600px'
+          }}
+        >
+          {/* Top Inverted Curve Mask with Title */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[140px] md:h-[180px] bg-[#eff9ff] rounded-b-[3rem] md:rounded-b-[4rem] z-10 w-full flex items-center justify-center pt-4"
+            style={{ border: 'none', borderWidth: 0, boxShadow: 'none', top: '-2px' }}
+          >
+            <h2 className="font-helios font-medium text-4xl sm:text-5xl md:text-6xl text-[#1b60bb] tracking-wide px-4 text-center leading-tight">
+              Explore Technologies
+            </h2>
+          </div>
+          {/* Carousel Skeleton */}
+          <div className="w-full relative z-20">
+            <div className="flex gap-4 md:gap-6 overflow-x-auto pb-16 pt-16 md:pt-20 px-[10vw] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex-shrink-0 w-[240px] xs:w-[260px] sm:w-[280px] md:w-[320px] h-[360px] sm:h-[380px] md:h-[420px]">
+                  <TechnologyCardSkeleton />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full relative">
+    <div id="technologies" data-section className="w-full relative">
 
       {/* Main Container Gradient */}
       <div 

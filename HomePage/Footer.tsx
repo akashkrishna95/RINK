@@ -19,8 +19,11 @@ export default function Footer() {
 
   return (
     <footer
+      id="footer"
+      data-section
       ref={footerRef}
-      className="relative bg-white text-slate-600 overflow-hidden"
+      className="relative bg-white text-black overflow-hidden"
+      style={{ backgroundColor: '#ffffff', color: '#000000' }}
     >
       {/* Main Footer Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-8 pt-12 lg:pt-16 pb-8">
@@ -54,23 +57,23 @@ export default function Footer() {
 
             {/* Address & Contact Info below logos */}
             <div className="space-y-4">
-              <p className="font-avenir text-slate-600 text-sm leading-relaxed max-w-sm">
-                <span className="font-bold text-slate-800 block">G3B, Thejaswini, Technopark Campus</span>
+              <p className="font-avenir text-black text-sm leading-relaxed max-w-sm" style={{ color: '#000000' }}>
+                <span className="font-bold text-black block" style={{ color: '#000000' }}>G3B, Thejaswini, Technopark Campus</span>
                 Kariyavattom, Trivandrum, Kerala 695581
               </p>
 
               <div className="space-y-2">
-                <div className="font-helios text-sm font-bold text-slate-800 mb-1 select-none">
+                <div className="font-helios text-sm font-bold text-black mb-1 select-none" style={{ color: '#000000' }}>
                   For more details
                 </div>
-                <a href="tel:08047180470" className="group flex items-center gap-2 font-avenir text-slate-600 hover:text-[#1b60bb] transition-colors text-sm lg:text-base w-fit gpu">
+                <a href="tel:08047180470" className="group flex items-center gap-2 font-avenir text-black hover:text-[#1b60bb] transition-colors text-sm lg:text-base w-fit gpu" style={{ color: '#000000' }}>
                   <Phone className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#1b60bb] transition-colors" />
                   <span className="relative">
                     08047180470
                     <span className="absolute bottom-0 left-0 w-full h-px bg-[#1b60bb] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
                   </span>
                 </a>
-                <a href="tel:04712700270" className="group flex items-center gap-2 font-avenir text-slate-600 hover:text-[#1b60bb] transition-colors text-sm lg:text-base w-fit gpu">
+                <a href="tel:04712700270" className="group flex items-center gap-2 font-avenir text-black hover:text-[#1b60bb] transition-colors text-sm lg:text-base w-fit gpu" style={{ color: '#000000' }}>
                   <Phone className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#1b60bb] transition-colors" />
                   <span className="relative">
                     0471-2700270
@@ -79,7 +82,8 @@ export default function Footer() {
                 </a>
                 <a
                   href="mailto:rink@startupmission.in"
-                  className="group flex items-center gap-2 font-avenir text-slate-600 hover:text-[#1b60bb] transition-colors text-sm lg:text-base w-fit gpu"
+                  className="group flex items-center gap-2 font-avenir text-black hover:text-[#1b60bb] transition-colors text-sm lg:text-base w-fit gpu"
+                  style={{ color: '#000000' }}
                 >
                   <svg className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-[#1b60bb] transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -100,7 +104,7 @@ export default function Footer() {
             transition={{ duration: 0.6, ease: easePremium, delay: 0.1 }}
             className="col-span-5 sm:col-span-5 md:col-span-3"
           >
-            <h4 className="font-helios text-sm font-bold text-slate-800 uppercase tracking-wider mb-4">
+            <h4 className="font-helios text-sm font-bold text-black uppercase tracking-wider mb-4" style={{ color: '#000000' }}>
               Navigate
             </h4>
             <ul className="space-y-3">
@@ -118,7 +122,8 @@ export default function Footer() {
                     href={link.href}
                     target={link.href.startsWith('http') ? '_blank' : undefined}
                     rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="group font-avenir text-slate-600 hover:text-[#1b60bb] transition-colors text-sm lg:text-base inline-block w-fit gpu"
+                    className="group font-avenir text-black hover:text-[#1b60bb] transition-colors text-sm lg:text-base inline-block w-fit gpu"
+                    style={{ color: '#000000' }}
                   >
                     <span className="relative">
                       {link.label}
@@ -137,7 +142,7 @@ export default function Footer() {
             transition={{ duration: 0.6, ease: easePremium, delay: 0.2 }}
             className="col-span-5 sm:col-span-4 md:col-span-3"
           >
-            <h4 className="font-helios text-sm font-bold text-slate-800 uppercase tracking-wider mb-4">
+            <h4 className="font-helios text-sm font-bold text-black uppercase tracking-wider mb-4" style={{ color: '#000000' }}>
               Connect
             </h4>
             <ul className="space-y-3">
@@ -149,7 +154,8 @@ export default function Footer() {
                     href={link.href}
                     target={link.href.startsWith('http') ? '_blank' : undefined}
                     rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="group font-avenir text-slate-600 hover:text-[#1b60bb] transition-colors text-sm lg:text-base flex items-center gap-2 w-fit gpu"
+                    className="group font-avenir text-black hover:text-[#1b60bb] transition-colors text-sm lg:text-base flex items-center gap-2 w-fit gpu"
+                    style={{ color: '#000000' }}
                   >
                     <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-slate-400 group-hover:text-[#1b60bb] transition-colors shrink-0">
                       <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
@@ -193,27 +199,27 @@ export default function Footer() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: easePremium, delay: 0.4 }}
-          className="flex flex-col md:flex-row items-center justify-between gap-4 font-avenir text-center md:text-left text-slate-500"
+          className="flex flex-col md:flex-row items-center justify-between gap-4 font-avenir text-center md:text-left text-black"
         >
-          <div className="text-sm sm:text-base">
+          <div className="text-sm sm:text-base" style={{ color: '#000000' }}>
             © 2025 Kerala Startup Mission
           </div>
           <div className="flex items-center justify-center gap-2.5 sm:gap-4 text-[11px] xs:text-xs sm:text-sm md:text-base whitespace-nowrap">
-            <Link href="/privacy/privacy-policy" className="group font-avenir text-slate-600 hover:text-[#1b60bb] transition-colors inline-block w-fit gpu">
+            <Link href="/privacy/privacy-policy" className="group font-avenir text-black hover:text-[#1b60bb] transition-colors inline-block w-fit gpu" style={{ color: '#000000' }}>
               <span className="relative">
                 Privacy Policy
                 <span className="absolute bottom-0 left-0 w-full h-px bg-[#1b60bb] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
               </span>
             </Link>
             <span className="text-slate-300">•</span>
-            <Link href="/privacy/terms" className="group font-avenir text-slate-600 hover:text-[#1b60bb] transition-colors inline-block w-fit gpu">
+            <Link href="/privacy/terms" className="group font-avenir text-black hover:text-[#1b60bb] transition-colors inline-block w-fit gpu" style={{ color: '#000000' }}>
               <span className="relative">
                 Terms & Conditions
                 <span className="absolute bottom-0 left-0 w-full h-px bg-[#1b60bb] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
               </span>
             </Link>
             <span className="text-slate-300">•</span>
-            <Link href="/privacy/cookies" className="group font-avenir text-slate-600 hover:text-[#1b60bb] transition-colors inline-block w-fit gpu">
+            <Link href="/privacy/cookies" className="group font-avenir text-black hover:text-[#1b60bb] transition-colors inline-block w-fit gpu" style={{ color: '#000000' }}>
               <span className="relative">
                 Cookies
                 <span className="absolute bottom-0 left-0 w-full h-px bg-[#1b60bb] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
