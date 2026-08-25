@@ -185,8 +185,7 @@ export default function AboutRink() {
       {/* Bottom Infinite Marquee - Full Width Edge-to-Edge */}
       <div className="relative z-10 w-full mt-16 py-5 overflow-hidden flex whitespace-nowrap">
         <div className="animate-marquee-custom text-[#1b60bb] font-helios text-base md:text-lg font-medium tracking-widest uppercase">
-          <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK</span>
-          <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK</span>
+          <span className="whitespace-pre">✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK ✦ KSUM ✦ RINK</span>
         </div>
       </div>
     </div>

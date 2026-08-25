@@ -1,12 +1,10 @@
 // public/sw.js
-// Service Worker for RINK KSUM Website
+// Service Worker for RINK KSUM Website (Images Cache Only)
 
-const CACHE_NAME = 'rink-static-cache-v1';
 const IMAGE_CACHE_NAME = 'rink-image-cache-v1';
 
-// Assets to pre-cache immediately on install
-const PRECACHE_ASSETS = [
-  '/',
+// Only pre-cache static logo/banner images immediately on install
+const PRECACHE_IMAGES = [
   '/images/favicon.png',
   '/images/ksum-favicon.svg',
   '/images/ksum-logo.svg',
@@ -27,10 +25,9 @@ const PRECACHE_ASSETS = [
 // Install Event
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      // Use catch block on addAll to prevent one missing file from breaking the whole install
-      return cache.addAll(PRECACHE_ASSETS).catch((err) => {
-        console.warn('[Service Worker] Pre-cache assets loading error:', err);
+    caches.open(IMAGE_CACHE_NAME).then((cache) => {
+      return cache.addAll(PRECACHE_IMAGES).catch((err) => {
+        console.warn('[Service Worker] Pre-cache images loading error:', err);
       });
     }).then(() => self.skipWaiting())
   );
@@ -42,7 +39,8 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME && cacheName !== IMAGE_CACHE_NAME) {
+          // Delete all caches except the image cache to clear out old HTML/JS/CSS assets
+          if (cacheName !== IMAGE_CACHE_NAME) {
             console.log('[Service Worker] Deleting obsolete cache:', cacheName);
             return caches.delete(cacheName);
           }
@@ -58,20 +56,27 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
 
-  // Skip chrome-extension, internal webpack, or non-http requests
+  // Skip chrome-extension, internal webpack, API, or non-http requests
   if (!event.request.url.startsWith('http')) return;
-  if (url.pathname.includes('/_next/webpack-hmr') || url.pathname.includes('/api/')) return;
+  if (url.pathname.includes('/_next/') || url.pathname.includes('/api/')) return;
 
-  const isLocalImage = url.pathname.startsWith('/images/') || url.pathname.endsWith('.png') || url.pathname.endsWith('.webp') || url.pathname.endsWith('.jpg') || url.pathname.endsWith('.jpeg') || url.pathname.endsWith('.svg');
-  const isGoogleImage = url.hostname.includes('googleusercontent.com') || url.hostname.includes('drive.google.com');
+  const isLocalImage = url.pathname.startsWith('/images/') || 
+                       url.pathname.endsWith('.png') || 
+                       url.pathname.endsWith('.webp') || 
+                       url.pathname.endsWith('.jpg') || 
+                       url.pathname.endsWith('.jpeg') || 
+                       url.pathname.endsWith('.svg');
+                       
+  const isGoogleImage = url.hostname.includes('googleusercontent.com') || 
+                        url.hostname.includes('drive.google.com');
 
-  // Handle local and remote images
+  // Handle local and remote images using a Stale-While-Revalidate caching strategy
   if (isLocalImage || isGoogleImage) {
     event.respondWith(
       caches.open(IMAGE_CACHE_NAME).then((cache) => {
         return cache.match(event.request).then((cachedResponse) => {
           if (cachedResponse) {
-            // Stale-while-revalidate for images to keep cache updated
+            // Fetch updated image from network and update cache in the background
             fetch(event.request)
               .then((networkResponse) => {
                 if (networkResponse.status === 200) {
@@ -82,32 +87,7 @@ self.addEventListener('fetch', (event) => {
             return cachedResponse;
           }
 
-          return fetch(event.request).then((networkResponse) => {
-            if (networkResponse.status === 200) {
-              cache.put(event.request, networkResponse.clone());
-            }
-            return networkResponse;
-          });
-        });
-      })
-    );
-    return;
-  }
-
-  // Handle local CSS, JS, and web fonts
-  const isStaticAsset = 
-    url.pathname.includes('/fonts/') ||
-    url.pathname.endsWith('.js') ||
-    url.pathname.endsWith('.css') ||
-    url.pathname.endsWith('.woff') ||
-    url.pathname.endsWith('.woff2') ||
-    url.pathname.endsWith('.ttf');
-
-  if (isStaticAsset) {
-    event.respondWith(
-      caches.open(CACHE_NAME).then((cache) => {
-        return cache.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) return cachedResponse;
+          // Not in cache, fetch from network and cache it
           return fetch(event.request).then((networkResponse) => {
             if (networkResponse.status === 200) {
               cache.put(event.request, networkResponse.clone());
@@ -118,4 +98,5 @@ self.addEventListener('fetch', (event) => {
       })
     );
   }
+  // All other assets (HTML, JS, CSS, fonts) fall back to native browser network request dynamically
 });

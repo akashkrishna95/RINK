@@ -32,8 +32,15 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
     : (initialInstitutions || []);
 
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     setIsMounted(true);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const [activeDistrict, setActiveDistrict] = useState<string | null>(null);
@@ -276,15 +283,46 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                   <Maximize2 size={16} className="text-[#1b60bb]" strokeWidth={2.5} />
                 </div>
                 {!isMapExpanded && (
-                  <InteractiveMap
-                    activeDistrict={activeDistrict}
-                    activeInstitution={activeInstitution}
-                    onDistrictHover={handleMapHover}
-                    onDistrictLeave={resetInteractions}
-                    onInstitutionHover={setActiveInstitution}
-                    isExpanded={false}
-                    institutions={institutionLogos}
-                  />
+                  isMobile ? (
+                    <div className="w-full h-full bg-[#eff9ff] flex flex-col items-center justify-center p-6 text-center select-none">
+                      {/* Stylized placeholder preview */}
+                      <div className="relative w-full max-w-[160px] h-[220px] flex flex-col justify-between py-4 mb-4 opacity-75">
+                        {[...Array(5)].map((_, i) => (
+                          <div 
+                            key={i} 
+                            className="flex items-center gap-3"
+                            style={{ transform: `translateX(${Math.sin(i * 1.2) * 15}px)` }}
+                          >
+                            <div className="w-3.5 h-3.5 rounded-full bg-[#1b60bb]/20 flex items-center justify-center">
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#1b60bb]" />
+                            </div>
+                            <div className="h-2 bg-slate-300/60 rounded w-16" />
+                          </div>
+                        ))}
+                        <div className="absolute top-6 bottom-6 left-[7px] w-0.5 border-l border-dashed border-[#1b60bb]/20 z-0" />
+                      </div>
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsMapExpanded(true);
+                        }}
+                        className="bg-[#1b60bb] hover:bg-[#153156] text-white font-helios font-semibold text-xs px-5 py-2.5 rounded-full shadow-md transition-colors cursor-pointer"
+                      >
+                        View Interactive Map
+                      </button>
+                    </div>
+                  ) : (
+                    <InteractiveMap
+                      activeDistrict={activeDistrict}
+                      activeInstitution={activeInstitution}
+                      onDistrictHover={handleMapHover}
+                      onDistrictLeave={resetInteractions}
+                      onInstitutionHover={setActiveInstitution}
+                      isExpanded={false}
+                      institutions={institutionLogos}
+                    />
+                  )
                 )}
               </div>
             </motion.div>

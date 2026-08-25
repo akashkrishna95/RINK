@@ -74,7 +74,8 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
 
   const [extendedTechnologies, setExtendedTechnologies] = useState<Technology[]>(() => {
     if (initialTechnologies.length > 0) {
-      return [...initialTechnologies, ...initialTechnologies, ...initialTechnologies];
+      const topTechs = initialTechnologies.slice(0, 12);
+      return [...topTechs, ...topTechs, ...topTechs];
     }
     return [];
   });
@@ -134,7 +135,8 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
           };
 
           const processedTechs = Array.from(uniqueMap.values())
-            .sort((a, b) => getSortScore(b) - getSortScore(a));
+            .sort((a, b) => getSortScore(b) - getSortScore(a))
+            .slice(0, 12); // Limit to top 12 technologies to make page extremely lightweight on mobile
 
           // Tripled array to facilitate seamless infinite native scrolling
           setExtendedTechnologies([
