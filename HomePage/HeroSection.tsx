@@ -6,26 +6,6 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 
 export default function HeroSection() {
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return (
-      <div id="hero" data-section className="w-full max-w-[1400px] mx-auto px-4 md:px-8 py-6 font-sans relative animate-pulse md:mt-4">
-        {/* Banner Skeleton */}
-        <div className="w-full h-[520px] sm:h-[500px] md:h-[500px] rounded-[20px] bg-slate-200 mb-4" />
-        {/* Three Cards Skeleton */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mt-4 md:mt-6">
-          <div className="h-[120px] md:h-[150px] bg-slate-100 rounded-2xl" />
-          <div className="h-[120px] md:h-[150px] bg-slate-100 rounded-2xl" />
-          <div className="col-span-2 md:col-span-1 h-[120px] md:h-[150px] bg-slate-100 rounded-2xl" />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div id="hero" data-section className="w-full max-w-[1400px] mx-auto px-4 md:px-8 py-6 font-sans relative scroll-mt-20">
 

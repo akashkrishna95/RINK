@@ -31,10 +31,8 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
     ? institutions
     : (initialInstitutions || []);
 
-  const [isMounted, setIsMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    setIsMounted(true);
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -132,102 +130,11 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
 
   const visibleLogos = showMore ? institutionLogos : institutionLogos.slice(0, 15);
 
-  if (!isMounted) {
-    return (
-      <div 
-        id="institutions"
-        data-section
-        className="w-full py-8 md:py-16 px-4 md:px-8 bg-[#eff9ff] min-h-screen font-sans relative overflow-hidden animate-pulse"
-        style={{
-          contentVisibility: 'auto',
-          containIntrinsicSize: '800px',
-        }}
-      >
-        <div className="max-w-[1400px] mx-auto">
-          {/* Mobile Title Skeleton */}
-          <div className="lg:hidden items-center gap-3 mb-6 px-2 flex">
-            <div className="h-10 bg-slate-300 rounded-lg w-48" />
-            <div className="h-10 bg-slate-300 rounded-full w-10" />
-          </div>
-
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 lg:items-stretch">
-            {/* Left Column: Interactive Map Card Skeleton */}
-            <div className="order-2 lg:order-2 lg:w-[35%] xl:w-[40%] flex flex-col justify-stretch h-[450px] lg:h-auto">
-              <div className="relative w-full h-full flex-1 bg-white shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-3xl overflow-hidden ring-1 ring-black/5 p-6 flex items-center justify-center min-h-[450px]">
-                {/* Stylized Node Map placeholder to look exactly like the interactive map */}
-                <div className="relative w-full h-full max-w-[200px] flex flex-col justify-between py-6">
-                  {[...Array(8)].map((_, i) => (
-                    <div 
-                      key={i} 
-                      className="flex items-center gap-3"
-                      style={{ transform: `translateX(${Math.sin(i * 1.2) * 20}px)` }}
-                    >
-                      <div className="w-5 h-5 rounded-full bg-[#1b60bb]/10 flex items-center justify-center">
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#1b60bb]/20" />
-                      </div>
-                      <div className="h-3 bg-slate-200 rounded w-16" />
-                    </div>
-                  ))}
-                  {/* Dashed connecting line */}
-                  <div className="absolute top-10 bottom-10 left-[10px] w-0.5 border-l border-dashed border-[#1b60bb]/10 z-0" />
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Institutions List Card Skeleton */}
-            <div className="order-3 lg:order-1 flex-1 flex flex-col justify-between">
-              <div className="bg-white rounded-3xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.06)] border border-slate-100 flex-1 flex flex-col">
-                <div className="h-6 bg-[#1b60bb]/10 rounded w-1/3 mb-1" />
-                <div className="h-3 bg-slate-100 rounded w-1/4 mb-6" />
-
-                {/* Simulated search bar */}
-                <div className="h-10 bg-slate-50 border border-slate-100 rounded-xl w-full mb-6" />
-
-                {/* List of Districts and Institutions */}
-                <div className="space-y-6 flex-1">
-                  {[1, 2, 3].map((districtIndex) => (
-                    <div key={districtIndex} className="space-y-3">
-                      {/* District Header */}
-                      <div className="flex items-center justify-between border-b border-[#daf1ff] pb-2">
-                        <div className="flex items-center gap-2 w-1/2">
-                          <div className="w-3.5 h-3.5 bg-slate-200 rounded" />
-                          <div className="h-5 bg-slate-200 rounded w-2/3" />
-                        </div>
-                        <div className="h-5 bg-[#daf1ff] rounded w-6" />
-                      </div>
-
-                      {/* District Institutions list */}
-                      <div className="pl-4 space-y-2">
-                        {[1, 2].map((instIndex) => (
-                          <div key={instIndex} className="flex items-center justify-between p-3 rounded-xl border border-slate-100">
-                            <div className="flex-1 pr-3 space-y-2">
-                              <div className="h-4 bg-slate-200 rounded w-5/6" />
-                              <div className="h-3 bg-slate-100 rounded w-1/3" />
-                            </div>
-                            <div className="h-10 w-10 rounded-lg bg-slate-100" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div 
       id="institutions"
       data-section
       className="w-full py-8 md:py-16 px-4 md:px-8 bg-[#eff9ff] min-h-screen font-sans relative overflow-hidden"
-      style={{
-        contentVisibility: 'auto',
-        containIntrinsicSize: '800px',
-      }}
     >
       <div className="max-w-[1400px] mx-auto">
 

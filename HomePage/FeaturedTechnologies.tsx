@@ -65,7 +65,6 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
   const isInteracting = useRef(false);
   const isVisible = useRef(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
   
   // Drag-to-scroll states for desktop swiping
   const [isDragging, setIsDragging] = useState(false);
@@ -81,8 +80,6 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
   });
 
   useEffect(() => {
-    setIsMounted(true);
-
     if (initialTechnologies.length > 0) return; // Skip fetch if initialized from props
 
     async function fetchTechs() {
@@ -154,7 +151,6 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
 
   // Monitor element intersection with viewport to pause when offscreen
   useEffect(() => {
-    if (!isMounted) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -170,7 +166,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
     return () => {
       observer.disconnect();
     };
-  }, [isMounted]);
+  }, []);
 
   // Handler for pausing the entire carousel
   const handleInteractionStart = useCallback(() => {
@@ -226,7 +222,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
 
   // Infinite Auto-Scroll Logic (Moves Right to Left automatically)
   useEffect(() => {
-    if (!isMounted || extendedTechnologies.length === 0) return;
+    if (extendedTechnologies.length === 0) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -301,44 +297,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [isMounted, extendedTechnologies.length]);
-
-  if (!isMounted) {
-    return (
-      <div id="technologies" data-section className="w-full relative">
-        <div 
-          className="bg-gradient-to-b from-[#36a8fb] via-[#1b60bb] to-[#153156] relative pt-[140px] md:pt-[180px] pb-[100px] md:pb-[140px] overflow-hidden flex flex-col justify-center"
-          style={{ 
-            border: 'none', 
-            borderWidth: 0, 
-            boxShadow: 'none',
-            contentVisibility: 'auto',
-            containIntrinsicSize: '600px'
-          }}
-        >
-          {/* Top Inverted Curve Mask with Title */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[140px] md:h-[180px] bg-[#eff9ff] rounded-b-[3rem] md:rounded-b-[4rem] z-10 w-full flex items-center justify-center pt-4"
-            style={{ border: 'none', borderWidth: 0, boxShadow: 'none', top: '-2px' }}
-          >
-            <h2 className="font-helios font-medium text-4xl sm:text-5xl md:text-6xl text-[#1b60bb] tracking-wide px-4 text-center leading-tight">
-              Explore Technologies
-            </h2>
-          </div>
-          {/* Carousel Skeleton */}
-          <div className="w-full relative z-20">
-            <div className="flex gap-4 md:gap-6 overflow-x-auto pb-16 pt-16 md:pt-20 px-[10vw] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex-shrink-0 w-[240px] xs:w-[260px] sm:w-[280px] md:w-[320px] h-[360px] sm:h-[380px] md:h-[420px]">
-                  <TechnologyCardSkeleton />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  }, [extendedTechnologies.length]);
 
   return (
     <div id="technologies" data-section className="w-full relative">
@@ -350,8 +309,6 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
           border: 'none', 
           borderWidth: 0, 
           boxShadow: 'none',
-          contentVisibility: 'auto',
-          containIntrinsicSize: '600px'
         }}
       >
 
