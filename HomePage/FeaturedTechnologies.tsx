@@ -119,16 +119,13 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
             }
           });
 
-          const getSortScore = (tech: Technology) => {
-            // Sort Top Tech (featured) first, then Patented ones
-            if (tech.featured) return 2;
-            if (tech.ipStatus === 'Patented') return 1;
-            return 0;
-          };
+          const featured = Array.from(uniqueMap.values()).filter(t => t.featured);
+          const patentedOnly = Array.from(uniqueMap.values()).filter(t => !t.featured && t.ipStatus === 'Patented');
 
-          const processedTechs = Array.from(uniqueMap.values())
-            .sort((a, b) => getSortScore(b) - getSortScore(a))
-            .slice(0, 12); // Limit to top 12 technologies to make page extremely lightweight on mobile
+          const processedTechs = [
+            ...featured.slice(0, 8),
+            ...patentedOnly.slice(0, 8)
+          ];
 
           // Tripled array to facilitate seamless infinite native scrolling
           setExtendedTechnologies([
@@ -231,6 +228,18 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
     };
     window.addEventListener('resize', handleResize);
 
+    // Active scroll listener for seamless loop even during manual mobile swiping / drag interactions
+    const handleScroll = () => {
+      const oneThird = scrollWidth / 3;
+      const sLeft = container.scrollLeft;
+      if (sLeft >= oneThird * 2) {
+        container.scrollLeft = sLeft - oneThird;
+      } else if (sLeft <= 0) {
+        container.scrollLeft = sLeft + oneThird;
+      }
+    };
+    container.addEventListener('scroll', handleScroll);
+
     // Start user in the middle section for infinite drag in both directions
     container.scrollLeft = scrollWidth / 3;
 
@@ -246,10 +255,9 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
       const clampedDelta = Math.min(deltaTime, 32); 
 
       if (!isInteracting.current && isVisible.current) {
-        const speed = 0.10; // pixels per millisecond (speed set to 0.10)
-        currentScroll += speed * clampedDelta;
+        const speed = 0.10; // pixels per millisecond
+        currentScroll = container.scrollLeft + speed * clampedDelta;
 
-        // Loop back seamlessly using cached calculation
         const oneThird = scrollWidth / 3;
         if (currentScroll >= oneThird * 2) {
           currentScroll -= oneThird;
@@ -258,7 +266,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
         }
         container.scrollLeft = currentScroll;
       } else {
-        // Sync float scroll value with actual DOM scrollLeft when user drags/interacts or offscreen
+        // Sync float scroll value with actual DOM scrollLeft when user drags/interacts
         currentScroll = container.scrollLeft;
       }
       animationId = requestAnimationFrame(scroll);
@@ -269,6 +277,7 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', handleResize);
+      container.removeEventListener('scroll', handleScroll);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }

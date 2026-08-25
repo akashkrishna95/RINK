@@ -46,12 +46,14 @@ export function getFeaturedTechnologies(): Technology[] {
     }
   });
 
-  const getSortScore = (tech: Technology) => {
-    // Sort Top Tech (featured) first, then Patented ones
-    if (tech.featured) return 2;
-    if (tech.ipStatus === 'Patented') return 1;
-    return 0;
-  };
+  const featured = Array.from(uniqueMap.values()).filter(t => t.featured);
+  const patentedOnly = Array.from(uniqueMap.values()).filter(t => !t.featured && t.ipStatus === 'Patented');
 
-  return Array.from(uniqueMap.values()).sort((a, b) => getSortScore(b) - getSortScore(a));
+  // Take top 8 featured and top 8 patented (total 16 items)
+  const processedTechs = [
+    ...featured.slice(0, 8),
+    ...patentedOnly.slice(0, 8)
+  ];
+
+  return processedTechs;
 }
