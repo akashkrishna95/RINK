@@ -101,11 +101,9 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
 
             const isFeatured = isFeaturedTechnology(tech.startup_potential);
             const isPatented = normalizeIPStatus(tech.patent_status) === 'Patented';
-            const hasTrl = tech.trl && tech.trl !== 'Not Specified' && tech.trl.trim() !== '';
-            const hasStartupPotential = tech.startup_potential && tech.startup_potential !== '⚪ Not Specified' && tech.startup_potential.trim() !== '';
 
-            // Show only cards that are patented, have a TRL, have startup potential, or are featured (have badge)
-            if (isPatented || hasTrl || hasStartupPotential || isFeatured) {
+            // Show only cards that are patented or featured
+            if (isFeatured || isPatented) {
               if (!uniqueMap.has(tech.technology_id)) {
                 uniqueMap.set(tech.technology_id, {
                   id: String(tech.technology_id),
@@ -122,12 +120,9 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
           });
 
           const getSortScore = (tech: Technology) => {
-            const hasImage = tech.image && !tech.image.includes('placeholder') && tech.image.trim() !== '';
-            const isFeatured = tech.featured;
-
-            if (hasImage && isFeatured) return 3;
-            if (hasImage) return 2;
-            if (isFeatured) return 1;
+            // Sort Top Tech (featured) first, then Patented ones
+            if (tech.featured) return 2;
+            if (tech.ipStatus === 'Patented') return 1;
             return 0;
           };
 
@@ -225,25 +220,6 @@ export default function FeaturedTechnologies({ initialTechnologies = [] }: Featu
     if (extendedTechnologies.length === 0) return;
     const container = containerRef.current;
     if (!container) return;
-
-    // Detect if we are on a mobile/tablet or touch device to disable auto-scroll reflow loops.
-    // This saves 100% CPU cycles on mobile phones and ensures butter-smooth page scrolling!
-    const isMobileDevice = typeof window !== 'undefined' && (window.innerWidth < 1024 || 'ontouchstart' in window);
-    
-    if (isMobileDevice) {
-      let scrollWidth = container.scrollWidth;
-      container.scrollLeft = scrollWidth / 3;
-
-      const handleResize = () => {
-        if (container) {
-          container.scrollLeft = container.scrollWidth / 3;
-        }
-      };
-      window.addEventListener('resize', handleResize);
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }
 
     // Cache scrollWidth to prevent layouts thrashing reflows inside requestAnimationFrame loop
     let scrollWidth = container.scrollWidth;

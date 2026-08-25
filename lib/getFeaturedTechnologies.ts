@@ -28,10 +28,9 @@ export function getFeaturedTechnologies(): Technology[] {
 
     const isFeatured = isFeaturedTechnology(tech.startup_potential);
     const isPatented = normalizeIPStatus(tech.patent_status) === 'Patented';
-    const hasTrl = tech.trl && tech.trl !== 'Not Specified' && tech.trl.trim() !== '';
-    const hasStartupPotential = tech.startup_potential && tech.startup_potential !== '⚪ Not Specified' && tech.startup_potential.trim() !== '';
 
-    if (isPatented || hasTrl || hasStartupPotential || isFeatured) {
+    // Display only Top Tech (Featured) or Patented technologies in the carousel
+    if (isFeatured || isPatented) {
       if (!uniqueMap.has(tech.technology_id)) {
         uniqueMap.set(tech.technology_id, {
           id: String(tech.technology_id),
@@ -48,12 +47,9 @@ export function getFeaturedTechnologies(): Technology[] {
   });
 
   const getSortScore = (tech: Technology) => {
-    const hasImage = tech.image && !tech.image.includes('placeholder') && tech.image.trim() !== '';
-    const isFeatured = tech.featured;
-
-    if (hasImage && isFeatured) return 3;
-    if (hasImage) return 2;
-    if (isFeatured) return 1;
+    // Sort Top Tech (featured) first, then Patented ones
+    if (tech.featured) return 2;
+    if (tech.ipStatus === 'Patented') return 1;
     return 0;
   };
 

@@ -92,15 +92,24 @@ export default function RootLayout({
             }, true);
           `}
         </Script>
-        {/* Service worker registration for caching images and content */}
-        <Script id="register-sw" strategy="afterInteractive">
+        {/* Cleanup script to unregister all service workers and delete all service worker caches */}
+        <Script id="clear-sw" strategy="beforeInteractive">
           {`
-            if ('serviceWorker' in navigator) {
-              window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                  .then((reg) => console.log('[Service Worker] Registered with scope:', reg.scope))
-                  .catch((err) => console.error('[Service Worker] Registration failed:', err));
-              });
+            if (typeof window !== 'undefined') {
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then((registrations) => {
+                  for (let registration of registrations) {
+                    registration.unregister();
+                  }
+                });
+              }
+              if ('caches' in window) {
+                caches.keys().then((keys) => {
+                  keys.forEach((key) => {
+                    caches.delete(key);
+                  });
+                });
+              }
             }
           `}
         </Script>
