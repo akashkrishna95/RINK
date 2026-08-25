@@ -92,23 +92,34 @@ export default function RootLayout({
             }, true);
           `}
         </Script>
-        {/* Cleanup script to unregister all service workers and delete all service worker caches */}
+        {/* Version checker & cleanup script to unregister all service workers, delete caches, and clear local data when new code is pushed */}
         <Script id="clear-sw" strategy="beforeInteractive">
           {`
             if (typeof window !== 'undefined') {
-              if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then((registrations) => {
-                  for (let registration of registrations) {
-                    registration.unregister();
-                  }
-                });
-              }
-              if ('caches' in window) {
-                caches.keys().then((keys) => {
-                  keys.forEach((key) => {
-                    caches.delete(key);
+              const currentBuildVersion = "20260825_1815";
+              const savedVersion = localStorage.getItem('rink_build_version');
+              
+              if (savedVersion !== currentBuildVersion) {
+                localStorage.clear();
+                sessionStorage.clear();
+                localStorage.setItem('rink_build_version', currentBuildVersion);
+                
+                if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.getRegistrations().then((registrations) => {
+                    for (let registration of registrations) {
+                      registration.unregister();
+                    }
                   });
-                });
+                }
+                
+                if ('caches' in window) {
+                  caches.keys().then((keys) => {
+                    keys.forEach((key) => {
+                      caches.delete(key);
+                    });
+                  });
+                }
+                console.log('[Version Manager] New version detected (' + currentBuildVersion + '). Site data and caches reset.');
               }
             }
           `}
