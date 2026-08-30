@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, ExternalLink, Image as ImageIcon, X, ChevronDown, Send, ArrowUpRight, ArrowRight } from 'lucide-react';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { getProxiedImageUrl } from '@/lib/utils';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
@@ -443,6 +444,11 @@ export default function FundsClient({ initialFunds }: { initialFunds: Fund[] }) 
           </motion.div>
         </div>
       </section>
+
+      {/* Mini Breadcrumb Navigation */}
+      <div className="pt-4 pb-0">
+        <Breadcrumbs />
+      </div>
 
       {/* KSUM FUNDS Section */}
       <section className="pt-12 pb-6 sm:pt-20 px-4 md:px-8 max-w-[1400px] mx-auto">

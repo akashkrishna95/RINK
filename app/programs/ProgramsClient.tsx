@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, ExternalLink, Image as ImageIcon, X, Clock, ChevronDown, Loader2, ArrowUpRight, Send } from 'lucide-react';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { getProxiedImageUrl } from '@/lib/utils';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
@@ -444,6 +445,11 @@ export default function ProgramsClient({ initialPrograms }: { initialPrograms: P
           </motion.div>
         </div>
       </section>
+
+      {/* Mini Breadcrumb Navigation */}
+      <div className="pt-4 pb-0">
+        <Breadcrumbs />
+      </div>
 
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 pt-10 pb-0 flex justify-end">
         <div className="relative">

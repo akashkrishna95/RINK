@@ -5,13 +5,18 @@ import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail } from 'lucide-react';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-[#F4F7FB] relative overflow-hidden flex flex-col justify-between">
       <Navbar />
 
-      <section className="pt-32 pb-24 px-4 md:px-8 max-w-[1400px] mx-auto w-full flex-grow">
+      <div className="pt-24 pb-0">
+        <Breadcrumbs />
+      </div>
+
+      <section className="pt-8 pb-24 px-4 md:px-8 max-w-[1400px] mx-auto w-full flex-grow">
         <div className="mb-16 text-center max-w-2xl mx-auto">
           <h1
             className="font-helios text-5xl md:text-6xl lg:text-7xl font-bold text-[#1b60bb] mb-6"

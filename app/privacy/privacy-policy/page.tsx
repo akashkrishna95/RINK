@@ -5,13 +5,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Footer from '@/HomePage/Footer';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { ShieldCheck, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function PrivacyPolicyPage() {
   return (
     <main className="min-h-screen bg-[#F4F7FB] relative overflow-hidden flex flex-col justify-between">
-      <section className="pt-16 pb-24 px-4 md:px-8 max-w-[1400px] mx-auto w-full flex-grow flex flex-col gap-10">
+      <div className="pt-8 pb-0">
+        <Breadcrumbs />
+      </div>
+      <section className="pt-6 pb-24 px-4 md:px-8 max-w-[1400px] mx-auto w-full flex-grow flex flex-col gap-10">
         {/* Logos and Page Header Card */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

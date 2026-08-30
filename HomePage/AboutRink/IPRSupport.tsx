@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle2, FileBadge, Search, Users } from 'lucide-react';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function IPRSupport() {
   return (
@@ -35,6 +36,11 @@ export default function IPRSupport() {
           </motion.div>
         </div>
       </section>
+
+      {/* Mini Breadcrumb Navigation */}
+      <div className="pt-4 pb-0">
+        <Breadcrumbs />
+      </div>
 
       {/* Main Content Section */}
       <section className="py-20 px-4 md:px-8 max-w-[1200px] mx-auto">

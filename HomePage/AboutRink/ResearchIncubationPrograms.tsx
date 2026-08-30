@@ -7,6 +7,7 @@ import { motion, useInView } from 'framer-motion';
 import { ArrowRight, CheckCircle2, UserCheck, Search, Lightbulb, FileText, TrendingUp, MapPin, Award, BookOpen, Rocket, Users } from 'lucide-react';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { getProxiedImageUrl } from '@/lib/utils';
 import { useRealTimeSync } from '@/hooks/useRealTimeSync';
 import { pb, mapPbStartup, Startup } from '@/lib/pocketbase';
@@ -116,6 +117,11 @@ export default function ResearchIncubationPrograms({ initialStartups }: { initia
           </motion.p>
         </div>
       </section>
+
+      {/* Mini Breadcrumb Navigation */}
+      <div className="pt-4 pb-0">
+        <Breadcrumbs />
+      </div>
 
       {/* Researchpreneurship Validation Program */}
       <section className="py-12 sm:py-20 px-4 md:px-8 max-w-[1400px] mx-auto">

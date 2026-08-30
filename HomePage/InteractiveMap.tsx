@@ -135,7 +135,7 @@ function ResolvedAddress({ lat, lng, fallback, enabled }: { lat: number; lng: nu
     return () => { cancelled = true; };
   }, [lat, lng, fallback, enabled]);
 
-  if (!address) return <span className="text-slate-400 italic">Resolving address…</span>;
+  if (!address) return <span className="text-slate-400 italic">Loading address…</span>;
   return <>{address}</>;
 }
 
@@ -203,6 +203,31 @@ export default function InteractiveMap({
         .custom-popup .leaflet-popup-close-button:hover {
           color: #1b60bb !important;
         }
+        .leaflet-top.leaflet-right {
+          right: 16px !important;
+          top: 16px !important;
+        }
+        .leaflet-top.leaflet-right .leaflet-control-zoom {
+          margin-top: 46px !important;
+          margin-right: 0 !important;
+          width: 36px !important;
+          border-radius: 0.75rem !important;
+          overflow: hidden !important;
+          border: 1px solid rgba(27, 96, 187, 0.15) !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+        }
+        .leaflet-control-zoom a {
+          width: 36px !important;
+          height: 32px !important;
+          line-height: 32px !important;
+          background-color: rgba(255, 255, 255, 0.95) !important;
+          color: #1b60bb !important;
+          transition: all 0.2s ease;
+        }
+        .leaflet-control-zoom a:hover {
+          background-color: #eff9ff !important;
+          color: #153156 !important;
+        }
       `}</style>
 
       {/* Floating Layer Toggle */}
@@ -240,6 +265,7 @@ export default function InteractiveMap({
         doubleClickZoom={false}
         zoomControl={false}
         attributionControl={false}
+        preferCanvas={true}
         className="w-full h-full overflow-hidden"
         style={{ borderRadius: isExpanded ? '0' : '1.5rem' }}
       >
@@ -249,30 +275,33 @@ export default function InteractiveMap({
           url={
             mapType === 'satellite'
               ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-              : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+              : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           }
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {/* District boundaries (thin outlines) */}
+        {/* District boundaries (sharp outlines matching OpenStreetMap exactly) */}
         {districtsGeoJSON && (
           <GeoJSON
             key={`kerala-districts-${mapType}`}
             data={districtsGeoJSON}
             style={{
               color: mapType === 'satellite' ? '#5cc4fe' : '#1b60bb',
-              weight: 0.8,
+              weight: 1.2,
+              opacity: 0.8,
               fillColor: mapType === 'satellite' ? '#bde7ff' : '#90daff',
-              fillOpacity: mapType === 'satellite' ? 0.02 : 0.05,
+              fillOpacity: mapType === 'satellite' ? 0.02 : 0.04,
             }}
           />
         )}
-        {/* Outer State boundary (thick border) */}
+        {/* Outer State boundary */}
         {stateGeoJSON && (
           <GeoJSON
             key={`kerala-state-border-${mapType}`}
             data={stateGeoJSON}
             style={{
-              color: mapType === 'satellite' ? '#bde7ff' : '#1b60bb',
-              weight: 2.5,
+              color: mapType === 'satellite' ? '#5cc4fe' : '#1b60bb',
+              weight: 2,
+              opacity: 0.9,
               fillOpacity: 0,
             }}
           />

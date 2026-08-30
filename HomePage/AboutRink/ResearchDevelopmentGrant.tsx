@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Coins, Settings, Microscope, Rocket } from 'lucide-react';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function ResearchDevelopmentGrant() {
   return (
@@ -36,6 +37,11 @@ export default function ResearchDevelopmentGrant() {
           </motion.div>
         </div>
       </section>
+
+      {/* Mini Breadcrumb Navigation */}
+      <div className="pt-4 pb-0">
+        <Breadcrumbs />
+      </div>
 
       {/* Details Section */}
       <section className="py-20 px-4 md:px-8 max-w-[1200px] mx-auto">

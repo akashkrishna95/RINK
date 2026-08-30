@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Play, CheckCircle2, Users, Lightbulb, TrendingUp } from 'lucide-react';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import PastVisitedInstitutions from '../PastVisitedInstitutions';
 import { useRealTimeSync } from '@/hooks/useRealTimeSync';
 import { pb, mapPbDemoDay, DemoDayVideo, PastVisitedInstitution } from '@/lib/pocketbase';
@@ -65,6 +66,11 @@ export default function DemoDayExposureVisits({
           </motion.div>
         </div>
       </section>
+
+      {/* Mini Breadcrumb Navigation */}
+      <div className="pt-4 pb-0">
+        <Breadcrumbs />
+      </div>
 
       {/* What is Demo Day Section */}
       <section className="py-20 px-4 md:px-8 max-w-[1200px] mx-auto">

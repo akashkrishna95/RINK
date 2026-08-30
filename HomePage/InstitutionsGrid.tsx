@@ -62,6 +62,51 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
   };
 
   useEffect(() => {
+    if (isMapExpanded) {
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const originalBodyOverscroll = document.body.style.overscrollBehavior;
+      const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior;
+      const originalPaddingRight = document.body.style.paddingRight;
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overscrollBehavior = 'contain';
+      document.documentElement.style.overscrollBehavior = 'contain';
+
+      if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = `${scrollBarWidth}px`;
+      }
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          setIsMapExpanded(false);
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+
+      const preventTouchScroll = (e: TouchEvent) => {
+        const target = e.target as HTMLElement | null;
+        if (!target?.closest('.overflow-y-auto')) {
+          if (e.cancelable) e.preventDefault();
+        }
+      };
+      window.addEventListener('touchmove', preventTouchScroll, { passive: false });
+
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+        document.body.style.overscrollBehavior = originalBodyOverscroll;
+        document.documentElement.style.overscrollBehavior = originalHtmlOverscroll;
+        document.body.style.paddingRight = originalPaddingRight;
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('touchmove', preventTouchScroll);
+      };
+    }
+  }, [isMapExpanded]);
+
+  useEffect(() => {
     updateTooltipPosition();
   }, [activeInstitution]);
 
@@ -202,7 +247,8 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[999] flex items-center justify-center bg-[#153156]/60 backdrop-blur-md p-4 md:p-8"
+                onWheel={(e) => e.stopPropagation()}
+                className="fixed inset-0 z-[99999] flex items-center justify-center bg-[#153156]/60 backdrop-blur-md p-4 md:p-8 overscroll-contain"
               >
                 <div className="relative w-full h-full max-w-7xl bg-[#eff9ff] rounded-3xl overflow-hidden shadow-2xl flex flex-col-reverse md:flex-row ring-1 ring-[#1b60bb]/15">
                   {/* Left Side Panel - Institutions info */}
@@ -409,9 +455,10 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                     <div className="absolute top-4 right-4 z-50">
                       <button
                         onClick={() => setIsMapExpanded(false)}
-                        className="bg-white/80 hover:bg-white text-[#1b60bb] p-2 rounded-full backdrop-blur shadow-sm border border-[#daf1ff] transition-all hover:scale-105"
+                        className="w-9 h-9 flex items-center justify-center bg-white/95 hover:bg-white text-[#1b60bb] rounded-full backdrop-blur shadow-md border border-[#daf1ff] transition-all hover:scale-105 cursor-pointer"
+                        title="Close map"
                       >
-                        <X size={24} />
+                        <X size={20} />
                       </button>
                     </div>
                     <InteractiveMap
