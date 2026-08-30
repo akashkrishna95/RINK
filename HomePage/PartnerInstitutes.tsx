@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { Database, RefreshCw } from 'lucide-react';
 
 import { getProxiedImageUrl } from '@/lib/utils';
 import { useRealTimeSync } from '@/hooks/useRealTimeSync';
@@ -14,7 +15,6 @@ interface Institute {
   name: string;
   logoUrl: string;
 }
-
 
 export default function PartnerInstitutes({ initialInstitutions }: { initialInstitutions?: Institution[] }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -42,7 +42,6 @@ export default function PartnerInstitutes({ initialInstitutions }: { initialInst
 
   const hasMore = activeInstitutes.length > INITIAL_VISIBLE_COUNT;
 
-
   return (
     <section 
       id="partners"
@@ -63,49 +62,72 @@ export default function PartnerInstitutes({ initialInstitutions }: { initialInst
           </h2>
         </motion.div>
 
-        {/* Logo Grid - 3 columns on mobile, up to 6 on desktop */}
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6">
-          <AnimatePresence mode="popLayout">
-            {visibleInstitutes.map((institute, index) => (
-              <motion.div
-                key={institute.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{
-                  duration: 0.3,
-                  delay: (index % INITIAL_VISIBLE_COUNT) * 0.02
-                }}
-                className="flex items-center justify-center bg-white rounded-xl p-3 md:p-6 aspect-[4/3] shadow-[0_4px_20px_-4px_rgba(27,96,187,0.08)]"
-                title={institute.name}
-              >
-                <div className="relative w-full h-full flex items-center justify-center">
-                  <Image
-                    src={getProxiedImageUrl(institute.logoUrl)}
-                    alt={institute.name}
-                    fill
-                    className="object-contain"
-                    sizes="(max-w-768px) 33vw, (max-w-1200px) 25vw, 16vw"
-                  />
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-
-        {/* See More / See Less */}
-        {hasMore && (
-          <div className="mt-10 flex justify-start">
+        {activeInstitutes.length === 0 ? (
+          <div className="w-full flex flex-col items-center justify-center py-12 px-4 text-center bg-slate-50/60 rounded-3xl border border-slate-100 shadow-xs">
+            <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1b60bb] mb-3 shadow-xs">
+              <Database size={24} className="animate-pulse" />
+            </div>
+            <h4 className="font-helios text-base sm:text-lg font-bold text-slate-800 mb-1">
+              Database Connection Unavailable
+            </h4>
+            <p className="text-slate-500 font-poppins text-xs sm:text-sm max-w-sm mb-5 leading-relaxed">
+              Unable to connect to the database server to fetch partnered institutes.
+            </p>
             <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="font-medium text-[16px] text-[#1b60bb] transition-opacity duration-300 flex items-center gap-2 active:opacity-70"
+              onClick={() => window.location.reload()}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1b60bb] hover:bg-[#153156] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all duration-200 active:scale-95 cursor-pointer"
             >
-              {isExpanded ? 'See Less' : 'See More'}
-              <span className="text-xl leading-none relative top-[1px]">
-                {isExpanded ? '↑' : '↓'}
-              </span>
+              <RefreshCw size={13} />
+              <span>Retry Connection</span>
             </button>
           </div>
+        ) : (
+          <>
+            {/* Logo Grid - 3 columns on mobile, up to 6 on desktop */}
+            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6">
+              <AnimatePresence mode="popLayout">
+                {visibleInstitutes.map((institute, index) => (
+                  <motion.div
+                    key={institute.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{
+                      duration: 0.3,
+                      delay: (index % INITIAL_VISIBLE_COUNT) * 0.02
+                    }}
+                    className="flex items-center justify-center bg-white rounded-xl p-3 md:p-6 aspect-[4/3] shadow-[0_4px_20px_-4px_rgba(27,96,187,0.08)]"
+                    title={institute.name}
+                  >
+                    <div className="relative w-full h-full flex items-center justify-center">
+                      <Image
+                        src={getProxiedImageUrl(institute.logoUrl)}
+                        alt={institute.name}
+                        fill
+                        className="object-contain"
+                        sizes="(max-w-768px) 33vw, (max-w-1200px) 25vw, 16vw"
+                      />
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+
+            {/* See More / See Less */}
+            {hasMore && (
+              <div className="mt-10 flex justify-start">
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="font-medium text-[16px] text-[#1b60bb] transition-opacity duration-300 flex items-center gap-2 active:opacity-70"
+                >
+                  {isExpanded ? 'See Less' : 'See More'}
+                  <span className="text-xl leading-none relative top-[1px]">
+                    {isExpanded ? '↑' : '↓'}
+                  </span>
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>

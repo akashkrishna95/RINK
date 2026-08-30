@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, ArrowDownRight, X, Maximize2 } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, X, Maximize2, Database, RefreshCw } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -351,6 +351,25 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
                           </div>
                         );
                       })()
+                    ) : institutionLogos.length === 0 ? (
+                      <div className="flex-1 flex flex-col items-center justify-center text-center p-6 my-auto">
+                        <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1b60bb] mb-3 shadow-xs">
+                          <Database size={22} className="animate-pulse" />
+                        </div>
+                        <h4 className="font-helios text-sm font-bold text-slate-800 mb-1">
+                          Database Unavailable
+                        </h4>
+                        <p className="text-slate-500 font-poppins text-xs mb-4">
+                          Unable to retrieve records from the database.
+                        </p>
+                        <button
+                          onClick={() => window.location.reload()}
+                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#1b60bb] hover:bg-[#153156] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                        >
+                          <RefreshCw size={12} />
+                          <span>Retry</span>
+                        </button>
+                      </div>
                     ) : (
                       // List View
                       <div className="mt-6 flex-1 space-y-6">
@@ -513,92 +532,113 @@ export default function InstitutionsGrid({ initialInstitutions }: InstitutionsGr
             >
               {/* Smooth Expansion Container */}
               <div className="flex gap-4 items-stretch relative overflow-visible py-2">
-                <motion.div
-                  layout
-                  ref={gridRef}
-                  onScroll={handleGridScroll}
-                  className={`relative flex-1 custom-scrollbar-grid ${showMore ? 'max-h-[260px] md:max-h-[340px] overflow-y-auto pr-3' : 'overflow-visible'}`}
-                >
+                {institutionLogos.length === 0 ? (
+                  <div className="w-full flex flex-col items-center justify-center py-12 px-4 text-center">
+                    <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#1b60bb] mb-3 shadow-xs">
+                      <Database size={24} className="animate-pulse" />
+                    </div>
+                    <h4 className="font-helios text-base sm:text-lg font-bold text-slate-800 mb-1">
+                      Database Connection Unavailable
+                    </h4>
+                    <p className="text-slate-500 font-poppins text-xs sm:text-sm max-w-sm mb-5 leading-relaxed">
+                      Unable to connect to the database server to fetch institution records.
+                    </p>
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1b60bb] hover:bg-[#153156] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all duration-200 active:scale-95 cursor-pointer"
+                    >
+                      <RefreshCw size={13} />
+                      <span>Retry Connection</span>
+                    </button>
+                  </div>
+                ) : (
                   <motion.div
                     layout
-                    className={`grid grid-cols-4 md:grid-cols-5 gap-y-6 md:gap-y-10 gap-x-2 md:gap-x-4 ${!showMore ? 'pb-12 md:pb-16' : 'pb-2'}`}
+                    ref={gridRef}
+                    onScroll={handleGridScroll}
+                    className={`relative flex-1 custom-scrollbar-grid ${showMore ? 'max-h-[260px] md:max-h-[340px] overflow-y-auto pr-3' : 'overflow-visible'}`}
                   >
-                    <AnimatePresence>
-                      {visibleLogos.map((institution, index) => {
-                        const isActiveLogo = activeInstitution === institution.id;
-                        const isActiveDistrict = activeDistrict === institution.district;
-                        const isDimmed = activeDistrict !== null && !isActiveDistrict && !isActiveLogo;
+                    <motion.div
+                      layout
+                      className={`grid grid-cols-4 md:grid-cols-5 gap-y-6 md:gap-y-10 gap-x-2 md:gap-x-4 ${!showMore ? 'pb-12 md:pb-16' : 'pb-2'}`}
+                    >
+                      <AnimatePresence>
+                        {visibleLogos.map((institution, index) => {
+                          const isActiveLogo = activeInstitution === institution.id;
+                          const isActiveDistrict = activeDistrict === institution.district;
+                          const isDimmed = activeDistrict !== null && !isActiveDistrict && !isActiveLogo;
 
-                        return (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            key={institution.id}
-                            id={`logo-item-${institution.id}`}
-                            onMouseEnter={() => {
-                              if (isLocked === null) {
-                                handleLogoHover(institution.id, institution.district);
-                              }
-                            }}
-                            onMouseLeave={() => {
-                              if (isLocked !== institution.id) {
-                                resetInteractions();
-                              }
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (isLocked === institution.id) {
-                                setIsLocked(null);
-                                resetInteractions();
-                              } else {
-                                setIsLocked(institution.id);
-                                handleLogoHover(institution.id, institution.district);
-                              }
-                            }}
-                            onDoubleClick={(e) => {
-                              e.stopPropagation();
-                              if (institution.website) {
-                                const url = institution.website.startsWith('http')
-                                  ? institution.website
-                                  : `https://${institution.website}`;
-                                window.open(url, '_blank');
-                              }
-                            }}
-                            animate={{
-                              scale: isActiveDistrict || isActiveLogo ? 1.05 : 1,
-                              opacity: isDimmed ? 0.3 : 1,
-                              zIndex: isActiveLogo ? 100 : 1, // Boosted z-index
-                            }}
-                            exit={{ opacity: 0, scale: 0.8 }}
-                            transition={{ duration: 0.2 }}
-                            className="relative group flex items-center justify-center cursor-pointer logo-grid-item"
-                          >
-                            {/* Logo Image / Placeholder */}
-                            <div className="h-12 w-12 md:h-16 md:w-16 rounded-full bg-white border border-slate-100 flex items-center justify-center p-1 shadow-sm relative overflow-hidden">
-                              {institution.logoUrl ? (
-                                <Image
-                                  src={getProxiedImageUrl(institution.logoUrl)}
-                                  alt={institution.name}
-                                  fill
-                                  className="object-contain p-1"
-                                  sizes="(max-w-768px) 48px, 64px"
-                                />
-                              ) : (
-                                <div className="text-center text-slate-400 text-[9px] md:text-[10px] font-medium leading-tight">
-                                  Logo<br />{institution.id}
-                                </div>
-                              )}
-                            </div>
-                          </motion.div>
-                        );
-                      })}
-                    </AnimatePresence>
+                          return (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              key={institution.id}
+                              id={`logo-item-${institution.id}`}
+                              onMouseEnter={() => {
+                                if (isLocked === null) {
+                                  handleLogoHover(institution.id, institution.district);
+                                }
+                              }}
+                              onMouseLeave={() => {
+                                if (isLocked !== institution.id) {
+                                  resetInteractions();
+                                }
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (isLocked === institution.id) {
+                                  setIsLocked(null);
+                                  resetInteractions();
+                                } else {
+                                  setIsLocked(institution.id);
+                                  handleLogoHover(institution.id, institution.district);
+                                }
+                              }}
+                              onDoubleClick={(e) => {
+                                e.stopPropagation();
+                                if (institution.website) {
+                                  const url = institution.website.startsWith('http')
+                                    ? institution.website
+                                    : `https://${institution.website}`;
+                                  window.open(url, '_blank');
+                                }
+                              }}
+                              animate={{
+                                scale: isActiveDistrict || isActiveLogo ? 1.05 : 1,
+                                opacity: isDimmed ? 0.3 : 1,
+                                zIndex: isActiveLogo ? 100 : 1, // Boosted z-index
+                              }}
+                              exit={{ opacity: 0, scale: 0.8 }}
+                              transition={{ duration: 0.2 }}
+                              className="relative group flex items-center justify-center cursor-pointer logo-grid-item"
+                            >
+                              {/* Logo Image / Placeholder */}
+                              <div className="h-12 w-12 md:h-16 md:w-16 rounded-full bg-white border border-slate-100 flex items-center justify-center p-1 shadow-sm relative overflow-hidden">
+                                {institution.logoUrl ? (
+                                  <Image
+                                    src={getProxiedImageUrl(institution.logoUrl)}
+                                    alt={institution.name}
+                                    fill
+                                    className="object-contain p-1"
+                                    sizes="(max-width: 768px) 48px, 64px"
+                                  />
+                                ) : (
+                                  <div className="text-center text-slate-400 text-[9px] md:text-[10px] font-medium leading-tight">
+                                    Logo<br />{institution.id}
+                                  </div>
+                                )}
+                              </div>
+                            </motion.div>
+                          );
+                        })}
+                      </AnimatePresence>
+                    </motion.div>
                   </motion.div>
-                </motion.div>
+                )}
 
               </div>
 
               {/* Show More Gradient Overlay */}
-              {!showMore && (
+              {!showMore && institutionLogos.length > 0 && (
                 <div className="absolute bottom-0 left-0 w-full h-24 md:h-28 bg-gradient-to-t from-white via-white/95 to-transparent rounded-b-[24px] flex items-end justify-between p-5 md:p-8 pointer-events-none z-10">
                   <button
                     onClick={() => setShowMore(true)}

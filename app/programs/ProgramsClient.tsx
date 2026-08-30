@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, ExternalLink, Image as ImageIcon, X, Clock, ChevronDown, Loader2, ArrowUpRight, Send } from 'lucide-react';
+import { Calendar, MapPin, ExternalLink, Image as ImageIcon, X, Clock, ChevronDown, Loader2, ArrowUpRight, Send, Database, RefreshCw, Home } from 'lucide-react';
+import Link from 'next/link';
 import Navbar from '@/HomePage/Navbar';
 import Footer from '@/HomePage/Footer';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -426,6 +427,60 @@ export default function ProgramsClient({ initialPrograms }: { initialPrograms: P
   const showUpcoming = filterStatus === 'all' || filterStatus === 'upcoming';
   const showPast = filterStatus === 'all' || filterStatus === 'past';
 
+  if (programs.length === 0) {
+    return (
+      <main className="min-h-screen bg-[#F4F7FB] flex flex-col justify-between overflow-x-hidden text-slate-800">
+        <Navbar />
+
+        <section className="flex-grow flex items-center justify-center pt-32 pb-20 px-4 md:px-8">
+          <div className="max-w-xl w-full mx-auto text-center flex flex-col items-center">
+            
+            {/* Status Label & Code */}
+            <div className="relative mb-4">
+              <p className="text-[#1b60bb] text-xs sm:text-sm font-semibold tracking-widest uppercase mb-2 font-poppins">
+                500 - Server / Database Error
+              </p>
+              
+              <h1 className="font-helios text-7xl sm:text-8xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-br from-[#1b60bb] via-[#153156] to-[#0099ff] tracking-tight drop-shadow-sm select-none leading-none">
+                500
+              </h1>
+            </div>
+
+            <h2 className="font-helios text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-3 leading-snug">
+              Database Connection Error
+            </h2>
+
+            <p className="text-slate-500 font-poppins text-xs sm:text-sm md:text-base max-w-md mx-auto mb-8 leading-relaxed">
+              We encountered an unexpected issue while fetching records from the database or server. Please try again.
+            </p>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md justify-center mb-6">
+              <button
+                onClick={() => window.location.reload()}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[#1b60bb] hover:bg-[#153156] text-white text-xs sm:text-sm font-semibold shadow-[0_4px_14px_rgba(27,96,187,0.3)] hover:shadow-[0_6px_20px_rgba(27,96,187,0.4)] transition-all duration-200 active:scale-95 cursor-pointer"
+              >
+                <RefreshCw size={15} />
+                <span>Retry Request</span>
+              </button>
+
+              <Link
+                href="/"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white hover:bg-slate-50 text-slate-700 hover:text-[#1b60bb] border border-slate-200 text-xs sm:text-sm font-medium shadow-xs transition-all duration-200 active:scale-95 cursor-pointer"
+              >
+                <Home size={15} />
+                <span>Return to Homepage</span>
+              </Link>
+            </div>
+
+          </div>
+        </section>
+
+        <Footer />
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-[#F4F7FB] relative w-full overflow-x-hidden">
       <Navbar />
@@ -485,34 +540,34 @@ export default function ProgramsClient({ initialPrograms }: { initialPrograms: P
       </div>
 
       <div className="w-full">
-        {showCurrent && (
-          <ProgramCarouselSection
-            title="Current Programs"
-            programs={currentPrograms}
-            onCardClick={handleCardClick}
-            emptyLabel="No current programs at the moment."
-            onShare={handleShare}
-          />
-        )}
-        {showUpcoming && (
-          <ProgramCarouselSection
-            title="Upcoming Programs"
-            programs={upcomingPrograms}
-            onCardClick={handleCardClick}
-            emptyLabel="No upcoming programs right now. Check back soon!"
-            onShare={handleShare}
-          />
-        )}
-        {showPast && (
-          <ProgramCarouselSection
-            title="Past Programs"
-            programs={pastPrograms}
-            onCardClick={handleCardClick}
-            emptyLabel="No past programs yet."
-            onShare={handleShare}
-          />
-        )}
-      </div>
+          {showCurrent && (
+            <ProgramCarouselSection
+              title="Current Programs"
+              programs={currentPrograms}
+              onCardClick={handleCardClick}
+              emptyLabel="No current programs at the moment."
+              onShare={handleShare}
+            />
+          )}
+          {showUpcoming && (
+            <ProgramCarouselSection
+              title="Upcoming Programs"
+              programs={upcomingPrograms}
+              onCardClick={handleCardClick}
+              emptyLabel="No upcoming programs right now. Check back soon!"
+              onShare={handleShare}
+            />
+          )}
+          {showPast && (
+            <ProgramCarouselSection
+              title="Past Programs"
+              programs={pastPrograms}
+              onCardClick={handleCardClick}
+              emptyLabel="No past programs yet."
+              onShare={handleShare}
+            />
+          )}
+        </div>
 
       <AnimatePresence>
         {selectedProgram && (
