@@ -1,119 +1,120 @@
-# ✦ RINK (Research Innovation Network Kerala) - Official Web Portal ✦
+# Research Innovation Network Kerala (RINK) - Web Portal
 
-[![Build Status](https://img.shields.io/badge/Build-Passing-1b60bb?style=flat-square)](#)
 [![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=flat-square&logo=next.js)](#)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?style=flat-square&logo=typescript)](#)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8?style=flat-square&logo=tailwind-css)](#)
 
-The official repository for the **Research Innovation Network Kerala (RINK)** web portal. This platform is designed by the **Kerala Startup Mission (KSUM)** to bridge the gap between breakthrough laboratory research and commercial enterprise, empowering the research fraternity to build and scale deep-tech ventures.
+The official web portal for the **Research Innovation Network Kerala (RINK)**, an initiative led by the **Kerala Startup Mission (KSUM)**. RINK serves as the primary bridge between breakthrough institutional research, academic laboratories, and commercial enterprise, enabling deep-tech venture creation and technology transfer across Kerala.
 
 ---
 
-## 🚀 Overview
+## 📦 Implemented Modules & Features
 
-The RINK web portal is a highly optimized, visually stunning Next.js application that serves as the central hub for researchers, innovators, investors, and partner institutions. It combines a premium, corporate aesthetic with top-tier technical performance, designed to look state-of-the-art while running butter-smooth on all devices, including budget smartphones with 4GB of RAM.
+### 1. Core Homepage & Navigation
+- **Hero Banner**: Presentation of RINK's vision, key metrics, and direct action triggers.
+- **Interactive Kerala Map (`InteractiveMap.tsx`)**: Custom Leaflet map visualizing research institutes, incubators, and university hubs across Kerala with district-level filtering and facility detail drawers.
+- **About RINK Section (`AboutRink.tsx`)**: Segmented overview highlighting R&D Grants, Commercialization Support, Research Incubation Programs, and Ecosystem Collaborations.
+- **Featured Technologies Catalog (`FeaturedTechnologies.tsx`)**: Interactive catalog allowing users to search and filter laboratory technologies ready for commercial licensing.
+- **Partner & Institutional Networks (`InstitutionsGrid.tsx`, `PartnerInstitutes.tsx`)**: Directory displaying participating universities, R&D labs, and visited institutions.
+- **Navigation & Footer**: Hardware-accelerated header navbar and structured light-theme footer with contact details and back-to-top interaction.
 
----
+### 2. Core Portal Pages (`/app`)
+- **Programs Directory (`/programs`)**: Comprehensive listing of incubation, acceleration, and commercialization programs with streaming skeleton loading UI.
+- **Grants & Funding (`/funds`)**: Detailed overview of R&D seed funds, scheme guidelines, eligibility criteria, and application pathways with streaming loaders.
+- **About RINK (`/about`)**: Detailed breakdown of governance, institutional objectives, and ecosystem milestones.
+- **Contact Hub (`/contact`)**: Inquiry submission interface and official contact points.
+- **Privacy & Compliance (`/privacy`)**: Data privacy framework and institutional compliance guidelines.
 
-## 🎨 Visual Identity & Theme
+### 3. ROMI Portal (Research Operations & Market Intelligence) (`/RomiPortal`)
+- **Portal Workspace**: Dedicated workspace for researchers, innovators, and institutional administrators.
+- **Researchpreneurship Suite**: Guidance modules and tools tailored for converting lab research into commercial startups.
+- **Technology Repository & Assessment**: Tools for listing, tracking, and evaluating technology readiness levels (TRL).
+- **Analytics & Visualizations**: Interactive gauge metrics and data visualizations (`RomiGauge.tsx`).
+- **State Persistence**: Custom storage handling (`useRomiStorage.ts`) for user workflows.
 
-The website is styled using a modern, pristine **Light Corporate Theme** modeled after `rink.startupmission.in`:
-*   **Color Palette**: Sleek white backgrounds, slate grays (`text-slate-800`, `text-slate-600`), and official brand blues (`#1b60bb` and `#153156`).
-*   **Typography**: Clean, optimized typography utilizing only two Google Fonts:
-    *   **Barlow**: Used for body descriptions, metadata, and clean sans-serif text layout.
-    *   **Bricolage Grotesque** (`font-helios` / `font-clash`): A premium, snug-tracking font used for page headings and section titles.
-*   **Redesigned Footer**: Completely rebuilt to match the official light model:
-    *   Full-color brand logos (no filters or inversion).
-    *   Structured Address with a bold campus header (*G3B, Thejaswini, Technopark Campus*).
-    *   *For more details* dedicated contact block header.
-    *   Tactile Back-to-Top scroll button featuring a light blue circle that inverts to dark blue with a white arrow on hover.
-    *   Balanced mobile layout ensuring Navigate, Connect, and Scroll columns center perfectly.
-
----
-
-## ⚙️ Core Performance Features
-
-The site has been heavily optimized for maximum speed, responsiveness, and zero-latency interactions:
-
-### 1. GPU Hardware Acceleration
-All interactive elements (buttons, links, and cards) leverage CSS 3D transforms (`translate3d(0,0,0)`) to offload rendering onto the GPU. This eliminates any screen stutter during hover animations.
-
-### 2. Text Rendering Stabilization (Anti-Aliasing Fix)
-All links in the header navigation and footer utilize a hardware-accelerated composite layer. This prevents the browser from switching between subpixel and grayscale text antialiasing during transitions, eliminating any text boldness changes or flickering.
-
-### 3. Deferred Offscreen Rendering (`content-visibility: auto`)
-All heavy page modules (the Interactive Map grid, Partner Logos carousel, and Technology/Program listings) use `content-visibility: auto` along with a height fallback (`contain-intrinsic-size`). The browser skips rendering these sections until they are about to scroll into view, resulting in extremely fast initial paint speeds and low RAM usage.
-
-### 4. Advanced Service Worker Caching (`sw.js`)
-A customized service worker handles network requests in the background:
-*   **Pre-caching**: Automatically caches all critical layout assets (backgrounds, logos, banners).
-*   **Image Caching**: Dynamically caches Google Drive images (`googleusercontent.com`) and static assets using a **Stale-While-Revalidate** pattern.
-*   **Speed**: Delivers instant loading on return visits.
-
-### 5. Skeleton UI Loading Screens
-All data-heavy routes (such as `/programs` and `/funds`) use pulsing skeleton loaders during SSR streaming to provide visual loading indicators and completely eliminate layout shifts.
-
-### 6. Local Network Warning Suppression
-Client-side subscriptions to PocketBase real-time events check the origin before connecting. If the website is loaded from a public domain but configured with a local database endpoint, the SSE subscription is bypassed, completely preventing the browser's *"Local Network Access"* warning prompt.
+### 4. Technical & Performance Infrastructure
+- **GPU Hardware Acceleration**: CSS 3D transform layers on interactive components for optimal rendering performance.
+- **Subpixel Antialiasing Stabilization**: Composite layer locking on navigation links to maintain text rendering stability during hover states.
+- **Deferred Offscreen Rendering**: `content-visibility: auto` and intrinsic size bounds applied to heavy grids and carousels for fast initial paint times.
+- **Custom Service Worker (`sw.js`)**: Background caching utilizing Stale-While-Revalidate strategies for static assets and remote media resources.
+- **Skeleton UI Loaders**: Dynamic route streaming loaders (`/funds/loading.tsx`, `/programs/loading.tsx`) preventing layout shifts.
 
 ---
 
-## 🛠️ Technology Stack
+## 🤖 ROMI AI Engine Status
 
-*   **Core Framework**: [Next.js 16 (Turbopack)](https://nextjs.org/) (App Router)
-*   **Language**: [TypeScript](https://www.typescriptlang.org/) for strict static typing
-*   **Styling**: [Tailwind CSS](https://tailwindcss.com/) & Vanilla CSS
-*   **Animations**: [Framer Motion](https://www.framer.com/motion/) (Optimized with `once: true` viewport limits)
-*   **Maps**: [React Leaflet](https://react-leaflet.js.org/) (Mobile optimized with instant views; desktop maps animate via `flyTo`)
-*   **Icons**: [Lucide React](https://lucide.dev/)
-*   **Database**: [Pocketbase](https://pocketbase.io/)
+> [!IMPORTANT]
+> **Backend Integration Status**:
+> The frontend interfaces and analytical components for **ROMI AI** are integrated into the web portal. However, the **ROMI AI backend API is currently in active development**. 
+>
+> - **Deployment Roadmap**: The backend service will be deployed and connected to the production frontend upon final review and verification by **RINK officials**.
+> - **Testing Phase**: ROMI AI requires deep API testing specifically focused on **Market Study** generation, commercial viability scoring, and competitive landscape analysis before public release.
 
 ---
 
-## 📁 Key Directories
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router with Turbopack)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI & Animation**: [Lucide React](https://lucide.dev/), [Framer Motion](https://www.framer.com/motion/)
+- **Interactive Maps**: [React Leaflet](https://react-leaflet.js.org/)
+- **Database & Real-time API**: [PocketBase](https://pocketbase.io/)
+
+---
+
+## 📁 Project Structure
 
 ```
-├── app/                  # Next.js pages (Home, About, Funds, Programs, Privacy)
-│   ├── funds/loading.tsx # Funds page skeleton UI loader
-│   └── programs/loading.tsx # Programs page skeleton UI loader
-├── HomePage/             # Core Homepage components
-│   ├── Navbar.tsx        # Hardware-accelerated header navigation
-│   ├── Footer.tsx        # Redesigned light theme footer
-│   ├── InteractiveMap.tsx# Kerala Leaflet map component
-│   └── TechnologyCard.tsx# Optimized GPU-accelerated card component
-├── public/               # Static assets & service worker
-│   └── sw.js             # Service worker cache script
-├── hooks/                # Custom React hooks (Real-time PocketBase sync)
-└── tailwind.config.ts    # Custom configurations and font mappings
+├── app/                      # Next.js App Router pages
+│   ├── about/                # Institutional overview page
+│   ├── contact/              # Contact hub page
+│   ├── funds/                # Funding & R&D grants directory + skeleton loader
+│   ├── privacy/              # Privacy policy page
+│   ├── programs/             # Incubation & acceleration programs + skeleton loader
+│   └── RomiPortal/           # ROMI portal workspace & sub-features
+├── HomePage/                 # Core homepage modular components
+│   ├── AboutRink/            # Grants, incubation, and collaboration tabs
+│   ├── InteractiveMap.tsx    # Leaflet interactive map of Kerala institutes
+│   ├── FeaturedTechnologies.tsx # Searchable technology transfer catalog
+│   ├── InstitutionsGrid.tsx  # Network directory grid
+│   └── Navbar.tsx / Footer.tsx # Core navigation components
+├── components/               # Shared UI & utility components
+├── hooks/                    # Custom React hooks (PocketBase real-time sync)
+├── public/                   # Static assets & Service Worker (sw.js)
+└── tailwind.config.ts        # Tailwind configuration
 ```
 
 ---
 
-## 🚀 Running Locally
+## 🚀 Local Development
 
-To launch this project on your local machine:
+### Prerequisites
 
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/akashkrishna95/RINK.git
-    cd RINK
-    ```
+- Node.js (v18+)
+- `pnpm` or `npm`
 
-2.  **Install dependencies**
-    ```bash
-    pnpm install
-    # or
-    npm install
-    ```
+### Installation & Setup
 
-3.  **Start the development server**
-    ```bash
-    pnpm dev
-    # or
-    npm run dev
-    ```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/akashkrishna95/RINK.git
+   cd RINK
+   ```
 
-4.  **Open the application**: Visit [http://localhost:3000](http://localhost:3000) with your browser.
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   # or
+   npm install
+   ```
 
----
-*Developed with precision for the Kerala Startup Mission.*
+3. **Start the development server**
+   ```bash
+   pnpm dev
+   # or
+   npm run dev
+   ```
+
+4. **Access the application**
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
