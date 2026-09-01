@@ -2,7 +2,11 @@
 
 import PocketBase from 'pocketbase';
 
-export const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8090');
+const rawPbUrl = (process.env.NEXT_PUBLIC_POCKETBASE_URL || process.env.POCKETBASE_URL || 'http://127.0.0.1:8090').trim();
+// Remove trailing slash if present for clean URL concatenations
+export const POCKETBASE_URL = rawPbUrl.replace(/\/+$/, '');
+
+export const pb = new PocketBase(POCKETBASE_URL);
 
 // Disable auto cancellation to prevent concurrent request conflicts
 pb.autoCancellation(false);
@@ -22,6 +26,26 @@ export function formatDriveImageUrl(url: string): string {
   return trimmed;
 }
 
+// Helper to resolve media URLs whether they are Google Drive links, full HTTP links, or native PocketBase file uploads
+export function getMediaUrl(record: any, fieldOrUrl: string | undefined | null): string {
+  if (!fieldOrUrl) return '';
+  const val = String(fieldOrUrl).trim();
+  if (!val) return '';
+
+  // If it's already an absolute HTTP/HTTPS URL or Google Drive link
+  if (val.startsWith('http://') || val.startsWith('https://')) {
+    return formatDriveImageUrl(val);
+  }
+
+  // If it's a relative PocketBase file name stored in a record (e.g., 'image_abc.png')
+  if (record && (record.collectionId || record.collectionName) && record.id) {
+    const col = record.collectionId || record.collectionName;
+    return `${POCKETBASE_URL}/api/files/${col}/${record.id}/${val}`;
+  }
+
+  return val;
+}
+
 export interface Institution {
   id: string;
   name: string;
@@ -36,19 +60,21 @@ export interface Institution {
 }
 
 export function mapPbInstitution(record: any): Institution {
-  const name = record.institution || record.name || 'Untitled Institution';
-  const location = record.location || '';
-  const district = record.district || '';
-  const website = record.website || '';
-  const logoUrl = formatDriveImageUrl(record.institution_logo_url || record.logo_url || '');
-  const rawPartnered = record.partnered_institutions || record.partnered || '';
+  if (!record) return {} as Institution;
+  const name = (record.institution || record.institution_name || record.name || record.title || 'Untitled Institution').trim();
+  const location = (record.location || record.address || '').trim();
+  const district = (record.district || record.standardized_district || '').trim();
+  const website = (record.website || record.url || record.link || '').trim();
+  const logoRaw = record.institution_logo_url || record.logo_url || record.logo || record.image || '';
+  const logoUrl = getMediaUrl(record, logoRaw);
+  const rawPartnered = record.partnered_institutions ?? record.partnered ?? record.is_partnered ?? record.isPartnered ?? '';
   const isPartnered = 
     typeof rawPartnered === 'boolean' 
       ? rawPartnered 
-      : String(rawPartnered).trim().toLowerCase() === 'partnered' || String(rawPartnered).trim().toLowerCase() === 'true';
+      : ['partnered', 'true', '1', 'yes'].includes(String(rawPartnered).trim().toLowerCase());
   const lat = parseFloat(record.latitude || record.lat || '10.5');
   const lng = parseFloat(record.longitude || record.lng || '76.3');
-  const techCount = parseInt(record.tech_count || record.techCount || '0', 10);
+  const techCount = parseInt(record.tech_count || record.techCount || record.technologies_count || '0', 10);
 
   return {
     id: record.id,
@@ -58,9 +84,9 @@ export function mapPbInstitution(record: any): Institution {
     website,
     logoUrl,
     isPartnered,
-    lat,
-    lng,
-    techCount
+    lat: isNaN(lat) ? 10.5 : lat,
+    lng: isNaN(lng) ? 76.3 : lng,
+    techCount: isNaN(techCount) ? 0 : techCount
   };
 }
 
@@ -77,10 +103,11 @@ function extractYoutubeId(url: string): string | null {
 }
 
 export function mapPbDemoDay(record: any, index?: number): DemoDayVideo | null {
-  const youtubeLink = record.youtube_link || record.url || record.link || '';
+  if (!record) return null;
+  const youtubeLink = record.youtube_link || record.youtube_url || record.url || record.link || record.video_url || '';
   const youtubeId = extractYoutubeId(youtubeLink);
   if (!youtubeId) return null;
-  const title = record.title || record.institution || record.name || `Demo Day Showcase ${(index ?? 0) + 1}`;
+  const title = (record.title || record.institution || record.institution_name || record.name || `Demo Day Showcase ${(index ?? 0) + 1}`).trim();
   return {
     id: record.id,
     youtubeId,
@@ -97,15 +124,18 @@ export interface Fund {
   registrationLink: string;
 }
 
-export const mapPbFund = (record: any): Fund => ({
-  id: record.id,
-  // Changed grant_name to fund_name here to match your database change
-  title: record.fund_name || record.title || '', 
-  description: record.description || '',
-  posterLink: record.poster_link || '',
-  lastDate: record.last_date || '',
-  registrationLink: record.registration_link || '',
-});
+export const mapPbFund = (record: any): Fund => {
+  if (!record) return {} as Fund;
+  const posterRaw = record.poster_link || record.poster || record.image || record.poster_url || '';
+  return {
+    id: record.id,
+    title: (record.fund_name || record.title || record.grant_name || record.name || '').trim(), 
+    description: record.description || record.details || record.about || '',
+    posterLink: getMediaUrl(record, posterRaw),
+    lastDate: record.last_date || record.lastDate || record.deadline || record.date || record.end_date || '',
+    registrationLink: (record.registration_link || record.registration_url || record.apply_link || record.link || record.url || '').trim(),
+  };
+};
 
 export interface Program {
   id: string;
@@ -121,30 +151,32 @@ export interface Program {
 }
 
 export function mapPbProgram(record: any): Program {
+  if (!record) return {} as Program;
   const rawStatus = (record.status ?? '').toLowerCase().trim();
   let status: 'upcoming' | 'current' | 'past' = 'upcoming';
-  if (rawStatus.includes('current')) {
+  if (rawStatus.includes('current') || rawStatus.includes('ongoing') || rawStatus.includes('live')) {
     status = 'current';
-  } else if (rawStatus.includes('past')) {
+  } else if (rawStatus.includes('past') || rawStatus.includes('completed') || rawStatus.includes('closed')) {
     status = 'past';
-  } else if (rawStatus.includes('upcoming')) {
+  } else if (rawStatus.includes('upcoming') || rawStatus.includes('open')) {
     status = 'upcoming';
   }
 
-  const programName = record.program_name || record.program || record.event_name || record.title || '';
-  const programGallery = record.view_gallery || record.program_gallery || record.event_gallery || '';
+  const programName = (record.program_name || record.program || record.event_name || record.title || record.name || '').trim();
+  const programGallery = (record.view_gallery || record.program_gallery || record.event_gallery || record.gallery || record.gallery_link || record.eventGallery || '').trim();
+  const posterRaw = record.poster_link || record.poster || record.image || record.poster_url || record.posterLink || '';
 
   return {
     id: record.id,
     title: programName,
-    date: record.date ?? '',
-    time: record.time ?? '',
-    description: record.description ?? '',
-    posterLink: formatDriveImageUrl(record.poster_link ?? ''),
-    registrationLink: record.registration_link ?? '',
-    location: record.location ?? '',
+    date: record.date || record.program_date || record.event_date || '',
+    time: record.time || record.program_time || record.event_time || '',
+    description: record.description || record.details || record.about || '',
+    posterLink: getMediaUrl(record, posterRaw),
+    registrationLink: (record.registration_link || record.registration_url || record.apply_link || record.link || record.registrationLink || '').trim(),
+    location: (record.location || record.venue || record.place || '').trim(),
     status,
-    eventGallery: programGallery.trim(),
+    eventGallery: programGallery,
   };
 }
 
@@ -155,10 +187,12 @@ export interface Startup {
 }
 
 export function mapPbStartup(record: any): Startup {
+  if (!record) return {} as Startup;
+  const logoRaw = record.startup_logo_url || record.logo_url || record.logo || record.image || '';
   return {
     id: record.id,
-    name: (record.startup_name || record.name || '').trim(),
-    logoUrl: formatDriveImageUrl(record.startup_logo_url || record.logo_url || record.logo || '')
+    name: (record.startup_name || record.name || record.title || '').trim(),
+    logoUrl: getMediaUrl(record, logoRaw)
   };
 }
 
@@ -169,9 +203,12 @@ export interface PastVisitedInstitution {
 }
 
 export function mapPbPastVisitedInstitution(record: any): PastVisitedInstitution {
+  if (!record) return {} as PastVisitedInstitution;
+  const logoRaw = record.institution_logo_url || record.logo_url || record.logo || record.image || '';
   return {
     id: record.id,
-    name: (record.institution || record.name || '').trim(),
-    logoUrl: formatDriveImageUrl(record.institution_logo_url || record.logo_url || record.logo || '')
+    name: (record.institution || record.institution_name || record.name || record.title || '').trim(),
+    logoUrl: getMediaUrl(record, logoRaw)
   };
 }
+

@@ -6,7 +6,7 @@ export async function getInstitutions(): Promise<Institution[]> {
     const [records, techCounts] = await Promise.all([
       pb.collection('all_institutions').getFullList({
         sort: 'institution',
-        next: { revalidate: 3600 },
+        requestKey: null,
       }),
       getTechCountsByInstitution().catch(() => new Map<string, number>()),
     ]);

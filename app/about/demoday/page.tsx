@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 async function getDemoDays() {
   try {
     const records = await pb.collection('demo_days').getFullList({
-      cache: 'no-store'
+      requestKey: null,
     });
     return records.map((record, index) => mapPbDemoDay(record, index)).filter(Boolean);
   } catch (error) {
@@ -19,7 +19,7 @@ async function getDemoDays() {
 async function getPastVisitedInstitutions() {
   try {
     const records = await pb.collection('past_visited_institutions').getFullList({
-      cache: 'no-store'
+      requestKey: null,
     });
     return records.map(mapPbPastVisitedInstitution);
   } catch (error) {

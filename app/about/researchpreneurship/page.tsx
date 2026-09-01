@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 async function getStartups() {
   try {
     const records = await pb.collection('startups').getFullList({
-      cache: 'no-store'
+      requestKey: null,
     });
     return records.map(mapPbStartup);
   } catch (error) {

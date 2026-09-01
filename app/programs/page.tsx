@@ -20,20 +20,13 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
   if (id) {
     try {
-      const record = await pb.collection('programs').getOne(id);
-      const title = record.program_name || record.program || record.event_name || record.title || 'Program';
-      const description = record.description 
-        ? record.description.replace(/[#*_\n]/g, ' ').slice(0, 150) + '...'
+      const record = await pb.collection('programs').getOne(id, { requestKey: null });
+      const program = mapPbProgram(record);
+      const title = program.title || 'Program';
+      const description = program.description 
+        ? program.description.replace(/[#*_\n]/g, ' ').slice(0, 150) + '...'
         : 'Explore this program on RINK KSUM.';
-      const posterLink = record.poster_link || '';
-      
-      const driveMatch = posterLink.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
-                         posterLink.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
-                         posterLink.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
-                         posterLink.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
-      const imageUrl = driveMatch && driveMatch[1]
-        ? `https://lh3.googleusercontent.com/d/${driveMatch[1]}`
-        : (posterLink || defaultLogo);
+      const imageUrl = program.posterLink || defaultLogo;
 
       return {
         title: `${title} | RINK Programs`,
@@ -71,7 +64,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 async function getPrograms() {
   try {
     const records = await pb.collection('programs').getFullList({
-      cache: 'no-store'
+      requestKey: null,
     });
     return records.map(mapPbProgram);
   } catch (error) {

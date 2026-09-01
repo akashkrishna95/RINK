@@ -19,20 +19,13 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
   if (id) {
     try {
-      const record = await pb.collection('funds').getOne(id);
-      const title = record.fund_name || record.title || 'Fund Opportunity';
-      const description = record.description
-        ? record.description.replace(/[#*_\n]/g, ' ').slice(0, 150) + '...'
+      const record = await pb.collection('funds').getOne(id, { requestKey: null });
+      const fund = mapPbFund(record);
+      const title = fund.title || 'Fund Opportunity';
+      const description = fund.description
+        ? fund.description.replace(/[#*_\n]/g, ' ').slice(0, 150) + '...'
         : 'Explore this fund opportunity on RINK KSUM.';
-      const posterLink = record.poster_link || '';
-
-      const driveMatch = posterLink.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
-        posterLink.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
-        posterLink.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
-        posterLink.match(/[?&]docid=([a-zA-Z0-9_-]+)/);
-      const imageUrl = driveMatch && driveMatch[1]
-        ? `https://lh3.googleusercontent.com/d/${driveMatch[1]}`
-        : (posterLink || defaultLogo);
+      const imageUrl = fund.posterLink || defaultLogo;
 
       return {
         title: `${title} | RINK Funds`,
@@ -70,7 +63,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 async function getFunds() {
   try {
     const records = await pb.collection('funds').getFullList({
-      cache: 'no-store'
+      requestKey: null,
     });
     return records.map(mapPbFund);
   } catch (error) {

@@ -1,21 +1,55 @@
 //C:\Users\Akash Krishna\Downloads\RINK KSUM Website\hooks\useRealTimeSync.ts
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { pb } from '@/lib/pocketbase';
 
 export function useRealTimeSync<T extends { id: string }>(
   collectionName: string,
-  initialData: T[],
+  initialData: T[] = [],
   // Optional mapper function in case the raw PB record needs to be mapped to frontend types during real-time updates
   mapRecord?: (record: any) => T | null
 ) {
-  const [data, setData] = useState<T[]>(initialData);
+  const [data, setData] = useState<T[]>(initialData || []);
+  const mapRecordRef = useRef(mapRecord);
+  mapRecordRef.current = mapRecord;
 
   // Sync state when initialData changes (e.g. during navigation or SSR updates)
   useEffect(() => {
-    setData(initialData);
+    if (initialData && initialData.length > 0) {
+      setData(initialData);
+    }
   }, [initialData]);
+
+  // Client-side fallback fetch: If initialData is empty, fetch existing records from PocketBase on mount
+  useEffect(() => {
+    let isMounted = true;
+
+    async function fetchClientData() {
+      try {
+        const records = await pb.collection(collectionName).getFullList({
+          requestKey: null,
+        });
+        if (!isMounted) return;
+        const mapped = records
+          .map((r) => (mapRecordRef.current ? mapRecordRef.current(r) : (r as unknown as T)))
+          .filter(Boolean) as T[];
+        if (mapped.length > 0) {
+          setData(mapped);
+        }
+      } catch (err) {
+        console.warn(`[useRealTimeSync] Client fetch for collection "${collectionName}" failed:`, err);
+      }
+    }
+
+    if (!initialData || initialData.length === 0) {
+      fetchClientData();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [collectionName, initialData]);
 
   useEffect(() => {
     // If the browser is accessing a public deployment but PocketBase is configured to a local address,
@@ -30,29 +64,36 @@ export function useRealTimeSync<T extends { id: string }>(
       }
     }
 
+    let isSubscribed = true;
+
     // Subscribe to all real-time changes in the collection
     pb.collection(collectionName).subscribe('*', (e) => {
+      if (!isSubscribed) return;
       console.log(`Real-time update [${collectionName}]:`, e.action);
       
-      const parsedRecord = mapRecord ? mapRecord(e.record) : (e.record as unknown as T);
+      const parsedRecord = mapRecordRef.current ? mapRecordRef.current(e.record) : (e.record as unknown as T);
       
       // Skip if parsing failed or was filtered out
       if (!parsedRecord) return;
 
       if (e.action === 'create') {
-        setData((prev) => [...prev, parsedRecord]);
+        setData((prev) => [...prev.filter(item => item.id !== parsedRecord.id), parsedRecord]);
       } else if (e.action === 'update') {
         setData((prev) => prev.map((item) => (item.id === parsedRecord.id ? parsedRecord : item)));
       } else if (e.action === 'delete') {
         setData((prev) => prev.filter((item) => item.id !== parsedRecord.id));
       }
+    }).catch((err) => {
+      console.warn(`[useRealTimeSync] Failed to subscribe to real-time events for "${collectionName}":`, err);
     });
 
     // CRITICAL: Cleanup subscription on unmount to prevent memory leaks
     return () => {
-      pb.collection(collectionName).unsubscribe('*');
+      isSubscribed = false;
+      pb.collection(collectionName).unsubscribe('*').catch(() => {});
     };
-  }, [collectionName, mapRecord]);
+  }, [collectionName]);
 
   return data;
 }
+

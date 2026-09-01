@@ -72,7 +72,7 @@ async function getBaselineInstitutions(): Promise<{ name: string; lat: number; l
   if (cachedBaselineInstitutionsPromise) return cachedBaselineInstitutionsPromise;
   cachedBaselineInstitutionsPromise = pb
     .collection('all_institutions')
-    .getFullList()
+    .getFullList({ requestKey: null })
     .then((records) => records.map((r) => {
       const inst = mapPbInstitution(r);
       return { name: inst.name, lat: inst.lat, lng: inst.lng };
