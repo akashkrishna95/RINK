@@ -74,7 +74,7 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/RomiPortal', label: 'ROMI AI' },
+    //{ href: '/RomiPortal', label: 'ROMI AI' },
     { href: 'https://rink-ksum.vercel.app/', label: 'Technologies' },
     { href: 'https://rink-ui.vercel.app/', label: 'Instrumentation' },
     { href: '/funds', label: 'Funds' },
@@ -143,7 +143,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile ROMI AI Quick Access Link */}
-          <div className="flex md:hidden items-center ml-auto mr-1.5 min-[360px]:mr-2.5 z-50">
+          {/* <div className="flex md:hidden items-center ml-auto mr-1.5 min-[360px]:mr-2.5 z-50">
             <Link
               href="/RomiPortal"
               onClick={(e) => handleLinkClick(e, '/RomiPortal')}
@@ -151,7 +151,7 @@ export default function Navbar() {
             >
               ROMI AI
             </Link>
-          </div>
+          </div> */}
 
           {/* Mobile Menu Toggle */}
           <button
